@@ -5,8 +5,9 @@
   min-height: calc(100vh - 80px);
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 0px;
+  padding-bottom: clamp(3rem, 6vw, 5rem);
 }
 
 /* Contenedor de contenido principal */
@@ -20,16 +21,17 @@
 
 /* Sección de eventos */
 .events-section {
-  padding: clamp(2rem, 5vw, 4rem) 0;
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(4rem, 8vw, 6rem) 0;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
 .events-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 clamp(1rem, 3vw, 2rem);
+  padding: 0 clamp(1rem, 3vw, 2rem) clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
   position: relative;
   z-index: 1;
   display: flex;
