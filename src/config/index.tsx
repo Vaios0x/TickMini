@@ -31,6 +31,6 @@ export const config = wagmiAdapter.wagmiConfig
 export const metadata = {
   name: 'TickBase',
   description: 'NFT Ticketing Marketplace en Base Network',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'https://tick-basem.vercel.app',
-  icons: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://tick-basem.vercel.app'}/icon.png`]
+  url: process.env.NEXT_PUBLIC_APP_URL || 'https://tick-base.vercel.app',
+  icons: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://tick-base.vercel.app'}/icon.png`]
 }

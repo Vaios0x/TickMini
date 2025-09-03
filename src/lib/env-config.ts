@@ -9,7 +9,7 @@ export const envConfig = {
   app: {
     url: process.env.NEXT_PUBLIC_APP_URL || 
       (process.env.NODE_ENV === 'production' 
-        ? 'https://tick-basem.vercel.app' 
+        ? 'https://tick-base.vercel.app' 
         : 'http://localhost:3000'),
     name: 'TickBase',
     description: 'NFT Ticketing Marketplace en Base Network',
