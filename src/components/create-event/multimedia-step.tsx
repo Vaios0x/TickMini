@@ -55,7 +55,7 @@ export function MultimediaStep({ formData, updateFormData, onNext, onPrev }: Mul
     setGalleryPreviews(updatedPreviews)
   }
 
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDrag = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -65,7 +65,7 @@ export function MultimediaStep({ formData, updateFormData, onNext, onPrev }: Mul
     }
   }
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: any) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
@@ -75,7 +75,7 @@ export function MultimediaStep({ formData, updateFormData, onNext, onPrev }: Mul
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault()
     
     // La imagen de portada es opcional pero recomendada

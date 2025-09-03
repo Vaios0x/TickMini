@@ -145,13 +145,13 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     onClose()
   }
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  const handleBackdropClick = (e: any) => {
     if (e.target === e.currentTarget) {
       onClose()
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: any) => {
     if (e.key === 'Escape') {
       onClose()
     }

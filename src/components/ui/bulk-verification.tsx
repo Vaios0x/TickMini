@@ -25,7 +25,7 @@ export function BulkVerification({ onVerifyMultiple, isVerifying }: BulkVerifica
     setTicketIds('')
   }
 
-  const handlePaste = (e: React.ClipboardEvent) => {
+  const handlePaste = (e: any) => {
     e.preventDefault()
     const pastedText = e.clipboardData.getData('text')
     
