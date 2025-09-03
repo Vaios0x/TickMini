@@ -164,57 +164,7 @@ export function EventsSection() {
               animation: 'pulse 8s ease-in-out infinite reverse'
             }} />
 
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <h1 className="hero-title">
-                🎫 Eventos NFT 2026
-              </h1>
-              
-              <p className="hero-description">
-                Descubre los eventos más increíbles del año. Compra tickets NFT únicos y forma parte de experiencias inolvidables en Base Network.
-              </p>
 
-              {/* Hero Stats - Completamente Responsivos */}
-              <div className="hero-stats">
-                {[
-                  { icon: '🎭', value: events.length, label: 'Eventos', color: '#00ffff' },
-                  { icon: '🎫', value: availableTickets.toLocaleString(), label: 'Tickets Disponibles', color: '#ff00ff' },
-                  { icon: '💰', value: `${averagePrice} ETH`, label: 'Precio Promedio', color: '#ffff00' }
-                ].map((stat, index) => (
-                  <div
-                    key={index}
-                    className="stat-card"
-                    style={{
-                      '--stat-color': stat.color,
-                      '--stat-color-15': `${stat.color}26`,
-                      '--stat-color-05': `${stat.color}0D`,
-                      '--stat-color-30': `${stat.color}4D`,
-                      '--stat-color-20': `${stat.color}33`,
-                      '--stat-color-40': `${stat.color}66`,
-                      '--stat-color-50': `${stat.color}80`,
-                      '--stat-color-60': `${stat.color}99`
-                    } as React.CSSProperties}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)'
-                      e.currentTarget.style.boxShadow = `0 20px 40px ${stat.color}66`
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                      e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}33`
-                    }}
-                  >
-                    <div className="stat-icon">
-                      {stat.icon}
-                    </div>
-                    <div className="stat-value">
-                      {stat.value}
-                    </div>
-                    <div className="stat-label">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
