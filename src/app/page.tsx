@@ -397,8 +397,78 @@ export default function HomePage() {
           </div>
         </section>
         
+        {/* División VISIBLE y ELEGANTE entre secciones */}
+        <div style={{
+          position: 'relative',
+          height: 'clamp(6rem, 10vw, 8rem)',
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 255, 255, 0.15) 30%, rgba(255, 0, 255, 0.15) 70%, rgba(0, 0, 0, 0) 100%)',
+          margin: 'clamp(3rem, 6vw, 4rem) 0',
+          overflow: 'hidden',
+          borderTop: '1px solid rgba(0, 255, 255, 0.3)',
+          borderBottom: '1px solid rgba(255, 0, 255, 0.3)'
+        }}>
+          {/* Línea divisoria PRINCIPAL - MÁS GRUESA */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'clamp(300px, 80vw, 600px)',
+            height: '4px',
+            background: 'linear-gradient(90deg, transparent 0%, #00ffff 15%, #ff00ff 35%, #ffff00 50%, #ff00ff 65%, #00ffff 85%, transparent 100%)',
+            boxShadow: '0 0 30px rgba(0, 255, 255, 0.8), 0 0 60px rgba(255, 0, 255, 0.6), 0 0 90px rgba(255, 255, 0, 0.4)',
+            borderRadius: '2px'
+          }} />
+          
+          {/* Elementos decorativos FLOTANTES - MÁS VISIBLES */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                top: `${15 + (i * 10)}%`,
+                left: `${5 + (i * 12)}%`,
+                width: '6px',
+                height: '6px',
+                background: `hsl(${i * 45}, 100%, 70%)`,
+                borderRadius: '50%',
+                filter: 'blur(1px)',
+                animation: `float-divider ${2 + (i % 3)}s ease-in-out infinite`,
+                animationDelay: `${i * 0.3}s`,
+                opacity: 0.8,
+                boxShadow: `0 0 10px hsl(${i * 45}, 100%, 70%)`
+              }}
+            />
+          ))}
+          
+          {/* Texto de transición - MÁS PROMINENTE */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'rgba(0, 0, 0, 0.9)',
+            padding: '1rem 2rem',
+            borderRadius: '25px',
+            border: '2px solid rgba(0, 255, 255, 0.5)',
+            backdropFilter: 'blur(15px)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 255, 255, 0.3)'
+          }}>
+            <span style={{
+              color: '#00ffff',
+              fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              textShadow: '0 0 20px rgba(0, 255, 255, 0.8)'
+            }}>
+              ✨ Eventos Destacados ✨
+            </span>
+          </div>
+        </div>
+
         {/* Events Section - Cards de eventos directamente */}
-        <div style={{ paddingTop: '2rem' }}>
+        <div style={{ paddingTop: '1rem' }}>
           {/* Sección de eventos destacados (solo 6) */}
           <section 
             className="featured-events-section"
