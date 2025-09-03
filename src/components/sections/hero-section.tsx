@@ -7,7 +7,7 @@ import { Ticket, Play, ArrowRight, Sparkles } from 'lucide-react'
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pb-20">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
       <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
@@ -106,28 +106,33 @@ export function HeroSection() {
           >
             <Link 
               href="/events"
-              className="text-lg px-8 py-6 h-auto text-white shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="text-lg px-8 py-6 h-auto font-bold shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
-                border: 'none'
+                background: 'linear-gradient(90deg, #ff00ff, #8b00ff)',
+                border: 'none',
+                color: '#000000',
+                boxShadow: '0 0 20px rgba(0, 255, 255, 0.6)'
               }}
               tabIndex={0}
             >
-              🎫 Explorar Eventos
+              <span className="mr-2">🎫</span>
+              EXPLORAR EVENTOS
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
             
             <button 
-              className="text-lg px-8 py-6 h-auto transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="text-lg px-8 py-6 h-auto font-bold transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden"
               style={{
-                background: 'transparent',
-                border: '2px solid #ffff00',
-                color: '#ffff00'
+                background: '#1a1a1a',
+                border: 'none',
+                color: '#ffff00',
+                boxShadow: '0 0 20px rgba(255, 255, 0, 0.4)'
               }}
               tabIndex={0}
             >
-              <Play className="mr-2 h-5 w-5" />
-              🚀 Crear Evento
+              <span className="mr-2">🚀</span>
+              CREAR EVENTO
+              <span className="ml-2">✨</span>
             </button>
           </motion.div>
 
