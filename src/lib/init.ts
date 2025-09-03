@@ -1,4 +1,4 @@
-import { validateEnvConfig } from './env-config'
+import { envConfig, isProduction, isDevelopment } from './env-config'
 
 // Inicialización de la aplicación
 export function initializeApp() {
@@ -6,16 +6,10 @@ export function initializeApp() {
     // Solo en el servidor
     console.log('🚀 Inicializando TickBase...')
     
-    const isValid = validateEnvConfig()
-    
-    if (isValid) {
-      console.log('✅ Configuración válida')
-    } else {
-      console.log('⚠️ Usando configuración por defecto para desarrollo')
-    }
-    
-    console.log('🌐 URL:', process.env.NEXTAUTH_URL || 'http://localhost:3000')
-    console.log('🔐 Secret configurado:', !!process.env.NEXTAUTH_SECRET)
+    console.log('🌐 Entorno:', isProduction ? 'Producción' : 'Desarrollo')
+    console.log('🌐 URL:', envConfig.auth.url || 'http://localhost:3000')
+    console.log('🔐 Secret configurado:', !!envConfig.auth.secret)
+    console.log('🎯 AppKit Project ID:', envConfig.appKit.projectId)
   }
 }
 

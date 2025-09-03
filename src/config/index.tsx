@@ -5,7 +5,7 @@ import { walletConnect } from 'wagmi/connectors'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
 // Project ID de Reown Dashboard
-export const projectId = 'd4181325794a773fbf713afbfbd8b348'
+export const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || 'd4181325794a773fbf713afbfbd8b348'
 
 if (!projectId) {
   throw new Error('Project ID is not defined')
@@ -31,6 +31,6 @@ export const config = wagmiAdapter.wagmiConfig
 export const metadata = {
   name: 'TickBase',
   description: 'NFT Ticketing Marketplace en Base Network',
-  url: 'https://tickbase.app',
-  icons: ['https://tickbase.app/icon.png']
+  url: process.env.NEXT_PUBLIC_APP_URL || 'https://tick-basem.vercel.app',
+  icons: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://tick-basem.vercel.app'}/icon.png`]
 }

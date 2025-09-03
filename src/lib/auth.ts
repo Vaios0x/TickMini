@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: "development-secret-key-change-in-production",
+  secret: process.env.NEXTAUTH_SECRET || "development-secret-key-change-in-production",
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
@@ -41,5 +41,5 @@ export const authOptions: NextAuthOptions = {
       return session
     }
   },
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
 }

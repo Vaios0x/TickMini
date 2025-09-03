@@ -1,30 +1,33 @@
-// Configuración de entorno con valores por defecto para desarrollo
-export const ENV_CONFIG = {
-  // NextAuth
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'development-secret-key-change-in-production',
+export const envConfig = {
+  // AppKit Configuration
+  appKit: {
+    projectId: process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || 'd4181325794a773fbf713afbfbd8b348',
+    environment: process.env.NODE_ENV || 'development',
+  },
   
-  // Entorno
-  NODE_ENV: process.env.NODE_ENV || 'development',
+  // App URLs
+  app: {
+    url: process.env.NEXT_PUBLIC_APP_URL || 
+      (process.env.NODE_ENV === 'production' 
+        ? 'https://tick-basem.vercel.app' 
+        : 'http://localhost:3000'),
+    name: 'TickBase',
+    description: 'NFT Ticketing Marketplace en Base Network',
+  },
   
-  // Base Network
-  BASE_CHAIN_ID: process.env.NEXT_PUBLIC_BASE_CHAIN_ID || '84531',
-  BASE_RPC_URL: process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://goerli.base.org',
+  // Base Network Configuration
+  base: {
+    chainId: process.env.NEXT_PUBLIC_CHAIN_ID || '8453',
+    rpcUrl: process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org',
+    explorer: process.env.NEXT_PUBLIC_BASE_EXPLORER || 'https://basescan.org',
+  },
   
-  // App
-  APP_NAME: 'TickBase',
-  APP_DESCRIPTION: 'NFT Ticketing Marketplace en Base Network'
-} as const
-
-// Función para verificar si la configuración es válida
-export function validateEnvConfig() {
-  const required = ['NEXTAUTH_URL', 'NEXTAUTH_SECRET']
-  const missing = required.filter(key => !ENV_CONFIG[key as keyof typeof ENV_CONFIG])
-  
-  if (missing.length > 0) {
-    console.warn(`⚠️ Variables de entorno faltantes: ${missing.join(', ')}`)
-    console.warn('📝 Usando valores por defecto para desarrollo')
+  // Authentication
+  auth: {
+    secret: process.env.NEXTAUTH_SECRET,
+    url: process.env.NEXTAUTH_URL,
   }
-  
-  return missing.length === 0
 }
+
+export const isProduction = process.env.NODE_ENV === 'production'
+export const isDevelopment = process.env.NODE_ENV === 'development'
