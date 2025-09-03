@@ -80,6 +80,46 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     return null
   }
   
+  // Fallback visual si algo falla
+  if (!event.id || !event.title) {
+    console.error('🎫 ERROR: Evento inválido para el modal:', event)
+    return (
+      <div className="checkout-modal-overlay" style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000
+      }}>
+        <div style={{
+          background: '#1a1a1a',
+          padding: '2rem',
+          borderRadius: '10px',
+          color: 'white',
+          textAlign: 'center'
+        }}>
+          <h3>Error al cargar el evento</h3>
+          <p>No se pudo cargar la información del evento.</p>
+          <button onClick={onClose} style={{
+            background: '#ff4444',
+            color: 'white',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    )
+  }
+  
   // Verificación adicional de seguridad
   if (!event.id || !event.title) {
     console.error('🎫 ERROR: Evento inválido para el modal:', event)

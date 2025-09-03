@@ -44,10 +44,24 @@ export default function HomePage() {
 
   // Función para abrir el modal de checkout
   const handleOpenCheckout = (event: any) => {
-    // Guardar la posición actual del scroll
-    setScrollPosition(window.scrollY)
-    setSelectedEvent(event)
-    setIsCheckoutOpen(true)
+    try {
+      console.log('🎫 Abriendo modal para evento:', event)
+      
+      // Validar que el evento tenga los datos necesarios
+      if (!event || !event.id || !event.title) {
+        console.error('🎫 ERROR: Evento inválido:', event)
+        return
+      }
+      
+      // Guardar la posición actual del scroll
+      setScrollPosition(window.scrollY)
+      setSelectedEvent(event)
+      setIsCheckoutOpen(true)
+      
+      console.log('🎫 Modal abierto exitosamente')
+    } catch (error) {
+      console.error('🎫 ERROR al abrir modal:', error)
+    }
   }
 
   // Función para cerrar el modal de checkout
@@ -1021,11 +1035,31 @@ export default function HomePage() {
 
       {/* Modal de checkout */}
       {isCheckoutOpen && selectedEvent && (
-        <CheckoutModal
-          isOpen={isCheckoutOpen}
-          onClose={handleCloseCheckout}
-          event={selectedEvent}
-        />
+        <div style={{ position: 'relative', zIndex: 10000 }}>
+          <CheckoutModal
+            isOpen={isCheckoutOpen}
+            onClose={handleCloseCheckout}
+            event={selectedEvent}
+          />
+        </div>
+      )}
+      
+      {/* Debug info - solo en desarrollo */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ 
+          position: 'fixed', 
+          bottom: '10px', 
+          right: '10px', 
+          background: 'rgba(0,0,0,0.8)', 
+          color: 'white', 
+          padding: '10px', 
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 9999
+        }}>
+          Modal: {isCheckoutOpen ? 'Abierto' : 'Cerrado'} | 
+          Evento: {selectedEvent ? 'Sí' : 'No'}
+        </div>
       )}
     </div>
   )
