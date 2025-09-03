@@ -1,7 +1,6 @@
 'use client'
 
-import * as React from 'react'
-import { useState } from 'react'
+import React, { useState, ChangeEvent, FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/hooks/use-toast'
@@ -25,13 +24,15 @@ export default function ContactPage() {
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    if (name) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
@@ -204,11 +205,8 @@ export default function ContactPage() {
                     Nombre Completo *
                   </label>
                                      <Input
-                     name="name"
-                     type="text"
-                     required
                      value={formData.name}
-                     onChange={handleInputChange}
+                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'name' } })}
                      className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
                      placeholder="Tu nombre completo"
                    />
@@ -219,11 +217,9 @@ export default function ContactPage() {
                     Email *
                   </label>
                                      <Input
-                     name="email"
                      type="email"
-                     required
                      value={formData.email}
-                     onChange={handleInputChange}
+                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'email' } })}
                      className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
                      placeholder="tu@email.com"
                    />
@@ -235,11 +231,8 @@ export default function ContactPage() {
                   Asunto *
                 </label>
                                  <Input
-                   name="subject"
-                   type="text"
-                   required
                    value={formData.subject}
-                   onChange={handleInputChange}
+                   onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'subject' } })}
                    className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
                    placeholder="¿En qué podemos ayudarte?"
                  />
@@ -250,17 +243,16 @@ export default function ContactPage() {
                   Mensaje *
                 </label>
                                  <textarea
-                   name="message"
                    required
                    rows={5}
                    value={formData.message}
-                   onChange={handleInputChange}
+                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'message' } })}
                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none resize-none contact-textarea"
                    placeholder="Cuéntanos más detalles sobre tu consulta..."
                  />
               </div>
 
-              <Button
+              <button
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed contact-submit-btn"
@@ -273,7 +265,7 @@ export default function ContactPage() {
                 ) : (
                   'Enviar Mensaje'
                 )}
-              </Button>
+              </button>
             </form>
 
             {/* Información adicional */}
