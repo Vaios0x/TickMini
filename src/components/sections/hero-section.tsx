@@ -142,17 +142,11 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 0, 255, 0.15), rgba(0, 100, 200, 0.15))',
-              padding: '2rem',
-              borderRadius: '20px',
-              border: '1px solid rgba(0, 255, 255, 0.3)'
-            }}
           >
             <div className="text-center p-4 rounded-xl transition-all duration-300"
                  style={{
-                   background: 'linear-gradient(135deg, rgba(0, 0, 255, 0.3), rgba(128, 0, 128, 0.3))',
-                   border: '1px solid rgba(0, 255, 255, 0.5)'
+                   background: 'linear-gradient(135deg, rgba(0, 0, 255, 0.2), rgba(128, 0, 128, 0.2))',
+                   border: '1px solid rgba(0, 255, 255, 0.4)'
                  }}>
               <div className="text-4xl font-bold mb-2">🎭</div>
               <div className="text-3xl font-bold mb-2" style={{ color: '#00ffff' }}>12</div>
@@ -160,8 +154,8 @@ export function HeroSection() {
             </div>
             <div className="text-center p-4 rounded-xl transition-all duration-300"
                  style={{
-                   background: 'linear-gradient(135deg, rgba(128, 0, 128, 0.3), rgba(255, 0, 255, 0.3))',
-                   border: '1px solid rgba(255, 0, 255, 0.5)'
+                   background: 'linear-gradient(135deg, rgba(128, 0, 128, 0.2), rgba(255, 0, 255, 0.2))',
+                   border: '1px solid rgba(255, 0, 255, 0.4)'
                  }}>
               <div className="text-4xl font-bold mb-2">🎫</div>
               <div className="text-3xl font-bold mb-2" style={{ color: '#ff00ff' }}>1,185</div>
@@ -169,8 +163,8 @@ export function HeroSection() {
             </div>
             <div className="text-center p-4 rounded-xl transition-all duration-300"
                  style={{
-                   background: 'linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 255, 0, 0.3))',
-                   border: '1px solid rgba(255, 255, 0, 0.5)'
+                   background: 'linear-gradient(135deg, rgba(255, 165, 0, 0.2), rgba(255, 255, 0, 0.2))',
+                   border: '1px solid rgba(255, 255, 0, 0.4)'
                  }}>
               <div className="text-4xl font-bold mb-2">💰</div>
               <div className="text-3xl font-bold mb-2" style={{ color: '#ffff00' }}>0.11 ETH</div>
