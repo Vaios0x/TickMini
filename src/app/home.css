@@ -45,7 +45,9 @@
   margin-bottom: clamp(2rem, 5vw, 4rem);
   position: relative;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-background {
@@ -323,6 +325,15 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+/* Estadísticas de eventos - Mismo ancho que en la página de eventos */
+.events-stats-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .home-content-container {
@@ -358,6 +369,13 @@
   .benefits-grid {
     grid-template-columns: 1fr;
   }
+  
+  /* En mobile, las estadísticas mantienen ancho normal */
+  .events-stats-container {
+    max-width: 100%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -376,6 +394,13 @@
   .section-title {
     font-size: clamp(1.5rem, 8vw, 2.5rem);
   }
+  
+  /* En pantallas muy pequeñas, las estadísticas tienen padding reducido */
+  .events-stats-container {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
 }
 
 /* Pantallas muy grandes */
@@ -391,6 +416,10 @@
   .hero-section {
     max-width: 1400px;
   }
+  
+  .events-stats-container {
+    max-width: 1400px;
+  }
 }
 
 @media (min-width: 1920px) {
@@ -404,6 +433,10 @@
   
   .hero-section {
     max-width: 1600px;
+  }
+  
+  .events-stats-container {
+    max-width: 1400px;
   }
 }
 
@@ -455,6 +488,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+
 
 /* Optimizaciones de rendimiento */
 .home-page {

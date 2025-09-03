@@ -1,5 +1,7 @@
 'use client'
 
+import './events-filters.css'
+
 interface EventsFiltersProps {
   searchTerm: string
   setSearchTerm: (term: string) => void
@@ -25,26 +27,10 @@ export function EventsFilters({
   categories
 }: EventsFiltersProps) {
   return (
-    <div style={{
-      background: 'rgba(255, 255, 255, 0.05)',
-      backdropFilter: 'blur(20px)',
-      borderRadius: '20px',
-      padding: '2rem',
-      marginBottom: '3rem',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
-    }}>
+    <div className="events-filters-container">
       {/* Barra de búsqueda */}
-      <div style={{
-        marginBottom: '2rem'
-      }}>
-        <label htmlFor="search-events" style={{
-          display: 'block',
-          color: '#ffffff',
-          fontSize: '1.1rem',
-          marginBottom: '0.8rem',
-          fontWeight: '500'
-        }}>
+      <div className="search-section">
+        <label htmlFor="search-events" className="search-label">
           🔍 Buscar Eventos
         </label>
         <input
@@ -53,74 +39,24 @@ export function EventsFilters({
           placeholder="Buscar por título, descripción, organizador o ubicación..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '1rem 1.5rem',
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '2px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '15px',
-            color: '#ffffff',
-            fontSize: '1rem',
-            outline: 'none',
-            transition: 'all 0.3s ease',
-            backdropFilter: 'blur(10px)'
-          }}
-          onFocus={(e) => {
-            e.target.style.borderColor = 'rgba(0, 255, 255, 0.6)'
-            e.target.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.3)'
-          }}
-          onBlur={(e) => {
-            e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-            e.target.style.boxShadow = 'none'
-          }}
+          className="search-input"
           tabIndex={0}
           aria-label="Buscar eventos"
         />
       </div>
 
       {/* Filtros */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '1rem',
-        alignItems: 'end'
-      }}>
+      <div className="filters-grid">
         {/* Filtro de categoría */}
-        <div>
-          <label htmlFor="category-filter" style={{
-            display: 'block',
-            color: '#ffffff',
-            fontSize: '1rem',
-            marginBottom: '0.8rem',
-            fontWeight: '500'
-          }}>
+        <div className="filter-group">
+          <label htmlFor="category-filter" className="filter-label">
             🏷️ Categoría
           </label>
           <select
             id="category-filter"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.8rem 1rem',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '12px',
-              color: '#ffffff',
-              fontSize: '0.9rem',
-              outline: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(10px)'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'rgba(0, 255, 255, 0.6)'
-              e.target.style.boxShadow = '0 0 15px rgba(0, 255, 255, 0.2)'
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-              e.target.style.boxShadow = 'none'
-            }}
+            className="filter-select"
             tabIndex={0}
             aria-label="Filtrar por categoría"
           >
@@ -133,41 +69,15 @@ export function EventsFilters({
         </div>
 
         {/* Filtro de ordenamiento */}
-        <div>
-          <label htmlFor="sort-filter" style={{
-            display: 'block',
-            color: '#ffffff',
-            fontSize: '1rem',
-            marginBottom: '0.8rem',
-            fontWeight: '500'
-          }}>
+        <div className="filter-group">
+          <label htmlFor="sort-filter" className="filter-label">
             📊 Ordenar Por
           </label>
           <select
             id="sort-filter"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.8rem 1rem',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '12px',
-              color: '#ffffff',
-              fontSize: '0.9rem',
-              outline: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(10px)'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'rgba(255, 0, 255, 0.6)'
-              e.target.style.boxShadow = '0 0 15px rgba(255, 0, 255, 0.2)'
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-              e.target.style.boxShadow = 'none'
-            }}
+            className="filter-select"
             tabIndex={0}
             aria-label="Ordenar eventos"
           >
@@ -179,37 +89,14 @@ export function EventsFilters({
         </div>
 
         {/* Botón de limpiar filtros */}
-        <div>
+        <div className="filter-group">
           <button
             onClick={() => {
               setSearchTerm('')
               setSelectedCategory('all')
               setSortBy('date')
             }}
-            style={{
-              width: '100%',
-              padding: '0.8rem 1rem',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '12px',
-              color: '#ffffff',
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(10px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-            }}
+            className="clear-filters-btn"
             tabIndex={0}
             aria-label="Limpiar todos los filtros"
           >
@@ -220,38 +107,30 @@ export function EventsFilters({
 
       {/* Información de filtros activos */}
       {(searchTerm || selectedCategory !== 'all') && (
-        <div style={{
-          marginTop: '1.5rem',
-          padding: '1rem',
-          background: 'rgba(0, 255, 255, 0.1)',
-          border: '1px solid rgba(0, 255, 255, 0.3)',
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          flexWrap: 'wrap'
-        }}>
-          <span style={{ color: '#00ffff', fontWeight: '600' }}>🔍 Filtros Activos:</span>
+        <div className="active-filters">
+          <span className="active-filters-label">🔍 Filtros Activos:</span>
           {searchTerm && (
-            <span style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              padding: '0.3rem 0.8rem',
-              borderRadius: '20px',
-              fontSize: '0.8rem',
-              color: '#ffffff'
-            }}>
+            <span className="filter-tag">
               Búsqueda: "{searchTerm}"
+              <button
+                className="remove-filter"
+                onClick={() => setSearchTerm('')}
+                aria-label="Eliminar filtro de búsqueda"
+              >
+                ×
+              </button>
             </span>
           )}
           {selectedCategory !== 'all' && (
-            <span style={{
-              background: 'rgba(255, 255, 255, 0.2)',
-              padding: '0.3rem 0.8rem',
-              borderRadius: '20px',
-              fontSize: '0.8rem',
-              color: '#ffffff'
-            }}>
+            <span className="filter-tag">
               Categoría: {categories.find(cat => cat.id === selectedCategory)?.name}
+              <button
+                className="remove-filter"
+                onClick={() => setSelectedCategory('all')}
+                aria-label="Eliminar filtro de categoría"
+              >
+                ×
+              </button>
             </span>
           )}
         </div>

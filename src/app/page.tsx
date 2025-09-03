@@ -13,6 +13,7 @@ export default function HomePage() {
   const [isVisible, setIsVisible] = React.useState(false)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
+
   const { connect, isConnected, address, formattedAddress } = useAppKitConnection()
 
   // Función para inicializar el componente
@@ -82,6 +83,18 @@ export default function HomePage() {
       title: 'Experiencia Móvil',
       description: 'Diseño responsive y PWA para usar desde cualquier dispositivo móvil.',
       color: '#8a2be2'
+    },
+    {
+      icon: '🎨',
+      title: 'Personalización Avanzada',
+      description: 'Crea eventos únicos con branding personalizado y metadatos NFT personalizables.',
+      color: '#ff1493'
+    },
+    {
+      icon: '🚀',
+      title: 'Escalabilidad Infinita',
+      description: 'Procesa millones de transacciones sin comprometer la velocidad o descentralización.',
+      color: '#32cd32'
     }
   ]
 
@@ -320,6 +333,10 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+
+
+
 
         {/* Final CTA Section - Completamente Responsivo */}
         <section 

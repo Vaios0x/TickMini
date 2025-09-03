@@ -41,11 +41,6 @@ export function ConnectButton() {
         {isDropdownOpen && (
           <div className="absolute right-0 top-full mt-2 w-48 bg-background border rounded-md shadow-lg z-50">
             <div className="p-2">
-              {network && (
-                <div className="px-3 py-2 text-sm text-muted-foreground border-b">
-                  Red: {network.name}
-                </div>
-              )}
               {formattedBalance && (
                 <div className="px-3 py-2 text-sm text-muted-foreground border-b">
                   Balance: {formattedBalance}

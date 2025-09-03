@@ -261,18 +261,22 @@ export function Navbar() {
               }} />
             </Link>
             
-            <Link href="/about" style={{
-              color: '#ffffff',
-              textDecoration: 'none',
-              fontSize: '1rem',
-              fontWeight: '500',
-              transition: 'all 0.3s ease',
-              padding: '0.75rem 1.2rem',
-              borderRadius: '15px',
-              border: '1px solid transparent',
-              position: 'relative',
-              overflow: 'hidden'
-            }} className="nav-link">
+            <Link href="/about"
+              style={{
+                color: '#ffffff',
+                textDecoration: 'none',
+                fontSize: '1rem',
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                padding: '0.75rem 1.2rem',
+                borderRadius: '15px',
+                border: '1px solid transparent',
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'none',
+                cursor: 'pointer',
+                fontFamily: 'inherit'
+              }} className="nav-link">
               <span style={{ position: 'relative', zIndex: 1 }}>Nosotros</span>
               <div style={{
                 position: 'absolute',
@@ -571,23 +575,28 @@ export function Navbar() {
               <span>Verificar Ticket</span>
             </Link>
             
-            <Link href="/about" style={{
-              color: '#ffffff',
-              textDecoration: 'none',
-              fontSize: '1.3rem',
-              fontWeight: '500',
-              padding: '1.5rem 2rem',
-              borderRadius: '25px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              transition: 'all 0.3s ease',
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(15px)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
-              minHeight: '70px'
-            }} className="nav-link mobile-nav-link" onClick={closeMobileMenu}>
+            <Link href="/about"
+              onClick={closeMobileMenu}
+              style={{
+                color: '#ffffff',
+                textDecoration: 'none',
+                fontSize: '1.3rem',
+                fontWeight: '500',
+                padding: '1.5rem 2rem',
+                borderRadius: '25px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                transition: 'all 0.3s ease',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(15px)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.5rem',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+                minHeight: '70px',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                width: '100%'
+              }} className="nav-link mobile-nav-link">
               <span style={{ fontSize: '2rem' }}>ℹ️</span>
               <span>Nosotros</span>
             </Link>

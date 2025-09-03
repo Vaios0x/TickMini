@@ -26,6 +26,9 @@ interface EventCardProps {
 
 export function EventCard({ event, categoryColor, categoryName, categoryIcon, onBuyTicket }: EventCardProps) {
   const [isHovered, setIsHovered] = useState(false)
+  
+  // Verificar que recibimos la función correctamente
+  console.log('🎫 EventCard renderizado:', event.title, 'onBuyTicket:', typeof onBuyTicket, 'función:', !!onBuyTicket)
 
   const getProgressPercentage = (available: number, total: number) => {
     return ((total - available) / total) * 100
@@ -36,29 +39,26 @@ export function EventCard({ event, categoryColor, categoryName, categoryIcon, on
       style={{
         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
         borderRadius: '20px',
-        padding: '2rem',
+        padding: 'clamp(1.5rem, 4vw, 2rem)', // Padding responsive
         border: `2px solid ${categoryColor}40`,
         boxShadow: `0 20px 40px rgba(0, 0, 0, 0.4), 0 0 60px ${categoryColor}20`,
         transition: 'all 0.3s ease',
         position: 'relative',
-        overflow: 'hidden',
-        cursor: 'pointer',
+        overflow: 'visible', // Cambiado de hidden a visible para evitar cortes
         transform: isHovered ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-        minHeight: '600px',
+        minHeight: 'clamp(500px, 70vh, 600px)', // Altura responsive
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        boxSizing: 'border-box' // Asegurar que el padding se incluya en el tamaño
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      tabIndex={0}
-      role="button"
-      aria-label={`Evento: ${event.title}`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onBuyTicket(event)
-        }
+      onClick={(e) => {
+        console.log('🎫 CONTAINER clickeado - se previene la propagación')
+        e.stopPropagation()
       }}
+      // Agregar estilos CSS adicionales para responsividad
+      className="event-card-responsive"
     >
       {/* Badge de categoría */}
       <div style={{
@@ -260,7 +260,21 @@ export function EventCard({ event, categoryColor, categoryName, categoryIcon, on
 
       {/* Botón de compra */}
       <button
-        onClick={() => onBuyTicket(event)}
+        onClick={(e) => {
+          console.log('🎫 BOTÓN CLICKEADO - Evento:', event.title)
+          e.preventDefault()
+          e.stopPropagation()
+          console.log('🎫 Llamando onBuyTicket...')
+          if (onBuyTicket && typeof onBuyTicket === 'function') {
+            onBuyTicket(event)
+          } else {
+            console.error('🎫 ERROR: onBuyTicket no está disponible o no es una función!')
+          }
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
         style={{
           width: '100%',
           background: `linear-gradient(135deg, ${categoryColor}, ${categoryColor}80)`,
@@ -274,7 +288,10 @@ export function EventCard({ event, categoryColor, categoryName, categoryIcon, on
           transition: 'all 0.3s ease',
           textTransform: 'uppercase',
           marginTop: 'auto',
-          boxShadow: `0 5px 20px ${categoryColor}40`
+          boxShadow: `0 5px 20px ${categoryColor}40`,
+          position: 'relative',
+          zIndex: 100,
+          pointerEvents: 'auto'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)'

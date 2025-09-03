@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useModalScroll } from '@/hooks/use-modal-scroll'
 import './checkout-modal.css'
 
 interface CheckoutModalProps {
@@ -17,7 +18,7 @@ interface CheckoutModalProps {
     image: string
     category: string
     organizer: string
-  }
+  } | null
 }
 
 export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
@@ -27,9 +28,65 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [step, setStep] = useState(1)
 
-  if (!isOpen) return null
+  // Use custom hook for modal scroll management
+  useModalScroll(isOpen)
 
-  console.log('🎫 CheckoutModal ABIERTO:', { isOpen, event: event?.title, timestamp: new Date().toISOString() })
+  // Reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🎫 Modal abriéndose para evento:', event?.title)
+      setStep(1)
+      setTicketQuantity(1)
+      setSelectedPaymentMethod('wallet')
+      setWalletAddress('')
+      setIsProcessing(false)
+      
+      // Force modal to center and focus for accessibility
+      setTimeout(() => {
+        if (typeof document !== 'undefined') {
+          const modalElement = document.querySelector('.checkout-modal-overlay') as HTMLElement
+          if (modalElement) {
+            modalElement.focus()
+            // Force center positioning
+            modalElement.style.display = 'flex'
+            modalElement.style.alignItems = 'center'
+            modalElement.style.justifyContent = 'center'
+            
+            // Asegurar que el modal esté visible
+            modalElement.style.visibility = 'visible'
+            modalElement.style.opacity = '1'
+            modalElement.style.zIndex = '10000'
+          }
+        }
+      }, 10)
+      
+      // Asegurar que el modal esté centrado después de un breve delay
+      setTimeout(() => {
+        if (typeof document !== 'undefined') {
+          const modalElement = document.querySelector('.checkout-modal-overlay') as HTMLElement
+          if (modalElement) {
+            modalElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }
+      }, 100)
+    }
+  }, [isOpen, event])
+
+  console.log('🎫 CheckoutModal render:', { isOpen, hasEvent: !!event, eventTitle: event?.title })
+  
+  // Early return si no está abierto o no hay evento
+  if (!isOpen || !event) {
+    console.log('🎫 Modal no se muestra:', { isOpen, hasEvent: !!event })
+    return null
+  }
+  
+  // Verificación adicional de seguridad
+  if (!event.id || !event.title) {
+    console.error('🎫 ERROR: Evento inválido para el modal:', event)
+    return null
+  }
+  
+  console.log('🎫 Modal se va a mostrar para:', event.title)
 
   const priceInEth = parseFloat(event.price.split(' ')[0])
   const totalPrice = priceInEth * ticketQuantity
@@ -45,11 +102,17 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   }
 
   const handleClose = () => {
-    if (step === 3) {
+    onClose()
+  }
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
       onClose()
-      setStep(1)
-      setTicketQuantity(1)
-    } else {
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
       onClose()
     }
   }
@@ -67,67 +130,44 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   }
 
   return (
-    <div className="checkout-modal-overlay" style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0, 0, 0, 0.85)',
-      backdropFilter: 'blur(15px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 10000,
-      padding: '1rem'
-    }}>
+    <div 
+      className="checkout-modal-overlay" 
+      onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="checkout-modal-title"
+      tabIndex={-1}
+    >
       {/* Modal Content */}
-      <div className="checkout-modal-content" style={{
-        background: 'rgba(0, 0, 0, 0.95)',
-        backdropFilter: 'blur(25px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '30px',
-        maxWidth: '700px',
-        width: '100%',
-        maxHeight: '90vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        position: 'relative',
-        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8)'
-      }}>
+      <div className="checkout-modal-content">
         {/* Header con efecto de brillo mejorado */}
-        <div className="gradient-shift" style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '2px',
-          background: 'linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ffff)',
-          backgroundSize: '400% 100%',
-          zIndex: 2
-        }} />
+        <div className="gradient-shift" />
 
         {/* Close Button mejorado */}
         <button
-          onClick={handleClose}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onClose()
+          }}
           style={{
             position: 'absolute',
-            top: '1.5rem',
-            right: '1.5rem',
+            top: '1rem',
+            right: '1rem',
             background: 'rgba(255, 255, 255, 0.1)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             color: '#ffffff',
-            width: '50px',
-            height: '50px',
+            width: '40px',
+            height: '40px',
             borderRadius: '50%',
-            fontSize: '1.5rem',
+            fontSize: '1.2rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'all 0.3s ease',
-            zIndex: 1,
+            zIndex: 11,
             backdropFilter: 'blur(10px)'
           }}
           onMouseEnter={(e: any) => {
@@ -140,13 +180,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
             e.currentTarget.style.transform = 'scale(1)'
           }}
+          tabIndex={0}
+          aria-label="Cerrar modal"
         >
           ✕
         </button>
 
         {/* Modal Header mejorado */}
         <div style={{
-          padding: '2.5rem 2.5rem 1.5rem 2.5rem',
+          padding: 'clamp(0.8rem, 2.5vw, 1.2rem) clamp(1rem, 3vw, 1.5rem) clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 3vw, 1.5rem)',
           textAlign: 'center',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
           background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%)',
@@ -155,19 +197,23 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           top: 0,
           zIndex: 10
         }}>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#ffffff',
-            fontWeight: 'bold',
-            marginBottom: '0.75rem',
-            textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
-          }}>
+          <h2 
+            id="checkout-modal-title"
+            style={{
+              fontSize: 'clamp(1.3rem, 3.5vw, 1.8rem)',
+              color: '#ffffff',
+              fontWeight: 'bold',
+              marginBottom: '0.3rem',
+              textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
+            }}
+          >
             🎫 Checkout
           </h2>
           <p style={{
             color: '#b0b0b0',
-            fontSize: '1.1rem',
-            opacity: 0.9
+            fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
+            opacity: 0.9,
+            marginBottom: 0
           }}>
             Completa tu compra de tickets NFT
           </p>
@@ -175,12 +221,13 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
         {/* Progress Steps mejorados */}
         <div style={{
-          padding: '1.5rem 2.5rem',
+          padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem)',
           display: 'flex',
           justifyContent: 'center',
-          gap: '1.5rem',
+          gap: 'clamp(0.5rem, 2vw, 1rem)',
           background: 'rgba(255, 255, 255, 0.02)',
-          flexShrink: 0
+          flexShrink: 0,
+          flexWrap: 'wrap'
         }}>
           {[
             { number: 1, label: 'Tickets', icon: '🎫' },
@@ -194,8 +241,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               gap: '0.5rem'
             }}>
               <div style={{
-                width: '50px',
-                height: '50px',
+                width: 'clamp(35px, 7vw, 40px)',
+                height: 'clamp(35px, 7vw, 40px)',
                 borderRadius: '50%',
                 background: step >= stepInfo.number 
                   ? 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)' 
@@ -205,7 +252,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 'bold',
-                fontSize: '1.3rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                 transition: 'all 0.4s ease',
                 border: step >= stepInfo.number 
                   ? '2px solid rgba(0, 255, 255, 0.5)' 
@@ -229,21 +276,29 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         </div>
 
         {/* Content Area */}
-        <div style={{
-          flex: 1,
-          padding: '2rem 2.5rem',
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem'
-        }}>
+        <div 
+          className="content-scroll"
+          style={{
+            flex: 1,
+            padding: 'clamp(0.8rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2rem)',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(0.8rem, 2vw, 1.5rem)',
+            minHeight: 0,
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(0, 255, 255, 0.5) rgba(255, 255, 255, 0.1)',
+            // Ajuste para móvil: menos espacio al final para acercar al botón
+            paddingBottom: 'clamp(0.8rem, 2vw, 1.5rem)' // Reducido para acercar al botón
+          }}
+        >
           {step === 1 && (
             /* Step 1: Ticket Selection */
             <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
               <h4 style={{
                 color: '#ffffff',
-                fontSize: '1.8rem',
-                marginBottom: '2rem',
+                fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
+                marginBottom: 'clamp(0.8rem, 1.5vw, 1rem)',
                 textAlign: 'center',
                 textShadow: '0 0 15px rgba(255, 255, 255, 0.3)'
               }}>
@@ -253,30 +308,41 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               {/* Event Info Card mejorada */}
               <div style={{
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-                borderRadius: '25px',
-                padding: '2rem',
+                borderRadius: 'clamp(12px, 3vw, 18px)',
+                padding: 'clamp(0.8rem, 2vw, 1.2rem)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-                marginBottom: '2rem'
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+                marginBottom: 'clamp(0.8rem, 1.5vw, 1rem)'
               }}>
-                <div style={{
-                  display: 'flex',
-                  gap: '2rem',
-                  alignItems: 'center'
-                }}>
+                                  <div style={{
+                    display: 'flex',
+                    gap: 'clamp(1rem, 3vw, 2rem)',
+                    alignItems: 'center',
+                    flexWrap: 'wrap'
+                  }}>
                   <div style={{
-                    width: '120px',
-                    height: '120px',
-                    borderRadius: '20px',
-                    background: `url(${event.image}) center/cover`,
+                    width: 'clamp(80px, 20vw, 120px)',
+                    height: 'clamp(80px, 20vw, 120px)',
+                    borderRadius: 'clamp(15px, 3vw, 20px)',
+                    background: event.image.startsWith('http') 
+                      ? `url(${event.image}) center/cover`
+                      : 'linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2))',
                     border: '2px solid rgba(0, 255, 255, 0.3)',
-                    boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)'
-                  }} />
+                    boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)',
+                    flexShrink: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 'clamp(2rem, 5vw, 3rem)',
+                    color: '#00ffff'
+                  }}>
+                    {event.image.startsWith('http') ? '' : event.image}
+                  </div>
                   <div style={{ flex: 1 }}>
                     <h5 style={{
                       color: '#00ffff',
-                      fontSize: '1.5rem',
-                      marginBottom: '1rem',
+                      fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)',
+                      marginBottom: 'clamp(0.8rem, 2vw, 1rem)',
                       fontWeight: '600',
                       textShadow: '0 0 10px rgba(0, 255, 255, 0.3)'
                     }}>
@@ -311,15 +377,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               {/* Quantity Selector mejorado */}
               <div style={{
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-                borderRadius: '25px',
-                padding: '2rem',
+                borderRadius: 'clamp(15px, 4vw, 25px)',
+                padding: 'clamp(1.5rem, 3vw, 2rem)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
               }}>
                 <h5 style={{
                   color: '#ffffff',
-                  fontSize: '1.3rem',
-                  marginBottom: '1.5rem',
+                  fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
+                  marginBottom: 'clamp(1rem, 2vw, 1.5rem)',
                   textAlign: 'center',
                   textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
                 }}>
@@ -329,7 +395,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '2rem'
+                  gap: 'clamp(1rem, 3vw, 2rem)',
+                  flexWrap: 'wrap'
                 }}>
                   <button
                     onClick={() => setTicketQuantity(Math.max(1, ticketQuantity - 1))}
@@ -337,10 +404,10 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                       background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       color: '#ffffff',
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '20px',
-                      fontSize: '2rem',
+                      width: 'clamp(50px, 12vw, 60px)',
+                      height: 'clamp(50px, 12vw, 60px)',
+                      borderRadius: 'clamp(15px, 3vw, 20px)',
+                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)'
@@ -357,15 +424,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                     -
                   </button>
                   <div style={{
-                    fontSize: '3rem',
+                    fontSize: 'clamp(2rem, 6vw, 3rem)',
                     color: '#00ffff',
                     fontWeight: 'bold',
-                    minWidth: '100px',
+                    minWidth: 'clamp(80px, 20vw, 100px)',
                     textAlign: 'center',
                     textShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
                     background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%)',
-                    padding: '1rem 2rem',
-                    borderRadius: '20px',
+                    padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
+                    borderRadius: 'clamp(15px, 3vw, 20px)',
                     border: '1px solid rgba(0, 255, 255, 0.3)'
                   }}>
                     {ticketQuantity}
@@ -376,10 +443,10 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                       background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       color: '#ffffff',
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '20px',
-                      fontSize: '2rem',
+                      width: 'clamp(50px, 12vw, 60px)',
+                      height: 'clamp(50px, 12vw, 60px)',
+                      borderRadius: 'clamp(15px, 3vw, 20px)',
+                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)'
@@ -401,15 +468,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               {/* Price Breakdown mejorado */}
               <div style={{
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-                borderRadius: '25px',
-                padding: '2rem',
+                borderRadius: 'clamp(15px, 4vw, 25px)',
+                padding: 'clamp(1.2rem, 2.5vw, 1.5rem)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
               }}>
                 <h4 style={{
                   color: '#ffffff',
-                  fontSize: '1.3rem',
-                  marginBottom: '1.5rem',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+                  marginBottom: 'clamp(0.8rem, 1.5vw, 1rem)',
                   textAlign: 'center',
                   textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
                 }}>
@@ -418,16 +485,16 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '1rem'
+                  gap: '0.8rem'
                 }}>
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     color: '#b0b0b0',
-                    fontSize: '1.1rem',
-                    padding: '0.75rem',
+                    fontSize: '1rem',
+                    padding: '0.6rem',
                     background: 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: '15px',
+                    borderRadius: '12px',
                     border: '1px solid rgba(255, 255, 255, 0.05)'
                   }}>
                     <span>Tickets ({ticketQuantity}x {event.price})</span>
@@ -437,10 +504,10 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     color: '#b0b0b0',
-                    fontSize: '1.1rem',
-                    padding: '0.75rem',
+                    fontSize: '1rem',
+                    padding: '0.6rem',
                     background: 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: '15px',
+                    borderRadius: '12px',
                     border: '1px solid rgba(255, 255, 255, 0.05)'
                   }}>
                     <span>Comisión de servicio (2.5%)</span>
@@ -449,18 +516,18 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   <div style={{
                     height: '2px',
                     background: 'linear-gradient(90deg, #00ffff, #ff00ff, #ffff00)',
-                    margin: '1rem 0',
+                    margin: '0.8rem 0',
                     borderRadius: '1px'
                   }} />
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     color: '#00ffff',
-                    fontSize: '1.4rem',
+                    fontSize: '1.3rem',
                     fontWeight: 'bold',
-                    padding: '1rem',
+                    padding: '0.8rem',
                     background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%)',
-                    borderRadius: '20px',
+                    borderRadius: '18px',
                     border: '1px solid rgba(0, 255, 255, 0.3)',
                     textShadow: '0 0 15px rgba(0, 255, 255, 0.5)'
                   }}>
@@ -473,7 +540,6 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           )}
 
           {step === 2 && (
-            /* Step 2: Payment Method */
             <div style={{ animation: 'fadeInRight 0.5s ease-out' }}>
               <h4 style={{
                 color: '#ffffff',
@@ -732,10 +798,13 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
         {/* Footer con botones de navegación */}
         <div style={{
-          padding: '2rem 2.5rem',
+          padding: 'clamp(1rem, 2.5vw, 1.5rem) clamp(1rem, 3vw, 2rem)',
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           background: 'linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%)',
-          flexShrink: 0
+          flexShrink: 0,
+          // Ajuste para móvil: menos espacio arriba del botón para acercar al contenido
+          paddingTop: 'clamp(0.8rem, 2vw, 1.2rem)', // Reducido para acercar al contenido
+          paddingBottom: 'clamp(1.2rem, 3vw, 1.8rem)' // Padding ajustado abajo
         }}>
           {step === 1 && (
             <button
@@ -745,22 +814,22 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 background: 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
                 color: '#000000',
                 border: 'none',
-                padding: '1.2rem',
-                borderRadius: '20px',
-                fontSize: '1.2rem',
+                padding: 'clamp(0.5rem, 1.2vw, 0.7rem)', // Mucho más pequeño
+                borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
+                fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 10px 30px rgba(0, 255, 255, 0.4)',
+                boxShadow: '0 8px 20px rgba(0, 255, 255, 0.3)', // Reducido
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
               }}
               onMouseEnter={(e: any) => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.6)'
+                e.currentTarget.style.boxShadow = '0 12px 25px rgba(0, 255, 255, 0.4)' // Reducido
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.4)'
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 255, 255, 0.3)' // Reducido
               }}
             >
               Continuar al Pago →
@@ -770,18 +839,22 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           {step === 2 && (
             <div style={{
               display: 'flex',
-              gap: '1.5rem'
+              gap: 'clamp(0.8rem, 1.5vw, 1rem)', // Gap reducido para botones más pequeños
+              flexWrap: 'nowrap', // Cambiado de wrap a nowrap para que estén en la misma línea
+              alignItems: 'center', // Alinear botones al centro
+              justifyContent: 'center' // Cambiado a center para centrar los botones
             }}>
               <button
                 onClick={prevStep}
                 style={{
-                  flex: 1,
+                  flex: '0 1 auto', // Cambiado para que no se estire
+                  minWidth: 'clamp(120px, 25vw, 150px)', // Ancho mínimo fijo
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
                   color: '#ffffff',
                   border: '1px solid rgba(255, 255, 255, 0.3)',
-                  padding: '1.2rem',
-                  borderRadius: '20px',
-                  fontSize: '1.1rem',
+                  padding: 'clamp(0.5rem, 1.2vw, 0.7rem)', // Mucho más pequeño
+                  borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
+                  fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   backdropFilter: 'blur(10px)'
@@ -800,33 +873,34 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 onClick={handlePurchase}
                 disabled={isProcessing}
                 style={{
-                  flex: 2,
+                  flex: '1 1 auto', // Cambiado para que ocupe el espacio restante
+                  minWidth: 'clamp(180px, 35vw, 220px)', // Ancho mínimo para el botón principal
                   background: isProcessing 
                     ? 'rgba(255, 255, 255, 0.3)' 
                     : 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
                   color: '#000000',
                   border: 'none',
-                  padding: '1.2rem',
-                  borderRadius: '20px',
-                  fontSize: '1.2rem',
+                  padding: 'clamp(0.5rem, 1.2vw, 0.7rem)', // Mucho más pequeño
+                  borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
+                  fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                   fontWeight: 'bold',
                   cursor: isProcessing ? 'not-allowed' : 'pointer',
                   transition: 'all 0.3s ease',
                   boxShadow: isProcessing 
                     ? 'none' 
-                    : '0 10px 30px rgba(0, 255, 255, 0.4)',
+                    : '0 8px 20px rgba(0, 255, 255, 0.3)', // Reducido
                   textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
                 }}
                 onMouseEnter={(e: any) => {
                   if (!isProcessing) {
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.6)'
+                    e.currentTarget.style.boxShadow = '0 12px 25px rgba(0, 255, 255, 0.4)' // Reducido
                   }
                 }}
                 onMouseLeave={(e: any) => {
                   if (!isProcessing) {
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.4)'
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 255, 255, 0.3)' // Reducido
                   }
                 }}
               >
@@ -843,22 +917,22 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 background: 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
                 color: '#000000',
                 border: 'none',
-                padding: '1.2rem',
-                borderRadius: '20px',
-                fontSize: '1.2rem',
+                padding: 'clamp(0.5rem, 1.2vw, 0.7rem)', // Mucho más pequeño
+                borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
+                fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 10px 30px rgba(0, 255, 255, 0.4)',
+                boxShadow: '0 8px 20px rgba(0, 255, 255, 0.3)', // Reducido
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
               }}
               onMouseEnter={(e: any) => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.6)'
+                e.currentTarget.style.boxShadow = '0 12px 25px rgba(0, 255, 255, 0.4)' // Reducido
               }}
               onMouseLeave={(e: any) => {
                 e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.4)'
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 255, 255, 0.3)' // Reducido
               }}
             >
               🎉 ¡Perfecto!

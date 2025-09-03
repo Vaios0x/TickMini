@@ -1,3 +1,4 @@
+/* Animaciones básicas */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -14,26 +15,83 @@
   }
 }
 
-@keyframes fadeInRight {
-  from { 
-    opacity: 0; 
-    transform: translateX(30px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateX(0); 
-  }
+/* Estilos del modal */
+.checkout-modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  align-items: center !important; /* Volver a center para centrado perfecto */
+  justify-content: center !important;
+  z-index: 10000 !important;
+  overflow: auto !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(15px);
+  padding: clamp(0.5rem, 2vw, 1rem);
+  color: #ffffff;
+  /* Asegurar centrado perfecto */
+  min-height: 100vh;
+  min-width: 100vw;
+  /* Forzar centrado en dispositivos móviles */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Asegurar que el modal esté siempre visible */
+  will-change: transform;
+  /* Forzar visibilidad máxima */
+  visibility: visible !important;
+  opacity: 1 !important;
+  /* Asegurar que esté por encima de todo */
+  isolation: isolate;
+  /* Forzar stacking context */
+  transform-style: preserve-3d;
+  perspective: 1000px;
+
 }
 
-@keyframes fadeInUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(30px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
+/* Asegurar que el contenido del modal esté visible */
+.checkout-modal-content {
+  animation: slideUp 0.4s ease-out;
+  position: relative;
+  max-height: 70vh !important; /* Reducido de 80vh a 70vh */
+  max-width: min(420px, 85vw) !important; /* Reducido de 480px a 420px */
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(25px);
+  border: 2px solid rgba(0, 255, 255, 0.5) !important;
+  border-radius: clamp(10px, 2.5vw, 18px) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 255, 255, 0.2) !important;
+  /* Asegurar que el contenido no se desborde */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  /* Asegurar que el modal esté centrado */
+  margin: auto;
+  /* Forzar visibilidad */
+  z-index: 10001 !important;
+  /* Asegurar stacking context */
+  transform-style: preserve-3d;
+
+}
+
+/* Efecto de brillo en el header */
+.gradient-shift {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+  background-size: 400% 100%;
+  z-index: 2;
+  animation: gradientShift 3s ease infinite;
 }
 
 @keyframes gradientShift {
@@ -42,41 +100,253 @@
   100% { background-position: 0% 50%; }
 }
 
-.checkout-modal-overlay {
-  animation: fadeIn 0.3s ease-out;
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout-modal-overlay {
+    padding: clamp(1rem, 3vw, 2rem);
+    /* Forzar visibilidad en móviles */
+    position: fixed !important;
+    z-index: 10000 !important;
+  }
+  
+  .checkout-modal-content {
+    max-height: 75vh !important;
+    max-width: 90vw !important;
+    border-radius: 10px;
+    /* Asegurar que el contenido sea visible */
+    position: relative;
+    z-index: 10001;
+  }
 }
 
+@media (max-width: 480px) {
+  .checkout-modal-overlay {
+    padding: clamp(1rem, 3vw, 2rem);
+    /* Forzar visibilidad en dispositivos pequeños */
+    position: fixed !important;
+    z-index: 10000 !important;
+  }
+  
+  .checkout-modal-content {
+    max-height: 80vh !important;
+    max-width: 95vw !important;
+    border-radius: 8px;
+    /* Asegurar que el contenido sea visible */
+    position: relative;
+    z-index: 10001;
+  }
+}
+
+/* Scrollbar personalizado */
+.checkout-modal-content .content-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.checkout-modal-content .content-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.checkout-modal-content .content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.5);
+  border-radius: 3px;
+}
+
+.checkout-modal-content .content-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.7);
+}
+
+/* Estilos adicionales para compatibilidad */
+.checkout-modal-overlay * {
+  box-sizing: border-box;
+}
+
+/* Forzar visibilidad en navegadores antiguos */
+@supports not (backdrop-filter: blur(15px)) {
+  .checkout-modal-overlay {
+    background: rgba(0, 0, 0, 0.98) !important;
+  }
+  
+  .checkout-modal-content {
+    background: rgba(0, 0, 0, 0.98) !important;
+  }
+}
+
+/* Asegurar que el modal funcione en Safari */
+@supports (-webkit-appearance: none) {
+  .checkout-modal-overlay {
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  .checkout-modal-content {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Asegurar que el modal funcione en Firefox */
+@supports (-moz-appearance: none) {
+  .checkout-modal-overlay {
+    background: rgba(0, 0, 0, 0.98) !important;
+  }
+  
+  .checkout-modal-content {
+    background: rgba(0, 0, 0, 0.98) !important;
+  }
+}
+
+/* Estilos adicionales para dispositivos móviles muy pequeños */
+@media (max-width: 360px) {
+  .checkout-modal-overlay {
+    padding-top: clamp(5rem, 18vh, 8rem) !important; /* Separación máxima para pantallas muy pequeñas */
+    padding-bottom: clamp(2.5rem, 8vh, 4rem) !important;
+  }
+  
+  .checkout-modal-content {
+    margin-top: clamp(3.5rem, 12vh, 5.5rem) !important; /* Margen máximo para pantallas muy pequeñas */
+    margin-bottom: clamp(1.5rem, 5vh, 3rem) !important;
+    max-height: 75vh !important; /* Altura reducida para pantallas muy pequeñas */
+  }
+}
+
+
+
+
+
+/* Estilos para los botones del modal */
+.checkout-modal-content button {
+  min-height: clamp(32px, 6vh, 40px) !important; /* Mucho más pequeño */
+  max-height: clamp(36px, 7vh, 44px) !important; /* Altura máxima reducida */
+  line-height: 1.2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Botón principal del modal */
+.checkout-modal-content button[onClick*="nextStep"],
+.checkout-modal-content button[onClick*="handlePurchase"],
+.checkout-modal-content button[onClick*="handleClose"] {
+  padding: clamp(0.5rem, 1.2vw, 0.7rem) !important; /* Mucho más pequeño */
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Botón secundario del modal */
+.checkout-modal-content button[onClick*="prevStep"] {
+  padding: clamp(0.5rem, 1.2vw, 0.7rem) !important; /* Mucho más pequeño */
+  font-weight: 600 !important;
+}
+
+/* Ajuste especial para el paso 2 con dos botones */
+.checkout-modal-content button[onClick*="prevStep"],
+.checkout-modal-content button[onClick*="handlePurchase"] {
+  min-height: clamp(28px, 5vh, 36px) !important; /* Aún más pequeño para el paso 2 */
+  max-height: clamp(32px, 6vh, 40px) !important;
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem) !important; /* Texto más pequeño */
+}
+
+/* Layout específico para el paso 2 */
+.checkout-modal-content div[style*="flexWrap: nowrap"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important; /* Cambiado a center para centrar */
+  gap: clamp(0.8rem, 1.5vw, 1rem) !important;
+  width: 100% !important;
+}
+
+/* Botón "Atrás" en el paso 2 */
+.checkout-modal-content button[onClick*="prevStep"] {
+  flex: 0 1 auto !important;
+  min-width: clamp(120px, 25vw, 150px) !important;
+  max-width: clamp(140px, 30vw, 170px) !important;
+}
+
+/* Botón "Pagar" en el paso 2 */
+.checkout-modal-content button[onClick*="handlePurchase"] {
+  flex: 1 1 auto !important;
+  min-width: clamp(180px, 35vw, 220px) !important;
+}
+
+/* Asegurar que el contenido scrolleable llegue más cerca del botón */
 .checkout-modal-content {
-  animation: slideUp 0.4s ease-out;
+  /* Layout flexbox optimizado */
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-.checkout-modal-step {
-  animation: fadeInRight 0.3s ease-out;
+.checkout-modal-content .content-scroll {
+  /* Extender el contenido hacia abajo */
+  flex: 1 !important;
+  min-height: 0 !important;
+  /* Reducir el espacio inferior para acercar al botón */
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem) !important;
 }
 
-.checkout-modal-button {
-  animation: fadeInUp 0.3s ease-out;
+.checkout-modal-content > div:last-child {
+  /* Footer más cerca del contenido */
+  flex-shrink: 0 !important;
+  /* Reducir el espacio superior */
+  padding-top: clamp(0.5rem, 1.5vw, 1rem) !important;
 }
 
-.gradient-shift {
-  animation: gradientShift 3s ease-in-out infinite;
+/* Ajustes específicos para móvil - botón "Continuar al Pago" */
+@media (max-width: 768px) {
+  .checkout-modal-content {
+    /* Asegurar que el contenido tenga suficiente espacio */
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 80vh !important;
+  }
+  
+  .checkout-modal-content .content-scroll {
+    /* Dar más espacio al contenido principal */
+    flex: 1 !important;
+    min-height: 0 !important;
+    margin-bottom: clamp(0.5rem, 1.5vw, 1rem) !important; /* Reducido para que llegue más cerca del botón */
+  }
+  
+  .checkout-modal-content > div:last-child {
+    /* Footer con menos espacio arriba para que esté más cerca del contenido */
+    margin-top: auto !important;
+    padding-top: clamp(1rem, 2.5vw, 1.5rem) !important; /* Reducido para acercar al contenido */
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem) !important;
+  }
 }
 
-/* Asegurar que el modal esté centrado y visible */
-.checkout-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
+@media (max-width: 480px) {
+  .checkout-modal-content > div:last-child {
+    /* Menos espacio en móviles pequeños */
+    padding-top: clamp(1rem, 2.5vw, 1.5rem) !important; /* Reducido para acercar al contenido */
+    padding-bottom: clamp(2rem, 5vw, 3rem) !important;
+  }
+  
+  .checkout-modal-content .content-scroll {
+    /* Menos margen inferior para acercar al botón */
+    margin-bottom: clamp(0.5rem, 1.5vw, 1rem) !important;
+  }
 }
 
-.checkout-modal-content {
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
+/* Ajuste específico para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .checkout-modal-content > div:last-child {
+    /* Mínimo espacio en pantallas muy pequeñas */
+    padding-top: clamp(0.8rem, 2vw, 1.2rem) !important; /* Muy reducido para acercar al contenido */
+    padding-bottom: clamp(2rem, 5vw, 3rem) !important;
+  }
+  
+  .checkout-modal-content .content-scroll {
+    /* Mínimo margen inferior */
+    margin-bottom: clamp(0.3rem, 1vw, 0.8rem) !important;
+  }
 }
+
+

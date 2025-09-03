@@ -29,6 +29,8 @@ export function EventsSection() {
 
   // Track mouse position and window size for parallax effects
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
@@ -293,14 +295,17 @@ export function EventsSection() {
         )}
 
         {/* Estadísticas de eventos - Completamente Responsivas */}
-        <div style={{
-          marginTop: 'clamp(2rem, 5vw, 4rem)',
-          padding: 'clamp(1.5rem, 4vw, 2rem)',
-          background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: 'clamp(15px, 4vw, 20px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          textAlign: 'center'
-        }}>
+        <div 
+          className="events-stats-container"
+          style={{
+            marginTop: 'clamp(2rem, 5vw, 4rem)',
+            padding: 'clamp(1.5rem, 4vw, 2rem)',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: 'clamp(15px, 4vw, 20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            textAlign: 'center'
+          }}
+        >
           <h3 style={{
             color: '#00ffff',
             fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
@@ -369,24 +374,7 @@ export function EventsSection() {
         />
       )}
 
-      {/* Debug info para desarrollo */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: '#00ffff',
-          padding: '1rem',
-          borderRadius: '10px',
-          fontSize: '0.8rem',
-          zIndex: 9999,
-          border: '1px solid #00ffff'
-        }}>
-          <div>Modal: {isCheckoutOpen ? 'ABIERTO' : 'CERRADO'}</div>
-          <div>Evento: {selectedEvent?.title || 'Ninguno'}</div>
-        </div>
-      )}
+
 
       {/* CSS Animations */}
       <style jsx global>{`

@@ -37,8 +37,8 @@ export default function EventsPage() {
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
   const [isVisible, setIsVisible] = React.useState(false)
 
-  // Inicialización simple del componente
-  React.useState(() => {
+  // Inicialización del componente
+  React.useEffect(() => {
     setIsVisible(true)
     
     const handleMouseMove = (e: MouseEvent) => {
@@ -46,15 +46,24 @@ export default function EventsPage() {
     }
     
     const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+      if (typeof window !== 'undefined') {
+        setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+      }
     }
     
-    // Set initial window size
-    handleResize()
-    
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('resize', handleResize)
-  })
+    // Set initial window size solo en el cliente
+    if (typeof window !== 'undefined') {
+      handleResize()
+      
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('resize', handleResize)
+      
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [])
 
   const categories: Category[] = [
     { id: 'all', name: 'Todos', icon: '🎭', color: '#00ffff' },

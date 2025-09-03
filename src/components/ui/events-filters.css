@@ -8,11 +8,17 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: slideInDown 0.8s ease-out;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Barra de búsqueda */
 .search-section {
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .search-label {
@@ -34,6 +40,7 @@
   outline: none;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  box-sizing: border-box;
 }
 
 .search-input:focus {
@@ -276,7 +283,7 @@
 @media (min-width: 1440px) {
   .events-filters-container {
     padding: 2.5rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -329,7 +336,7 @@
 /* Layout para pantallas ultra-wide */
 @media (min-width: 1920px) {
   .events-filters-container {
-    max-width: 1600px;
+    max-width: 1400px;
     padding: 3rem;
   }
   
