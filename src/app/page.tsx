@@ -44,14 +44,21 @@ export default function HomePage() {
 
   // Función para abrir el modal de checkout
   const handleOpenCheckout = (event: any) => {
+    console.log('🎫 handleOpenCheckout llamado con evento:', event)
+    console.log('🎫 Estado actual - isCheckoutOpen:', isCheckoutOpen, 'selectedEvent:', selectedEvent)
+    
     setSelectedEvent(event)
     setIsCheckoutOpen(true)
+    
+    console.log('🎫 Estado después de set - isCheckoutOpen:', true, 'selectedEvent:', event)
   }
 
   // Función para cerrar el modal de checkout
   const handleCloseCheckout = () => {
+    console.log('🎫 handleCloseCheckout llamado')
     setIsCheckoutOpen(false)
     setSelectedEvent(null)
+    console.log('🎫 Modal cerrado - isCheckoutOpen: false, selectedEvent: null')
   }
 
   // Función para inicializar el componente
@@ -726,7 +733,7 @@ export default function HomePage() {
                             }}
                             onClick={() => handleOpenCheckout(event)}
                           >
-                            Ver Detalles
+                            🎫 Comprar Ticket
                           </button>
                         </div>
                       </div>
