@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
 import { EventCard } from '@/components/ui/event-card'
-import { EventsFilters } from '@/components/ui/events-filters'
 import { useEvents } from '@/hooks/use-events'
 
 export function EventsSection() {
@@ -15,6 +14,7 @@ export function EventsSection() {
   const {
     events,
     categories,
+    availableTags,
     filteredAndSortedEvents,
     searchTerm,
     setSearchTerm,
@@ -22,9 +22,20 @@ export function EventsSection() {
     setSelectedCategory,
     sortBy,
     setSortBy,
-    clearFilters,
+    priceRange,
+    setPriceRange,
+    dateRange,
+    setDateRange,
+    selectedTags,
+    setSelectedTags,
+    showAdvancedFilters,
+    setShowAdvancedFilters,
+    isLoading,
+    clearAllFilters,
+    toggleTag,
     getCategoryColor,
-    getCategoryInfo
+    getCategoryInfo,
+    getTagInfo
   } = useEvents()
 
   // Track mouse position and window size for parallax effects
@@ -140,18 +151,32 @@ export function EventsSection() {
         width: '100%'
       }}>
         
-
-
-        {/* Filtros y búsqueda */}
-        <EventsFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          categories={categories}
-        />
+        {/* Título de la sección de eventos */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: 'clamp(2rem, 5vw, 3rem)'
+        }}>
+          <h2 style={{
+            fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: 'clamp(1rem, 2vw, 1.5rem)'
+          }}>
+            🎭 Eventos Disponibles
+          </h2>
+          <p style={{
+            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+            color: '#b0b0b0',
+            maxWidth: '600px',
+            margin: '0 auto',
+            lineHeight: '1.6'
+          }}>
+            Explora nuestra colección de eventos únicos. Los filtros aplicados desde la página principal se mantienen aquí.
+          </p>
+        </div>
 
         {/* Grid de eventos - Completamente Responsivo */}
         <div 
@@ -192,7 +217,7 @@ export function EventsSection() {
             <h3 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', marginBottom: 'clamp(1rem, 2vw, 1rem)' }}>No se encontraron eventos</h3>
             <p style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1rem)' }}>Intenta ajustar los filtros de búsqueda o categoría.</p>
             <button
-              onClick={clearFilters}
+              onClick={clearAllFilters}
               style={{
                 marginTop: 'clamp(1rem, 2vw, 1rem)',
                 padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 3vw, 1.5rem)',

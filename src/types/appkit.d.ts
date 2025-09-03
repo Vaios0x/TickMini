@@ -38,9 +38,6 @@ declare module '@reown/appkit/react' {
 }
 
 declare module '@reown/appkit/networks' {
-  export const mainnet: any
-  export const arbitrum: any
-  export const polygon: any
   export const base: any
 }
 
@@ -49,4 +46,26 @@ declare module '@reown/appkit-adapter-wagmi' {
     constructor(config: any)
     wagmiConfig: any
   }
+}
+
+declare module '@reown/appkit' {
+  export interface CreateAppKitOptions {
+    adapters: any[]
+    projectId: string
+    networks: any[]
+    metadata: {
+      name: string
+      description: string
+      url: string
+      icons: string[]
+    }
+    features?: {
+      analytics?: boolean
+      email?: boolean
+      socials?: string[]
+      emailShowWallets?: boolean
+    }
+  }
+
+  export function createAppKit(options: CreateAppKitOptions): any
 }

@@ -1,0 +1,299 @@
+/* Estilos para botones con efectos neon pulsantes */
+
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(0, 255, 255, 0.1);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), inset 0 0 40px rgba(0, 255, 255, 0.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes neonBorder {
+  0%, 100% {
+    background-position: 0% 50%;
+    opacity: 1;
+  }
+  25% {
+    background-position: 100% 50%;
+    opacity: 0.8;
+  }
+  50% {
+    background-position: 100% 100%;
+    opacity: 1;
+  }
+  75% {
+    background-position: 0% 100%;
+    opacity: 0.8;
+  }
+}
+
+@keyframes neonGlow {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(0, 255, 255, 1));
+  }
+}
+
+@keyframes neonFlicker {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  10% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 0.9;
+    transform: scale(0.99);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.97);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.neon-button-connect,
+.neon-button-connected {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: neonFlicker 4s ease-in-out infinite;
+}
+
+.neon-button-connect:hover,
+.neon-button-connected:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+  animation: none;
+}
+
+.neon-button-connect:hover .neon-border,
+.neon-button-connected:hover .neon-border {
+  animation: neonBorder 1.5s ease-in-out infinite;
+}
+
+.neon-button-connect:hover .neon-glow,
+.neon-button-connected:hover .neon-glow {
+  animation: neonGlow 1s ease-in-out infinite;
+}
+
+/* Efecto de partículas flotantes neon */
+.neon-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.neon-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #00ffff;
+  border-radius: 50%;
+  animation: floatParticle 4s ease-in-out infinite;
+  box-shadow: 0 0 4px currentColor;
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+    scale: 0.5;
+  }
+  25% {
+    opacity: 1;
+    scale: 1;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.8;
+    scale: 1.2;
+  }
+  75% {
+    opacity: 0.5;
+    scale: 0.8;
+  }
+}
+
+/* Efecto de ondas neon */
+.neon-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  animation: rippleEffect 1s ease-out;
+}
+
+@keyframes rippleEffect {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+/* Variaciones de colores neon - Colores brillantes */
+.neon-cyan {
+  --neon-color: #00ffff;
+  --neon-glow: rgba(0, 255, 255, 0.8);
+}
+
+.neon-blue {
+  --neon-color: #0080ff;
+  --neon-glow: rgba(0, 128, 255, 0.8);
+}
+
+.neon-green {
+  --neon-color: #00ff80;
+  --neon-glow: rgba(0, 255, 128, 0.8);
+}
+
+.neon-purple {
+  --neon-color: #8000ff;
+  --neon-glow: rgba(128, 0, 255, 0.8);
+}
+
+/* Variaciones de colores neon - Colores oscuros con letras blancas */
+.neon-dark-red {
+  --neon-color: #ff0000;
+  --neon-glow: rgba(255, 0, 0, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(20, 0, 0, 0.95), rgba(40, 0, 0, 0.98));
+}
+
+.neon-dark-orange {
+  --neon-color: #ff6600;
+  --neon-glow: rgba(255, 102, 0, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(25, 10, 0, 0.95), rgba(50, 20, 0, 0.98));
+}
+
+.neon-dark-yellow {
+  --neon-color: #ffcc00;
+  --neon-glow: rgba(255, 204, 0, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(25, 25, 0, 0.95), rgba(50, 50, 0, 0.98));
+}
+
+.neon-dark-pink {
+  --neon-color: #ff0080;
+  --neon-glow: rgba(255, 0, 128, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(25, 0, 20, 0.95), rgba(50, 0, 40, 0.98));
+}
+
+.neon-dark-cyan {
+  --neon-color: #00ccff;
+  --neon-glow: rgba(0, 204, 255, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(0, 20, 25, 0.95), rgba(0, 40, 50, 0.98));
+}
+
+.neon-dark-blue {
+  --neon-color: #0066ff;
+  --neon-glow: rgba(0, 102, 255, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(0, 10, 25, 0.95), rgba(0, 20, 50, 0.98));
+}
+
+.neon-dark-green {
+  --neon-color: #00cc66;
+  --neon-glow: rgba(0, 204, 102, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(0, 25, 10, 0.95), rgba(0, 50, 20, 0.98));
+}
+
+.neon-dark-purple {
+  --neon-color: #6600ff;
+  --neon-glow: rgba(102, 0, 255, 0.8);
+  --text-color: #ffffff;
+  --bg-color: linear-gradient(135deg, rgba(20, 0, 25, 0.95), rgba(40, 0, 50, 0.98));
+}
+
+/* Efectos adicionales para hover */
+.neon-button-connect:active,
+.neon-button-connected:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Efecto de brillo en el texto */
+.neon-button-connect span,
+.neon-button-connected span {
+  text-shadow: 0 0 5px currentColor;
+  transition: text-shadow 0.3s ease;
+}
+
+.neon-button-connect:hover span,
+.neon-button-connected:hover span {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+/* Efecto de resplandor en el borde */
+.neon-button-connect::before,
+.neon-button-connected::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+  border-radius: 31px;
+  z-index: -2;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .neon-button-connect,
+  .neon-button-connected {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .neon-particle {
+    width: 1px;
+    height: 1px;
+  }
+}

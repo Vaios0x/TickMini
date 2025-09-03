@@ -2,15 +2,44 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useAppKitConnection } from '@/hooks/use-appkit'
+import dynamic from 'next/dynamic'
+import { ConnectButton } from '@/components/ui/connect-button'
+
+// Import simple connect button that works immediately
+const ConnectButtonSimple = dynamic(
+  () => import('@/components/ui/connect-button-simple').then((mod) => ({ default: mod.ConnectButtonSimple })),
+  {
+    ssr: false,
+            loading: () => (
+          <button
+            disabled
+            style={{
+              background: 'linear-gradient(135deg, rgba(20, 0, 25, 0.95), rgba(40, 0, 50, 0.98))',
+              border: '2px solid #6600ff',
+              color: '#ffffff',
+              padding: '0.9rem 1.8rem',
+              borderRadius: '30px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.8rem',
+              backdropFilter: 'blur(15px)',
+              cursor: 'not-allowed',
+              opacity: 0.7
+            }}
+          >
+            <span style={{ fontSize: '1.2rem' }}>🔑</span>
+            <span>Cargando...</span>
+          </button>
+        ),
+  }
+)
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  
-  // Hook para conexión de wallet
-  const { connect, isConnected, formattedAddress } = useAppKitConnection()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -317,76 +346,14 @@ export function Navbar() {
           </div>
         )}
 
-        {/* Botón Conectar Wallet con glassmorphism premium - Solo visible en desktop */}
+        {/* Botón Conectar Wallet - Solo visible en desktop */}
         {!isMobile && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
             position: 'relative'
           }} className="desktop-wallet">
-            <button 
-              onClick={connect}
-              style={{
-                background: isConnected 
-                  ? 'linear-gradient(135deg, rgba(0, 255, 0, 0.8), rgba(0, 100, 0, 0.9))'
-                  : 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 20, 40, 0.9))',
-                border: isConnected ? '2px solid #00ff00' : '2px solid #00ffff',
-                color: isConnected ? '#00ff00' : '#00ffff',
-                padding: '0.9rem 1.8rem',
-                borderRadius: '30px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.8rem',
-                boxShadow: isConnected 
-                  ? '0 8px 32px rgba(0, 255, 0, 0.3)' 
-                  : '0 8px 32px rgba(0, 255, 255, 0.3)',
-                backdropFilter: 'blur(15px)',
-                position: 'relative',
-                overflow: 'hidden'
-              }} 
-              className="btn-outline-neon"
-              tabIndex={0}
-              aria-label={isConnected ? "Wallet conectada" : "Conectar wallet"}
-            >
-              {/* Efecto de brillo interno */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1))',
-                opacity: 0,
-                transition: 'opacity 0.3s ease'
-              }} />
-              
-              {/* Icono con glow */}
-              <span style={{
-                fontSize: '1.2rem',
-                filter: isConnected 
-                  ? 'drop-shadow(0 0 8px rgba(0, 255, 0, 0.6))' 
-                  : 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.6))',
-                position: 'relative',
-                zIndex: 1
-              }}>
-                {isConnected ? '🔗' : '🔑'}
-              </span>
-              
-              {/* Texto */}
-              <span style={{
-                position: 'relative',
-                zIndex: 1,
-                textShadow: isConnected 
-                  ? '0 0 10px rgba(0, 255, 0, 0.5)' 
-                  : '0 0 10px rgba(0, 255, 255, 0.5)'
-              }}>
-                {isConnected ? `🔗 ${formattedAddress}` : 'Conectar Wallet'}
-              </span>
-            </button>
+            <ConnectButtonSimple />
             
             {/* Efecto de partículas flotantes */}
             <div style={{
@@ -395,7 +362,7 @@ export function Navbar() {
               right: '-20px',
               width: '40px',
               height: '40px',
-              background: 'radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(102, 0, 255, 0.2) 0%, transparent 70%)',
               borderRadius: '50%',
               animation: 'float 4s ease-in-out infinite',
               pointerEvents: 'none'
@@ -628,53 +595,9 @@ export function Navbar() {
               paddingTop: '2rem',
               borderTop: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
-              <button 
-                onClick={connect}
-                style={{
-                  background: isConnected 
-                    ? 'linear-gradient(135deg, rgba(0, 255, 0, 0.8), rgba(0, 100, 0, 0.9))'
-                    : 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 20, 40, 0.9))',
-                  border: isConnected ? '2px solid #00ff00' : '2px solid #00ffff',
-                  color: isConnected ? '#00ff00' : '#00ffff',
-                  padding: '1.5rem 2rem',
-                  borderRadius: '35px',
-                  fontSize: '1.3rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '1.5rem',
-                  boxShadow: isConnected 
-                    ? '0 8px 30px rgba(0, 255, 0, 0.4)' 
-                    : '0 8px 30px rgba(0, 255, 255, 0.4)',
-                  backdropFilter: 'blur(15px)',
-                  width: '100%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  minHeight: '80px'
-                }} 
-                className="btn-outline-neon mobile-wallet-btn"
-                tabIndex={0}
-                aria-label={isConnected ? "Wallet conectada" : "Conectar wallet"}
-              >
-                <span style={{
-                  fontSize: '2rem',
-                  filter: isConnected 
-                    ? 'drop-shadow(0 0 10px rgba(0, 255, 0, 0.6))' 
-                    : 'drop-shadow(0 0 10px rgba(0, 255, 255, 0.6))'
-                }}>
-                  {isConnected ? '🔗' : '🔑'}
-                </span>
-                <span style={{
-                  textShadow: isConnected 
-                    ? '0 0 15px rgba(0, 255, 0, 0.6)' 
-                    : '0 0 15px rgba(0, 255, 255, 0.6)'
-                }}>
-                  {isConnected ? `🔗 ${formattedAddress}` : 'Conectar Wallet'}
-                </span>
-              </button>
+              <div style={{ width: '100%' }}>
+                <ConnectButton onConnect={closeMobileMenu} />
+              </div>
             </div>
           </div>
         </div>
@@ -719,36 +642,21 @@ export function Navbar() {
           opacity: 1 !important;
         }
         
-        .btn-outline-neon:hover {
-          background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 30, 60, 1)) !important;
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
-          border-color: #00ffff;
-        }
-        
-        .btn-outline-neon:hover > div {
-          opacity: 1 !important;
-        }
         
         .mobile-nav-link:hover {
-          background: rgba(0, 255, 255, 0.1) !important;
-          border-color: rgba(0, 255, 255, 0.3) !important;
+          background: rgba(102, 0, 255, 0.1) !important;
+          border-color: rgba(102, 0, 255, 0.3) !important;
           transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+          box-shadow: 0 8px 25px rgba(102, 0, 255, 0.3);
         }
         
         .mobile-menu-btn:hover {
-          background: rgba(0, 255, 255, 0.2) !important;
-          border-color: rgba(0, 255, 255, 0.5) !important;
+          background: rgba(102, 0, 255, 0.2) !important;
+          border-color: rgba(102, 0, 255, 0.5) !important;
           transform: scale(1.05);
-          box-shadow: 0 6px 25px rgba(0, 255, 255, 0.4);
+          box-shadow: 0 6px 25px rgba(102, 0, 255, 0.4);
         }
         
-        .mobile-wallet-btn:hover {
-          background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 30, 60, 1)) !important;
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
-        }
         
         /* Scrollbar personalizado para el menú mobile */
         .mobile-menu-content::-webkit-scrollbar {
@@ -761,12 +669,12 @@ export function Navbar() {
         }
         
         .mobile-menu-content::-webkit-scrollbar-thumb {
-          background: rgba(0, 255, 255, 0.4);
+          background: rgba(102, 0, 255, 0.4);
           border-radius: 4px;
         }
         
         .mobile-menu-content::-webkit-scrollbar-thumb:hover {
-          background: rgba(0, 255, 255, 0.6);
+          background: rgba(102, 0, 255, 0.6);
         }
         
         /* Prevenir scroll del body cuando el menú está abierto */

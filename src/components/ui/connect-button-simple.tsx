@@ -1,26 +1,15 @@
-"use client"
+'use client'
 
 import { useAppKitConnection } from '@/hooks/use-appkit'
-import { Button } from './button'
-import { Wallet, ChevronDown } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import './neon-button.css'
 
-interface ConnectButtonProps {
+interface ConnectButtonSimpleProps {
   onConnect?: () => void
 }
 
-export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
-  const { 
-    isConnected, 
-    address, 
-    formattedAddress, 
-    connect, 
-    disconnect,
-    network,
-    formattedBalance 
-  } = useAppKitConnection()
-  
+export function ConnectButtonSimple({ onConnect }: ConnectButtonSimpleProps = {}) {
+  const { connect, isConnected, formattedAddress, disconnect, formattedBalance } = useAppKitConnection()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -37,16 +26,30 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
     }
   }, [])
 
+  const handleClick = () => {
+    if (isConnected) {
+      setIsDropdownOpen(!isDropdownOpen)
+    } else {
+      console.log('Connect button clicked!')
+      if (connect) {
+        connect()
+        onConnect?.() // Call onConnect callback if provided
+      } else {
+        console.error('AppKit connect function not available')
+      }
+    }
+  }
+
   const handleDisconnect = () => {
     disconnect()
     setIsDropdownOpen(false)
   }
 
-  if (isConnected && address) {
+  if (isConnected && formattedAddress) {
     return (
-      <div className="relative" ref={dropdownRef}>
-        <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+      <div style={{ position: 'relative' }} ref={dropdownRef}>
+        <button 
+          onClick={handleClick}
           style={{
             background: 'linear-gradient(135deg, rgba(20, 0, 25, 0.95), rgba(40, 0, 50, 0.98))',
             border: '2px solid #6600ff',
@@ -62,13 +65,9 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
             cursor: 'pointer',
             transition: 'all 0.3s ease',
             position: 'relative',
-            overflow: 'hidden',
-            width: '100%',
-            justifyContent: 'center'
+            overflow: 'hidden'
           }}
           className="neon-button-connected neon-dark-purple"
-          tabIndex={0}
-          aria-label="Menú de wallet"
         >
           {/* Efecto de glow neon pulsante */}
           <div 
@@ -120,9 +119,9 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
             ))}
           </div>
           
-          <Wallet className="h-4 w-4" style={{ zIndex: 1, position: 'relative' }} />
+          <span style={{ fontSize: '1.2rem', zIndex: 1, position: 'relative' }}>🟢</span>
           <span style={{ zIndex: 1, position: 'relative' }}>{formattedAddress}</span>
-          <ChevronDown className="h-4 w-4" style={{ zIndex: 1, position: 'relative' }} />
+          <span style={{ fontSize: '0.8rem', zIndex: 1, position: 'relative' }}>▼</span>
         </button>
         
         {isDropdownOpen && (
@@ -177,14 +176,9 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
     )
   }
 
-  const handleConnect = () => {
-    connect()
-    onConnect?.() // Call onConnect callback if provided
-  }
-
   return (
-    <button
-      onClick={handleConnect}
+    <button 
+      onClick={handleClick}
       style={{
         background: 'linear-gradient(135deg, rgba(20, 0, 25, 0.95), rgba(40, 0, 50, 0.98))',
         border: '2px solid #6600ff',
@@ -200,13 +194,9 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        justifyContent: 'center'
+        overflow: 'hidden'
       }}
       className="neon-button-connect neon-dark-purple"
-      tabIndex={0}
-      aria-label="Conectar wallet"
     >
       {/* Efecto de glow neon pulsante */}
       <div 
@@ -258,7 +248,7 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
         ))}
       </div>
       
-      <Wallet className="h-4 w-4" style={{ zIndex: 1, position: 'relative' }} />
+      <span style={{ fontSize: '1.2rem', zIndex: 1, position: 'relative' }}>🔑</span>
       <span style={{ zIndex: 1, position: 'relative' }}>Conectar Wallet</span>
     </button>
   )

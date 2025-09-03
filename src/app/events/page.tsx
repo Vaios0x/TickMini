@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
+import { AdvancedSearch } from '@/components/ui/advanced-search'
+import { useEvents } from '@/hooks/use-events'
 import Link from 'next/link'
 
 interface Event {
@@ -27,9 +29,29 @@ interface Category {
 }
 
 export default function EventsPage() {
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [selectedCategory, setSelectedCategory] = React.useState('all')
-  const [sortBy, setSortBy] = React.useState('date')
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
+    sortBy,
+    setSortBy,
+    priceRange,
+    setPriceRange,
+    dateRange,
+    setDateRange,
+    selectedTags,
+    setSelectedTags,
+    showAdvancedFilters,
+    setShowAdvancedFilters,
+    categories,
+    availableTags,
+    filteredAndSortedEvents,
+    isLoading,
+    clearAllFilters,
+    toggleTag
+  } = useEvents()
+  
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false)
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
@@ -64,17 +86,6 @@ export default function EventsPage() {
       }
     }
   }, [])
-
-  const categories: Category[] = [
-    { id: 'all', name: 'Todos', icon: '🎭', color: '#00ffff' },
-    { id: 'music', name: 'Música', icon: '🎵', color: '#ff00ff' },
-    { id: 'tech', name: 'Tecnología', icon: '💻', color: '#00ff00' },
-    { id: 'sports', name: 'Deportes', icon: '⚽', color: '#ffff00' },
-    { id: 'art', name: 'Arte', icon: '🎨', color: '#ff8000' },
-    { id: 'business', name: 'Negocios', icon: '💼', color: '#8000ff' },
-    { id: 'food', name: 'Gastronomía', icon: '🍕', color: '#ff0080' },
-    { id: 'gaming', name: 'Gaming', icon: '🎮', color: '#00ff80' }
-  ]
 
   const events: Event[] = [
     {
@@ -219,32 +230,7 @@ export default function EventsPage() {
     }
   ]
 
-  // Optimized filtering and sorting without useMemo
-  const filteredAndSortedEvents = (() => {
-    let filtered = events.filter(event => {
-      const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           event.organizer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           event.location.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory
-      return matchesSearch && matchesCategory
-    })
 
-    return filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'date':
-          return new Date(a.date.split(' ')[0]).getTime() - new Date(b.date.split(' ')[0]).getTime()
-        case 'price':
-          return parseFloat(a.price.split(' ')[0]) - parseFloat(b.price.split(' ')[0])
-        case 'name':
-          return a.title.localeCompare(b.title)
-        case 'popularity':
-          return (b.totalTickets - b.availableTickets) - (a.totalTickets - a.availableTickets)
-        default:
-          return 0
-      }
-    })
-  })()
 
   const handleBuyTicket = (event: Event) => {
     setSelectedEvent(event)
@@ -469,199 +455,66 @@ export default function EventsPage() {
           </div>
       </div>
 
-        {/* Search and Filters - Completamente Responsivos */}
+        {/* Advanced Search Component */}
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
           padding: '0 clamp(1rem, 3vw, 2rem)',
           marginBottom: 'clamp(2rem, 5vw, 4rem)'
         }}>
-          {/* Advanced Search Bar */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(255, 0, 255, 0.08))',
-            backdropFilter: 'blur(25px)',
-            borderRadius: 'clamp(20px, 5vw, 30px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3), 0 0 100px rgba(0, 255, 255, 0.1)',
-            marginBottom: 'clamp(2rem, 4vw, 3rem)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            {/* Search Background Effects */}
-            <div style={{
-              position: 'absolute',
-              top: '-50%',
-              left: '-50%',
-              width: '200%',
-              height: '200%',
-              background: 'radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%)',
-              animation: 'pulse 6s ease-in-out infinite'
-            }} />
-
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              {/* Main Search Input */}
-              <div style={{
-                position: 'relative',
-                marginBottom: 'clamp(1.5rem, 3vw, 2rem)'
-              }}>
-                <input
-                  type="text"
-                  placeholder="🔍 Buscar eventos, organizadores, ubicaciones..."
-                  value={searchTerm}
-                  onChange={(e: any) => setSearchTerm(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: 'clamp(1rem, 2.5vw, 1.5rem) clamp(1.5rem, 3vw, 2rem)',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: 'clamp(15px, 4vw, 20px)',
-                    color: '#ffffff',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(15px)'
-                  }}
-                  onFocus={(e: any) => {
-                    e.target.style.borderColor = 'rgba(0, 255, 255, 0.6)'
-                    e.target.style.boxShadow = '0 0 30px rgba(0, 255, 255, 0.3)'
-                  }}
-                  onBlur={(e: any) => {
-                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-                    e.target.style.boxShadow = 'none'
-                  }}
-                  tabIndex={0}
-                  aria-label="Buscar eventos"
-                />
-                <div style={{
-                  position: 'absolute',
-                  right: 'clamp(0.8rem, 2vw, 1rem)',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
-                  opacity: '0.6'
-                }}>
-                  ✨
-                </div>
-              </div>
-
-              {/* Filters Row - Completamente Responsivo */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(180px, 35vw, 220px), 1fr))',
-                gap: 'clamp(1rem, 2vw, 1.5rem)',
-                alignItems: 'center',
-                justifyItems: 'center',
-                justifyContent: 'center'
-              }}>
-                {/* Category Filter */}
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e: any) => setSelectedCategory(e.target.value)}
-                    style={{
-                      padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 2.5vw, 1.5rem)',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '2px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: 'clamp(12px, 3vw, 15px)',
-                      color: '#ffffff',
-                      fontSize: 'clamp(0.8rem, 2.5vw, 1rem)',
-                      outline: 'none',
-                      width: '100%',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      backdropFilter: 'blur(15px)'
-                    }}
-                    onFocus={(e: any) => {
-                      e.target.style.borderColor = 'rgba(0, 255, 255, 0.6)'
-                      e.target.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.2)'
-                    }}
-                    onBlur={(e: any) => {
-                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-                      e.target.style.boxShadow = 'none'
-                    }}
-                    tabIndex={0}
-                    aria-label="Filtrar por categoría"
-                  >
-                    {categories.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.icon} {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Sort Filter */}
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={sortBy}
-                    onChange={(e: any) => setSortBy(e.target.value)}
-                    style={{
-                      padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 2.5vw, 1.5rem)',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '2px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: 'clamp(12px, 3vw, 15px)',
-                      color: '#ffffff',
-                      fontSize: 'clamp(0.8rem, 2.5vw, 1rem)',
-                      outline: 'none',
-                      width: '100%',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      backdropFilter: 'blur(15px)'
-                    }}
-                    onFocus={(e: any) => {
-                      e.target.style.borderColor = 'rgba(255, 0, 255, 0.6)'
-                      e.target.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.2)'
-                    }}
-                    onBlur={(e: any) => {
-                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-                      e.target.style.boxShadow = 'none'
-                    }}
-                    tabIndex={0}
-                    aria-label="Ordenar eventos"
-                  >
-                    <option value="date">📅 Por Fecha</option>
-                    <option value="price">💰 Por Precio</option>
-                    <option value="name">🔤 Por Nombre</option>
-                    <option value="popularity">🔥 Por Popularidad</option>
-                  </select>
-                </div>
-
-                {/* Create Event Button */}
-                <Link href="/create-event">
-                  <button style={{
-                    background: 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
-                    color: '#000000',
-                    border: 'none',
-                    padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
-                    borderRadius: 'clamp(15px, 4vw, 20px)',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    fontWeight: '900',
-                    cursor: 'pointer',
-                    transition: 'all 0.4s ease',
-                    boxShadow: '0 10px 30px rgba(0, 255, 255, 0.4)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    transform: 'translateY(0)',
-                    width: '100%',
-                    minHeight: 'clamp(45px, 8vw, 55px)'
-                  }}
-                  onMouseEnter={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(-5px) scale(1.05)'
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.6)'
-                  }}
-                  onMouseLeave={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.4)'
-                  }}
-                  tabIndex={0}
-                  aria-label="Crear nuevo evento"
-                  >
-                    ✨ Crear Evento
-                  </button>
-                </Link>
-              </div>
-            </div>
+          <AdvancedSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            showAdvancedFilters={showAdvancedFilters}
+            setShowAdvancedFilters={setShowAdvancedFilters}
+            categories={categories}
+            totalResults={filteredAndSortedEvents.length}
+            isLoading={isLoading}
+          />
+          
+          {/* Create Event Button */}
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <Link href="/create-event">
+              <button style={{
+                background: 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
+                color: '#000000',
+                border: 'none',
+                padding: 'clamp(1rem, 2.5vw, 1.5rem) clamp(2rem, 4vw, 3rem)',
+                borderRadius: 'clamp(20px, 5vw, 25px)',
+                fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+                fontWeight: '900',
+                cursor: 'pointer',
+                transition: 'all 0.4s ease',
+                boxShadow: '0 15px 35px rgba(0, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                transform: 'translateY(0)',
+                minHeight: 'clamp(50px, 10vw, 60px)'
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(-5px) scale(1.05)'
+                e.currentTarget.style.boxShadow = '0 25px 50px rgba(0, 255, 255, 0.6)'
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 255, 255, 0.4)'
+              }}
+              tabIndex={0}
+              aria-label="Crear nuevo evento"
+              >
+                ✨ Crear Evento
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -738,6 +591,29 @@ export default function EventsPage() {
                   {categories.find(cat => cat.id === event.category)?.icon} {categories.find(cat => cat.id === event.category)?.name}
                 </div>
 
+                {/* Rating Badge */}
+                {event.rating && (
+                  <div style={{
+                    position: 'absolute',
+                    top: 'clamp(1rem, 3vw, 1.5rem)',
+                    left: 'clamp(1rem, 3vw, 1.5rem)',
+                    background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1))',
+                    border: '1px solid rgba(255, 215, 0, 0.4)',
+                    borderRadius: 'clamp(15px, 4vw, 20px)',
+                    padding: 'clamp(0.4rem, 1vw, 0.5rem) clamp(0.8rem, 2vw, 1rem)',
+                    fontSize: 'clamp(0.7rem, 2vw, 0.9rem)',
+                    color: '#FFD700',
+                    fontWeight: '700',
+                    backdropFilter: 'blur(10px)',
+                    zIndex: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem'
+                  }}>
+                    ⭐ {event.rating}
+                  </div>
+                )}
+
               {/* Event Image */}
               <div style={{
                 fontSize: 'clamp(3rem, 8vw, 5rem)',
@@ -775,19 +651,65 @@ export default function EventsPage() {
                 {event.description}
               </p>
 
+              {/* Event Tags */}
+              {event.tags && event.tags.length > 0 && (
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  justifyContent: 'center',
+                  marginBottom: 'clamp(1.5rem, 3vw, 2rem)'
+                }}>
+                  {event.tags.slice(0, 4).map((tagId, index) => {
+                    const tag = availableTags.find(t => t.id === tagId)
+                    return tag ? (
+                      <span
+                        key={index}
+                        style={{
+                          background: `linear-gradient(135deg, ${tag.color}20, ${tag.color}10)`,
+                          border: `1px solid ${tag.color}30`,
+                          borderRadius: 'clamp(8px, 2vw, 12px)',
+                          padding: 'clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 1.5vw, 0.8rem)',
+                          fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
+                          color: tag.color,
+                          fontWeight: '600',
+                          backdropFilter: 'blur(10px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.3rem'
+                        }}
+                      >
+                        {tag.icon} {tag.name}
+                      </span>
+                    ) : null
+                  })}
+                  {event.tags.length > 4 && (
+                    <span style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: 'clamp(8px, 2vw, 12px)',
+                      padding: 'clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 1.5vw, 0.8rem)',
+                      fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
+                      color: '#ffffff',
+                      fontWeight: '600',
+                      backdropFilter: 'blur(10px)'
+                    }}>
+                      +{event.tags.length - 4} más
+                    </span>
+                  )}
+                </div>
+              )}
+
                 {/* Event Details Grid */}
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(180px, 35vw, 220px), 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
                   gap: 'clamp(0.8rem, 2vw, 1rem)',
-                  marginBottom: 'clamp(1.5rem, 3vw, 2rem)',
-                  justifyItems: 'center',
-                  justifyContent: 'center'
+                  marginBottom: 'clamp(1.5rem, 3vw, 2rem)'
                 }}>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
                     gap: 'clamp(0.6rem, 1.5vw, 0.8rem)',
                     color: '#e0e0e0',
                     fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
@@ -796,11 +718,15 @@ export default function EventsPage() {
                     borderRadius: 'clamp(8px, 2vw, 12px)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
                     width: '100%',
-                    maxWidth: 'clamp(180px, 35vw, 220px)',
-                    textAlign: 'center'
+                    minWidth: '0'
                   }}>
                     <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>📅</span>
-                    <span style={{ wordBreak: 'break-word' }}>{event.date}</span>
+                    <span style={{ 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: 'nowrap',
+                      flex: '1'
+                    }}>{event.date}</span>
                   </div>
                   <div style={{
                     display: 'flex',
@@ -811,10 +737,17 @@ export default function EventsPage() {
                     padding: 'clamp(0.5rem, 1vw, 0.8rem)',
                     background: 'rgba(255, 255, 255, 0.03)',
                     borderRadius: 'clamp(8px, 2vw, 12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    width: '100%',
+                    minWidth: '0'
                   }}>
                     <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>🕐</span>
-                    <span style={{ wordBreak: 'break-word' }}>{event.time}</span>
+                    <span style={{ 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: 'nowrap',
+                      flex: '1'
+                    }}>{event.time}</span>
                   </div>
                   <div style={{
                     display: 'flex',
@@ -825,10 +758,17 @@ export default function EventsPage() {
                     padding: 'clamp(0.5rem, 1vw, 0.8rem)',
                     background: 'rgba(255, 255, 255, 0.03)',
                     borderRadius: 'clamp(8px, 2vw, 12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    width: '100%',
+                    minWidth: '0'
                   }}>
                     <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>📍</span>
-                    <span style={{ wordBreak: 'break-word' }}>{event.location}</span>
+                    <span style={{ 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: 'nowrap',
+                      flex: '1'
+                    }}>{event.location}</span>
                   </div>
                   <div style={{
                     display: 'flex',
@@ -839,11 +779,72 @@ export default function EventsPage() {
                     padding: 'clamp(0.5rem, 1vw, 0.8rem)',
                     background: 'rgba(255, 255, 255, 0.03)',
                     borderRadius: 'clamp(8px, 2vw, 12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    width: '100%',
+                    minWidth: '0'
                   }}>
                     <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>👤</span>
-                    <span style={{ wordBreak: 'break-word' }}>{event.organizer}</span>
+                    <span style={{ 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: 'nowrap',
+                      flex: '1'
+                    }}>{event.organizer}</span>
                   </div>
+                  
+                  {/* Event Type */}
+                  {event.eventType && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'clamp(0.6rem, 1.5vw, 0.8rem)',
+                      color: '#e0e0e0',
+                      fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
+                      padding: 'clamp(0.5rem, 1vw, 0.8rem)',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      borderRadius: 'clamp(8px, 2vw, 12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      width: '100%',
+                      minWidth: '0'
+                    }}>
+                      <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>
+                        {event.eventType === 'presential' ? '🎭' : event.eventType === 'virtual' ? '💻' : '🌐'}
+                      </span>
+                      <span style={{ 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap',
+                        flex: '1'
+                      }}>
+                        {event.eventType === 'presential' ? 'Presencial' : event.eventType === 'virtual' ? 'Virtual' : 'Híbrido'}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Distance */}
+                  {event.distance !== undefined && event.distance > 0 && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'clamp(0.6rem, 1.5vw, 0.8rem)',
+                      color: '#e0e0e0',
+                      fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
+                      padding: 'clamp(0.5rem, 1vw, 0.8rem)',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      borderRadius: 'clamp(8px, 2vw, 12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      width: '100%',
+                      minWidth: '0'
+                    }}>
+                      <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>📍</span>
+                      <span style={{ 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap',
+                        flex: '1'
+                      }}>{event.distance.toFixed(1)} km</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Price Section */}
