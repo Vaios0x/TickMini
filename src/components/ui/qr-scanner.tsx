@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 
 interface QRScannerProps {
   onScan: (data: string) => void
@@ -18,47 +18,15 @@ export function QRScanner({ onScan, onError, onClose, isOpen }: QRScannerProps) 
   const streamRef = useRef<MediaStream | null>(null)
   const animationFrameRef = useRef<number>()
 
-  useEffect(() => {
-    if (isOpen && hasPermission === null) {
-      requestCameraPermission()
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
     }
-    
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-      }
-      stopCamera()
-    }
-  }, [isOpen, hasPermission])
+    setIsScanning(false)
+  }, [])
 
-  const requestCameraPermission = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: 'environment',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        } 
-      })
-      
-      setHasPermission(true)
-      streamRef.current = stream
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        videoRef.current.play()
-        setIsScanning(true)
-        startScanning()
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido'
-      setHasPermission(false)
-      setError(`Error al acceder a la cámara: ${errorMessage}`)
-      if (onError) onError(errorMessage)
-    }
-  }
-
-  const startScanning = () => {
+  const startScanning = useCallback(() => {
     if (!videoRef.current || !canvasRef.current) return
 
     const video = videoRef.current
@@ -96,15 +64,47 @@ export function QRScanner({ onScan, onError, onClose, isOpen }: QRScannerProps) 
     }
 
     scanFrame()
-  }
+  }, [onScan, stopCamera])
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
-      streamRef.current = null
+  const requestCameraPermission = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
+      })
+      
+      setHasPermission(true)
+      streamRef.current = stream
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        videoRef.current.play()
+        setIsScanning(true)
+        startScanning()
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido'
+      setHasPermission(false)
+      setError(`Error al acceder a la cámara: ${errorMessage}`)
+      if (onError) onError(errorMessage)
     }
-    setIsScanning(false)
-  }
+  }, [startScanning, onError])
+
+  useEffect(() => {
+    if (isOpen && hasPermission === null) {
+      requestCameraPermission()
+    }
+    
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+      stopCamera()
+    }
+  }, [isOpen, hasPermission, requestCameraPermission, stopCamera])
 
   const handleClose = () => {
     stopCamera()

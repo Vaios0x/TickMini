@@ -15,7 +15,7 @@ interface AdvancedSearchProps {
   dateRange: [Date | null, Date | null]
   setDateRange: (range: [Date | null, Date | null]) => void
   selectedTags: string[]
-  setSelectedTags: (tags: string[]) => void
+  setSelectedTags: (tags: string[] | ((prev: string[]) => string[])) => void
   showAdvancedFilters: boolean
   setShowAdvancedFilters: (show: boolean) => void
   categories: Array<{
@@ -131,7 +131,7 @@ export function AdvancedSearch({
 
   // Toggle tag
   const toggleTag = useCallback((tagId: string) => {
-    setSelectedTags(prev => 
+    setSelectedTags((prev: string[]) => 
       prev.includes(tagId) 
         ? prev.filter(id => id !== tagId)
         : [...prev, tagId]
