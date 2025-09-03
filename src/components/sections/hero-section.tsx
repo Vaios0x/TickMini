@@ -106,7 +106,7 @@ export function HeroSection() {
           >
             <Link 
               href="/events"
-              className="text-lg px-8 py-6 h-auto text-white shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="text-lg px-8 py-6 h-auto text-white shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               style={{
                 background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
                 border: 'none'
@@ -118,7 +118,7 @@ export function HeroSection() {
             </Link>
             
             <button 
-              className="text-lg px-8 py-6 h-auto transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="text-lg px-8 py-6 h-auto transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               style={{
                 background: 'transparent',
                 border: '2px solid #ffff00',

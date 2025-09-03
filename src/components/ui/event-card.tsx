@@ -78,24 +78,7 @@ export function EventCard({ event, categoryColor, categoryName, categoryIcon, on
         {categoryIcon} {categoryName}
       </div>
 
-      {/* Badge de destacado */}
-      {event.featured && (
-        <div style={{
-          position: 'absolute',
-          top: '1rem',
-          left: '1rem',
-          background: 'linear-gradient(135deg, #ffd700, #ffed4e)',
-          color: '#000000',
-          borderRadius: '15px',
-          padding: '0.5rem 1rem',
-          fontSize: '0.8rem',
-          fontWeight: 'bold',
-          zIndex: 2,
-          boxShadow: '0 0 20px rgba(255, 215, 0, 0.5)'
-        }}>
-          ⭐ Destacado
-        </div>
-      )}
+
 
       {/* Imagen del evento */}
       <div style={{
