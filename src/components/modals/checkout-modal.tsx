@@ -22,6 +22,8 @@ interface CheckoutModalProps {
 }
 
 export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
+  console.log('🎫 CheckoutModal renderizado con props:', { isOpen, event })
+  
   const [ticketQuantity, setTicketQuantity] = useState(1)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('wallet')
   const [walletAddress, setWalletAddress] = useState('')
@@ -178,6 +180,18 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
       aria-modal="true"
       aria-labelledby="checkout-modal-title"
       tabIndex={-1}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.95)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000
+      }}
     >
       {/* Modal Content */}
       <div className="checkout-modal-content">

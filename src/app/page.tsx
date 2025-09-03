@@ -1017,12 +1017,31 @@ export default function HomePage() {
       </div>
 
       {/* Checkout Modal */}
+      {console.log('🎫 Renderizando modal - selectedEvent:', selectedEvent, 'isCheckoutOpen:', isCheckoutOpen)}
       {selectedEvent && (
         <CheckoutModal
           isOpen={isCheckoutOpen}
           onClose={handleCloseCheckout}
           event={selectedEvent}
         />
+      )}
+      
+      {/* Debug info - solo en desarrollo */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ 
+          position: 'fixed', 
+          bottom: '10px', 
+          right: '10px', 
+          background: 'rgba(0,0,0,0.8)', 
+          color: 'white', 
+          padding: '10px', 
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 9999
+        }}>
+          Modal: {isCheckoutOpen ? 'Abierto' : 'Cerrado'} | 
+          Evento: {selectedEvent ? 'Sí' : 'No'}
+        </div>
       )}
     </div>
   )
