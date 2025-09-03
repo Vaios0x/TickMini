@@ -223,6 +223,7 @@ export function EventsSection() {
             className="events-stats-container"
             style={{
               marginTop: 'clamp(6rem, 10vw, 8rem)',
+              marginBottom: 'clamp(4rem, 8vw, 6rem)',
               padding: 'clamp(1.5rem, 4vw, 2rem)',
               background: 'rgba(255, 255, 255, 0.05)',
               borderRadius: 'clamp(15px, 4vw, 20px)',
