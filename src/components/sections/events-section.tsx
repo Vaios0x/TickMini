@@ -218,19 +218,19 @@ export function EventsSection() {
           </div>
         )}
 
-                          {/* Estadísticas de eventos - Completamente Responsivas */}
-          <div 
-            className="events-stats-container"
-            style={{
-              marginTop: 'clamp(6rem, 10vw, 8rem)',
-              marginBottom: 'clamp(4rem, 8vw, 6rem)',
-              padding: 'clamp(1.5rem, 4vw, 2rem)',
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: 'clamp(15px, 4vw, 20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              textAlign: 'center'
-            }}
-          >
+                                                     {/* Estadísticas de eventos - Completamente Responsivas */}
+           <div 
+             className="events-stats-container"
+             style={{
+               marginTop: 'clamp(10rem, 15vw, 12rem)',
+               marginBottom: 'clamp(8rem, 12vw, 10rem)',
+               padding: 'clamp(2rem, 5vw, 3rem)',
+               background: 'rgba(255, 255, 255, 0.05)',
+               borderRadius: 'clamp(15px, 4vw, 20px)',
+               border: '1px solid rgba(255, 255, 255, 0.1)',
+               textAlign: 'center'
+             }}
+           >
           <h3 style={{
             color: '#00ffff',
             fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
