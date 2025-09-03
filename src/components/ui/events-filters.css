@@ -1,0 +1,354 @@
+/* Estilos para los filtros de eventos */
+.events-filters-container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideInDown 0.8s ease-out;
+}
+
+/* Barra de búsqueda */
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.search-label {
+  display: block;
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  color: #ffffff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.search-input:focus {
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Contenedor de filtros */
+.filters-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+/* Layout para desktop - horizontal */
+@media (min-width: 1024px) {
+  .filters-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .search-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .search-input {
+    font-size: 1.1rem;
+    padding: 1.2rem 1.8rem;
+  }
+  
+  .filter-label {
+    font-size: 1.1rem;
+  }
+  
+  .filter-select,
+  .clear-filters-btn {
+    font-size: 1rem;
+    padding: 1rem 1.2rem;
+  }
+}
+
+/* Layout para tablet - 2 columnas */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .filters-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  
+  .clear-filters-btn {
+    grid-column: 1 / -1;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* Layout para móvil - vertical */
+@media (max-width: 767px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .events-filters-container {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-section {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Filtros individuales */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-label {
+  display: block;
+  color: #ffffff;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.filter-select:focus {
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.filter-select option {
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  padding: 0.5rem;
+}
+
+/* Botón de limpiar filtros */
+.clear-filters-btn {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.clear-filters-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.clear-filters-btn:active {
+  transform: translateY(0);
+}
+
+/* Información de filtros activos */
+.active-filters {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.active-filters-label {
+  color: #00ffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.filter-tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.filter-tag .remove-filter {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.filter-tag .remove-filter:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Animaciones */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Efectos de hover para inputs y selects */
+.search-input:hover,
+.filter-select:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Efectos de focus mejorados */
+.search-input:focus,
+.filter-select:focus,
+.clear-filters-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2);
+}
+
+/* Estados de carga */
+.loading .filter-select,
+.loading .search-input {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Responsive adicional para pantallas muy grandes */
+@media (min-width: 1440px) {
+  .events-filters-container {
+    padding: 2.5rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .filters-grid {
+    gap: 2.5rem;
+  }
+  
+  .search-input {
+    font-size: 1.2rem;
+    padding: 1.5rem 2rem;
+  }
+  
+  .filter-select,
+  .clear-filters-btn {
+    font-size: 1.1rem;
+    padding: 1.2rem 1.5rem;
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .events-filters-container {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+  
+  .search-input {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .filter-select,
+  .clear-filters-btn {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  
+  .active-filters {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+  
+  .filter-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+  }
+}
+
+/* Layout para pantallas ultra-wide */
+@media (min-width: 1920px) {
+  .events-filters-container {
+    max-width: 1600px;
+    padding: 3rem;
+  }
+  
+  .filters-grid {
+    gap: 3rem;
+  }
+  
+  .search-input {
+    font-size: 1.3rem;
+    padding: 1.8rem 2.5rem;
+  }
+  
+  .filter-select,
+  .clear-filters-btn {
+    font-size: 1.2rem;
+    padding: 1.5rem 2rem;
+  }
+  
+  .filter-label {
+    font-size: 1.2rem;
+  }
+}

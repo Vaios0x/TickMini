@@ -50,10 +50,33 @@ export function EventsSection() {
   }, [])
 
   const handleBuyTicket = (event: any) => {
-    console.log('handleBuyTicket llamado con:', event)
+    console.log('🎫 handleBuyTicket ejecutándose', event.title)
+    console.log('🎫 Evento completo:', event)
+    
+    // Asegurar que tenemos un evento válido
+    if (!event || !event.id) {
+      console.error('🎫 ERROR: Evento inválido recibido')
+      return
+    }
+    
+    // Actualizar el estado
     setSelectedEvent(event)
     setIsCheckoutOpen(true)
-    console.log('Estado del modal actualizado:', { selectedEvent: event, isCheckoutOpen: true })
+    
+    console.log('🎫 Estado actualizado', { 
+      isOpen: true, 
+      eventTitle: event.title,
+      eventId: event.id,
+      selectedEvent: event
+    })
+    
+    // Forzar un re-render
+    setTimeout(() => {
+      console.log('🎫 Estado después del timeout:', { 
+        isCheckoutOpen, 
+        selectedEvent 
+      })
+    }, 100)
   }
 
   // Calcular estadísticas
@@ -108,27 +131,17 @@ export function EventsSection() {
         margin: '0 auto',
         padding: '0 clamp(1rem, 3vw, 2rem)',
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Centrar todo el contenido
+        width: '100%'
       }}>
         
         {/* Hero Section - Completamente Responsivo */}
-        <div style={{
-          textAlign: 'center',
-          padding: 'clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem)',
-          marginBottom: 'clamp(2rem, 5vw, 4rem)',
-          position: 'relative'
-        }}>
+        <div className="hero-section">
           {/* Hero Background */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(255, 0, 255, 0.08) 50%, rgba(0, 255, 255, 0.08) 100%)',
-            backdropFilter: 'blur(30px)',
-            borderRadius: 'clamp(20px, 5vw, 40px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            padding: 'clamp(2rem, 5vw, 4rem)',
-            boxShadow: '0 30px 60px rgba(0, 0, 0, 0.4), 0 0 120px rgba(0, 255, 255, 0.08)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
+          <div className="hero-background">
             {/* Hero Glow Effects */}
             <div style={{
               position: 'absolute',
@@ -150,42 +163,16 @@ export function EventsSection() {
             }} />
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <h1 style={{
-                fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-                background: 'linear-gradient(45deg, #00ffff 0%, #ff00ff 25%, #ffff00 50%, #00ff00 75%, #00ffff 100%)',
-                backgroundSize: '400% 400%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                marginBottom: 'clamp(1rem, 3vw, 2rem)',
-                fontWeight: '900',
-                textShadow: '0 0 50px rgba(0, 255, 255, 0.8)',
-                letterSpacing: 'clamp(2px, 1vw, 4px)',
-                animation: 'gradient-shift 4s ease-in-out infinite',
-                lineHeight: '1.1'
-              }}>
+              <h1 className="hero-title">
                 🎫 Eventos NFT 2026
               </h1>
               
-              <p style={{
-                fontSize: 'clamp(1rem, 3vw, 1.8rem)',
-                color: '#e0e0e0',
-                maxWidth: 'clamp(300px, 90vw, 900px)',
-                margin: '0 auto clamp(1.5rem, 4vw, 3rem) auto',
-                lineHeight: '1.8',
-                fontWeight: '300',
-                opacity: '0.9'
-              }}>
+              <p className="hero-description">
                 Descubre los eventos más increíbles del año. Compra tickets NFT únicos y forma parte de experiencias inolvidables en Base Network.
               </p>
 
               {/* Hero Stats - Completamente Responsivos */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(180px, 50vw, 200px), 1fr))',
-                gap: 'clamp(1rem, 3vw, 2rem)',
-                maxWidth: 'clamp(600px, 90vw, 800px)',
-                margin: '0 auto'
-              }}>
+              <div className="hero-stats">
                 {[
                   { icon: '🎭', value: events.length, label: 'Eventos', color: '#00ffff' },
                   { icon: '🎫', value: availableTickets.toLocaleString(), label: 'Tickets Disponibles', color: '#ff00ff' },
@@ -193,49 +180,33 @@ export function EventsSection() {
                 ].map((stat, index) => (
                   <div
                     key={index}
+                    className="stat-card"
                     style={{
-                      textAlign: 'center',
-                      padding: 'clamp(1.5rem, 4vw, 2rem)',
-                      background: `linear-gradient(135deg, ${stat.color}15, ${stat.color}05)`,
-                      borderRadius: 'clamp(15px, 4vw, 25px)',
-                      border: `1px solid ${stat.color}30`,
-                      backdropFilter: 'blur(20px)',
-                      boxShadow: `0 10px 30px ${stat.color}20`,
-                      transition: 'all 0.4s ease',
-                      transform: 'translateY(0)',
-                      cursor: 'pointer'
-                    }}
+                      '--stat-color': stat.color,
+                      '--stat-color-15': `${stat.color}26`,
+                      '--stat-color-05': `${stat.color}0D`,
+                      '--stat-color-30': `${stat.color}4D`,
+                      '--stat-color-20': `${stat.color}33`,
+                      '--stat-color-40': `${stat.color}66`,
+                      '--stat-color-50': `${stat.color}80`,
+                      '--stat-color-60': `${stat.color}99`
+                    } as React.CSSProperties}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)'
-                      e.currentTarget.style.boxShadow = `0 20px 40px ${stat.color}40`
+                      e.currentTarget.style.boxShadow = `0 20px 40px ${stat.color}66`
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                      e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}20`
+                      e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}33`
                     }}
                   >
-                    <div style={{
-                      fontSize: 'clamp(2rem, 5vw, 3rem)',
-                      marginBottom: 'clamp(0.8rem, 2vw, 1rem)',
-                      filter: `drop-shadow(0 0 20px ${stat.color}60)`,
-                      animation: 'pulse 3s ease-in-out infinite'
-                    }}>
+                    <div className="stat-icon">
                       {stat.icon}
                     </div>
-                    <div style={{
-                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                      color: stat.color,
-                      fontWeight: '900',
-                      marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)',
-                      textShadow: `0 0 20px ${stat.color}50`
-                    }}>
+                    <div className="stat-value">
                       {stat.value}
                     </div>
-                    <div style={{
-                      color: '#d0d0d0',
-                      fontSize: 'clamp(0.8rem, 2vw, 1rem)',
-                      fontWeight: '500'
-                    }}>
+                    <div className="stat-label">
                       {stat.label}
                     </div>
                   </div>
@@ -257,14 +228,20 @@ export function EventsSection() {
         />
 
         {/* Grid de eventos - Completamente Responsivo */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(300px, 80vw, 400px), 1fr))',
-          gap: 'clamp(1.5rem, 3vw, 2rem)',
-          marginBottom: 'clamp(2rem, 5vw, 4rem)'
-        }}>
+        <div 
+          className="events-grid-container"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(320px, 85vw, 420px), 1fr))', // Aumentado el ancho mínimo
+            gap: 'clamp(2rem, 4vw, 3rem)', // Gap aumentado para mejor separación
+            marginBottom: 'clamp(3rem, 6vw, 5rem)', // Margen inferior aumentado
+            padding: 'clamp(1rem, 2vw, 2rem)', // Padding adicional para evitar cortes
+            boxSizing: 'border-box'
+          }}
+        >
           {filteredAndSortedEvents.map(event => {
             const categoryInfo = getCategoryInfo(event.category)
+            console.log('🎭 Mapeando evento:', event.title, 'handleBuyTicket:', typeof handleBuyTicket, 'función válida:', !!handleBuyTicket)
             return (
               <EventCard
                 key={event.id}
@@ -380,12 +357,35 @@ export function EventsSection() {
       </div>
 
       {/* Modal de checkout */}
-      {selectedEvent && (
+      {isCheckoutOpen && selectedEvent && (
         <CheckoutModal
           isOpen={isCheckoutOpen}
-          onClose={() => setIsCheckoutOpen(false)}
+          onClose={() => {
+            console.log('🎫 Cerrando modal de checkout')
+            setIsCheckoutOpen(false)
+            setSelectedEvent(null)
+          }}
           event={selectedEvent}
         />
+      )}
+
+      {/* Debug info para desarrollo */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          background: 'rgba(0, 0, 0, 0.8)',
+          color: '#00ffff',
+          padding: '1rem',
+          borderRadius: '10px',
+          fontSize: '0.8rem',
+          zIndex: 9999,
+          border: '1px solid #00ffff'
+        }}>
+          <div>Modal: {isCheckoutOpen ? 'ABIERTO' : 'CERRADO'}</div>
+          <div>Evento: {selectedEvent?.title || 'Ninguno'}</div>
+        </div>
       )}
 
       {/* CSS Animations */}

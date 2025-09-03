@@ -7,6 +7,7 @@ import { useAppKitConnection } from '@/hooks/use-appkit'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
 import './animations.css'
 import './events.css'
+import './home.css'
 
 export default function HomePage() {
   const [isVisible, setIsVisible] = React.useState(false)
@@ -92,16 +93,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div 
-      style={{
-        minHeight: 'calc(100vh - 80px)',
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-        marginTop: '0px'
-      }}
-      className="home-page"
-    >
+    <div className="home-page">
       {/* Dynamic Background Effects */}
       <div 
         style={{
@@ -166,13 +158,7 @@ export default function HomePage() {
         )
       })}
 
-      <div style={{ 
-        maxWidth: '1400px', 
-        margin: '0 auto', 
-        padding: '1rem',
-        position: 'relative',
-        zIndex: 1
-      }}>
+      <div className="home-content-container">
         
         {/* Events Section - Cards de eventos directamente */}
         <div style={{ paddingTop: '2rem' }}>
@@ -181,50 +167,23 @@ export default function HomePage() {
 
         {/* Features Section - Completamente Responsivo */}
         <section 
-          style={{
-            marginBottom: '4rem'
-          }}
           className="features-section"
           role="region"
           aria-label="Características principales"
         >
-          <h2 
-            style={{
-              textAlign: 'center',
-              fontSize: 'clamp(2rem, 6vw, 3rem)',
-              color: '#ffffff',
-              marginBottom: 'clamp(2rem, 5vw, 3rem)',
-              textShadow: '0 0 30px rgba(255, 255, 255, 0.3)',
-              fontWeight: 'bold'
-            }}
-            className="section-title"
-          >
+          <h2 className="section-title">
             ✨ Características Principales
           </h2>
           
-          <div 
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(280px, 80vw, 350px), 1fr))',
-              gap: 'clamp(1.5rem, 3vw, 2rem)'
-            }}
-            className="features-grid"
-          >
+          <div className="features-grid">
             {features.map((feature, index) => (
               <div 
                 key={index}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: 'clamp(15px, 4vw, 20px)',
-                  padding: 'clamp(2rem, 4vw, 2.5rem)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
                 className="feature-card"
+                style={{
+                  '--feature-color': feature.color,
+                  '--feature-color-50': `${feature.color}80`
+                } as React.CSSProperties}
                 onMouseEnter={(e: any) => {
                   e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)'
                   e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
@@ -265,30 +224,10 @@ export default function HomePage() {
                   }} 
                 />
                 
-                <h3 
-                  style={{ 
-                    fontSize: 'clamp(1.5rem, 4vw, 2rem)', 
-                    marginBottom: 'clamp(1rem, 2vw, 1rem)',
-                    color: feature.color,
-                    textShadow: `0 0 20px ${feature.color}50`,
-                    fontWeight: 'bold',
-                    position: 'relative',
-                    zIndex: 1
-                  }}
-                  className="feature-title"
-                >
+                <h3 className="feature-title">
                   {feature.icon} {feature.title}
                 </h3>
-                <p 
-                  style={{ 
-                    color: '#d0d0d0',
-                    fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                    lineHeight: '1.6',
-                    position: 'relative',
-                    zIndex: 1
-                  }}
-                  className="feature-description"
-                >
+                <p className="feature-description">
                   {feature.description}
                 </p>
               </div>
@@ -298,35 +237,15 @@ export default function HomePage() {
 
         {/* Base Network Benefits Section - Completamente Responsivo */}
         <section 
-          style={{
-            marginBottom: '4rem'
-          }}
           className="benefits-section"
           role="region"
           aria-label="Beneficios de Base Network"
         >
-          <h2 
-            style={{
-              textAlign: 'center',
-              fontSize: 'clamp(2rem, 6vw, 3rem)',
-              color: '#00ffff',
-              marginBottom: 'clamp(2rem, 5vw, 3rem)',
-              textShadow: '0 0 30px rgba(0, 255, 255, 0.5)',
-              fontWeight: 'bold'
-            }}
-            className="section-title"
-          >
+          <h2 className="section-title">
             🚀 ¿Por qué Base Network?
           </h2>
           
-          <div 
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(300px, 80vw, 400px), 1fr))',
-              gap: 'clamp(1.5rem, 3vw, 2rem)'
-            }}
-            className="benefits-grid"
-          >
+          <div className="benefits-grid">
             {[
               {
                 icon: '🔵',
@@ -367,17 +286,12 @@ export default function HomePage() {
             ].map((benefit, index) => (
               <div 
                 key={index}
-                style={{
-                  background: `linear-gradient(135deg, ${benefit.color}08 0%, ${benefit.color}05 100%)`,
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: 'clamp(15px, 4vw, 25px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  padding: 'clamp(2rem, 4vw, 2.5rem)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3)'
-                }}
                 className="benefit-card"
+                style={{
+                  '--benefit-color': benefit.color,
+                  '--benefit-color-08': `${benefit.color}15`,
+                  '--benefit-color-05': `${benefit.color}0D`
+                } as React.CSSProperties}
               >
                 <div 
                   style={{
@@ -392,35 +306,13 @@ export default function HomePage() {
                 />
                 
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                  <div 
-                    style={{
-                      fontSize: 'clamp(2rem, 5vw, 3rem)',
-                      marginBottom: 'clamp(1rem, 2vw, 1rem)',
-                      filter: `drop-shadow(0 0 20px ${benefit.color}50)`
-                    }}
-                    className="benefit-icon"
-                  >
+                  <div className="benefit-icon">
                     {benefit.icon}
                   </div>
-                  <h3 
-                    style={{
-                      fontSize: 'clamp(1.3rem, 3.5vw, 1.8rem)',
-                      color: benefit.color,
-                      marginBottom: 'clamp(0.8rem, 2vw, 1rem)',
-                      fontWeight: 'bold'
-                    }}
-                    className="benefit-title"
-                  >
+                  <h3 className="benefit-title">
                     {benefit.title}
                   </h3>
-                  <p 
-                    style={{
-                      color: '#d0d0d0',
-                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-                      lineHeight: '1.6'
-                    }}
-                    className="benefit-description"
-                  >
+                  <p className="benefit-description">
                     {benefit.description}
                   </p>
                 </div>
@@ -431,17 +323,6 @@ export default function HomePage() {
 
         {/* Final CTA Section - Completamente Responsivo */}
         <section 
-          style={{
-            textAlign: 'center',
-            background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: 'clamp(20px, 5vw, 30px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            padding: 'clamp(2rem, 5vw, 4rem)',
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3), 0 0 100px rgba(0, 255, 255, 0.1)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
           className="final-cta-section"
           role="region"
           aria-label="Llamada a la acción final"
@@ -460,64 +341,22 @@ export default function HomePage() {
           />
           
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <h2 
-              style={{
-                fontSize: 'clamp(2rem, 6vw, 3rem)',
-                color: '#ffffff',
-                marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
-                textShadow: '0 0 30px rgba(255, 255, 255, 0.3)',
-                fontWeight: 'bold'
-              }}
-              className="cta-title"
-            >
+            <h2 className="cta-title">
               🚀 ¿Listo para el Futuro?
             </h2>
             
-            <p 
-              style={{
-                fontSize: 'clamp(1rem, 3vw, 1.3rem)',
-                color: '#b0b0b0',
-                marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
-                maxWidth: 'clamp(500px, 80vw, 700px)',
-                margin: '0 auto clamp(1.5rem, 4vw, 2.5rem) auto',
-                lineHeight: '1.6'
-              }}
-              className="cta-description"
-            >
+            <p className="cta-description">
               Únete a la revolución del ticketing NFT en Base Network. 
               Experimenta la próxima generación de eventos digitales.
             </p>
             
             <div 
-              style={{
-                display: 'flex',
-                gap: 'clamp(1rem, 3vw, 1.5rem)',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-              }}
               className="cta-buttons-final"
               role="group"
               aria-label="Botones de acción final"
             >
               <Link href="/events">
                 <button 
-                  style={{
-                    background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
-                    color: '#000000',
-                    padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
-                    borderRadius: 'clamp(30px, 8vw, 50px)',
-                    fontSize: 'clamp(1rem, 3vw, 1.3rem)',
-                    fontWeight: 'bold',
-                    border: 'none',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 0 40px rgba(0, 255, 255, 0.6)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    minWidth: 'clamp(180px, 50vw, 250px)'
-                  }}
                   className="btn-primary-neon"
                   onMouseEnter={(e: any) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
@@ -536,19 +375,6 @@ export default function HomePage() {
               
               <Link href="/create-event">
                 <button 
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    color: '#ffffff',
-                    padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
-                    borderRadius: 'clamp(30px, 8vw, 50px)',
-                    fontSize: 'clamp(1rem, 3vw, 1.3rem)',
-                    fontWeight: '600',
-                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(10px)',
-                    minWidth: 'clamp(180px, 50vw, 250px)'
-                  }}
                   className="btn-secondary-neon"
                   onMouseEnter={(e: any) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
@@ -570,113 +396,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-
-      {/* CSS Animations y Responsive */}
-      <style jsx global>{`
-        @keyframes gradientShift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes gradient-shift-fast {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.6; transform: scale(1.1); }
-        }
-        
-        @keyframes grid-move {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(50px, 50px); }
-        }
-        
-        @keyframes float-particle {
-          0%, 100% { 
-            transform: translateY(0px) rotate(0deg);
-            opacity: 0.3;
-          }
-          50% { 
-            transform: translateY(-30px) rotate(180deg);
-            opacity: 1;
-          }
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-          .hero-section {
-            padding: 2rem 0;
-          }
-          
-          .hero-container {
-            padding: 2rem 1rem;
-          }
-          
-          .cta-buttons {
-            flex-direction: column;
-            align-items: center;
-          }
-          
-          .hero-stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-          }
-          
-          .features-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .benefits-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .hero-stats {
-            grid-template-columns: 1fr;
-          }
-          
-          .cta-buttons-final {
-            flex-direction: column;
-            align-items: center;
-          }
-        }
-        
-        /* Accessibility */
-        .btn-primary-neon:focus,
-        .btn-secondary-neon:focus,
-        .feature-card:focus,
-        .stat-card:focus {
-          outline: 2px solid #00ffff;
-          outline-offset: 2px;
-        }
-        
-        /* Smooth scrolling */
-        html {
-          scroll-behavior: smooth;
-        }
-        
-        /* Performance optimizations */
-        .home-page {
-          will-change: transform;
-        }
-        
-        .hero-section,
-        .features-section,
-        .benefits-section,
-        .final-cta-section {
-          will-change: opacity, transform;
-        }
-      `}</style>
     </div>
   )
 }
