@@ -16,7 +16,7 @@ export default function HomePage() {
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false)
   const [selectedEvent, setSelectedEvent] = React.useState<any>(null)
-  const [scrollPosition, setScrollPosition] = React.useState(0)
+
 
   // Hook de eventos para la búsqueda avanzada
   const {
@@ -44,38 +44,14 @@ export default function HomePage() {
 
   // Función para abrir el modal de checkout
   const handleOpenCheckout = (event: any) => {
-    try {
-      console.log('🎫 Abriendo modal para evento:', event)
-      
-      // Validar que el evento tenga los datos necesarios
-      if (!event || !event.id || !event.title) {
-        console.error('🎫 ERROR: Evento inválido:', event)
-        return
-      }
-      
-      // Guardar la posición actual del scroll
-      setScrollPosition(window.scrollY)
-      setSelectedEvent(event)
-      setIsCheckoutOpen(true)
-      
-      console.log('🎫 Modal abierto exitosamente')
-    } catch (error) {
-      console.error('🎫 ERROR al abrir modal:', error)
-    }
+    setSelectedEvent(event)
+    setIsCheckoutOpen(true)
   }
 
   // Función para cerrar el modal de checkout
   const handleCloseCheckout = () => {
     setIsCheckoutOpen(false)
     setSelectedEvent(null)
-    
-    // Restaurar la posición del scroll después de un pequeño delay
-    setTimeout(() => {
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: 'instant'
-      })
-    }, 100)
   }
 
   // Función para inicializar el componente
@@ -1033,33 +1009,13 @@ export default function HomePage() {
         </section>
       </div>
 
-      {/* Modal de checkout */}
-      {isCheckoutOpen && selectedEvent && (
-        <div style={{ position: 'relative', zIndex: 10000 }}>
-          <CheckoutModal
-            isOpen={isCheckoutOpen}
-            onClose={handleCloseCheckout}
-            event={selectedEvent}
-          />
-        </div>
-      )}
-      
-      {/* Debug info - solo en desarrollo */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{ 
-          position: 'fixed', 
-          bottom: '10px', 
-          right: '10px', 
-          background: 'rgba(0,0,0,0.8)', 
-          color: 'white', 
-          padding: '10px', 
-          borderRadius: '5px',
-          fontSize: '12px',
-          zIndex: 9999
-        }}>
-          Modal: {isCheckoutOpen ? 'Abierto' : 'Cerrado'} | 
-          Evento: {selectedEvent ? 'Sí' : 'No'}
-        </div>
+      {/* Checkout Modal */}
+      {selectedEvent && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={handleCloseCheckout}
+          event={selectedEvent}
+        />
       )}
     </div>
   )
