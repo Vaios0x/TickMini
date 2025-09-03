@@ -186,13 +186,44 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(0, 0, 0, 0.95)',
+        background: 'rgba(255, 0, 0, 0.9)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 10000
+        zIndex: 999999,
+        border: '5px solid yellow',
+        color: 'white',
+        fontSize: '20px',
+        fontWeight: 'bold'
       }}
     >
+      {/* DEBUG VISUAL - TEMPORAL */}
+      <div style={{
+        background: 'black',
+        padding: '20px',
+        borderRadius: '10px',
+        textAlign: 'center',
+        maxWidth: '400px'
+      }}>
+        <h2 style={{color: 'yellow', marginBottom: '15px'}}>🎫 MODAL FUNCIONANDO!</h2>
+        <p style={{marginBottom: '10px'}}>Evento: {event?.title || 'Sin título'}</p>
+        <p style={{marginBottom: '10px'}}>ID: {event?.id || 'Sin ID'}</p>
+        <p style={{marginBottom: '15px'}}>Modal abierto: {isOpen ? 'SÍ' : 'NO'}</p>
+        <button 
+          onClick={onClose}
+          style={{
+            background: 'yellow',
+            color: 'black',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Cerrar Modal
+        </button>
+      </div>
       {/* Modal Content */}
       <div className="checkout-modal-content">
         {/* Header con efecto de brillo mejorado */}
