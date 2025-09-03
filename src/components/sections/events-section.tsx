@@ -140,33 +140,7 @@ export function EventsSection() {
         width: '100%'
       }}>
         
-        {/* Hero Section - Completamente Responsivo */}
-        <div className="hero-section">
-          {/* Hero Background */}
-          <div className="hero-background">
-            {/* Hero Glow Effects */}
-            <div style={{
-              position: 'absolute',
-              top: '-60%',
-              left: '-60%',
-              width: '220%',
-              height: '220%',
-              background: 'radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 60%)',
-              animation: 'pulse 8s ease-in-out infinite'
-            }} />
-            <div style={{
-              position: 'absolute',
-              bottom: '-60%',
-              right: '-60%',
-              width: '220%',
-              height: '220%',
-              background: 'radial-gradient(circle, rgba(255, 0, 255, 0.08) 0%, transparent 60%)',
-              animation: 'pulse 8s ease-in-out infinite reverse'
-            }} />
 
-
-          </div>
-        </div>
 
         {/* Filtros y búsqueda */}
         <EventsFilters
