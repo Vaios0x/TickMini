@@ -990,7 +990,7 @@ export default function EventsPage() {
       )}
 
         {/* CSS Animations y Responsive */}
-        <style jsx global>{`
+        <style>{`
           @keyframes pulse {
             0%, 100% { 
               opacity: 0.3;

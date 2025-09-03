@@ -304,7 +304,7 @@ export function WelcomeMessage({ onStartVerification }: WelcomeMessageProps) {
       </div>
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes pulse {
           0%, 100% { 
             opacity: 0.3;

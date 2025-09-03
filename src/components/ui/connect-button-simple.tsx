@@ -11,7 +11,7 @@ interface ConnectButtonSimpleProps {
 export function ConnectButtonSimple({ onConnect }: ConnectButtonSimpleProps = {}) {
   const { connect, isConnected, formattedAddress, disconnect, formattedBalance } = useAppKitConnection()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

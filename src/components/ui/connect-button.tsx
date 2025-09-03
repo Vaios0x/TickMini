@@ -22,7 +22,7 @@ export function ConnectButton({ onConnect }: ConnectButtonProps = {}) {
   } = useAppKitConnection()
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

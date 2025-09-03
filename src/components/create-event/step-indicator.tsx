@@ -206,7 +206,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
       </div>
 
       {/* CSS para la animación de pulse */}
-      <style jsx>{`
+      <style>{`
         @keyframes pulse {
           0%, 100% { 
             opacity: 0.6;

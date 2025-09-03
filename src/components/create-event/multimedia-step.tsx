@@ -14,8 +14,8 @@ export function MultimediaStep({ formData, updateFormData, onNext, onPrev }: Mul
   const [dragActive, setDragActive] = useState(false)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const galleryInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const galleryInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleCoverImageChange = (file: File) => {
     if (file && file.type.startsWith('image/')) {

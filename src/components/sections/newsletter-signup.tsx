@@ -64,13 +64,13 @@ export function NewsletterSignup() {
         <p className="text-muted-foreground mb-6">
           Te enviaremos las últimas noticias sobre eventos, nuevas funcionalidades y ofertas exclusivas.
         </p>
-        <Button
-          variant="outline"
+        <button
           onClick={() => setIsSubscribed(false)}
           tabIndex={0}
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
         >
           Suscribir otro email
-        </Button>
+        </button>
       </motion.div>
     )
   }
@@ -110,22 +110,22 @@ export function NewsletterSignup() {
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
           <div className="relative flex-1">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
+            <input
               type="email"
               placeholder="tu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               tabIndex={0}
               aria-label="Email para newsletter"
               required
             />
           </div>
           
-          <Button
+          <button
             type="submit"
             disabled={isLoading}
-            className="sm:w-auto"
+            className="sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
             tabIndex={0}
           >
             {isLoading ? (
@@ -136,7 +136,7 @@ export function NewsletterSignup() {
             ) : (
               'Suscribirse'
             )}
-          </Button>
+          </button>
         </form>
 
         {/* Benefits */}

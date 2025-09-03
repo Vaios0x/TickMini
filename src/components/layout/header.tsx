@@ -59,9 +59,9 @@ export function Header() {
           <div className="hidden lg:flex items-center space-x-4 flex-1 max-w-md mx-8">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <input
                 placeholder="Buscar eventos, artistas, venues..."
-                className="pl-10 w-full"
+                className="pl-10 w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 tabIndex={0}
                 aria-label="Buscar eventos"
               />
@@ -71,18 +71,16 @@ export function Header() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Notifications */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
+            <button
+              className="relative h-10 w-10 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
               tabIndex={0}
               aria-label="Notificaciones"
             >
               <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs">
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-red-500 text-white flex items-center justify-center">
                 3
-              </Badge>
-            </Button>
+              </span>
+            </button>
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -91,10 +89,8 @@ export function Header() {
             <ConnectButton />
 
             {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+            <button
+              className="md:hidden h-10 w-10 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               tabIndex={0}
               aria-label="Menú móvil"
@@ -104,7 +100,7 @@ export function Header() {
               ) : (
                 <Menu className="h-5 w-5" />
               )}
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -120,9 +116,9 @@ export function Header() {
               {/* Mobile Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
+                <input
                   placeholder="Buscar eventos..."
-                  className="pl-10 w-full"
+                  className="pl-10 w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   tabIndex={0}
                   aria-label="Buscar eventos en móvil"
                 />

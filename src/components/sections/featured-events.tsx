@@ -73,9 +73,9 @@ export function FeaturedEvents() {
               <div className="relative h-48 bg-gradient-to-br from-primary/20 to-purple-500/20 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <Badge variant="premium" className="text-xs">
+                  <span className="text-xs bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full font-medium">
                     Destacado
-                  </Badge>
+                  </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="text-lg font-bold text-white mb-1 line-clamp-2">
@@ -91,7 +91,7 @@ export function FeaturedEvents() {
               <div className="p-6">
                 {/* Category */}
                 <div className="flex items-center justify-between mb-4">
-                  <Badge variant="secondary">{event.category}</Badge>
+                  <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm font-medium">{event.category}</span>
                   <span className="text-2xl font-bold text-primary">
                     {formatPrice(event.price, event.currency)}
                   </span>
@@ -130,14 +130,14 @@ export function FeaturedEvents() {
                 </div>
 
                 {/* CTA Button */}
-                <Button 
-                  className="w-full group-hover:bg-primary/90 transition-colors"
+                <button 
+                  className="w-full group-hover:bg-primary/90 transition-colors h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                   tabIndex={0}
                   aria-label={`Comprar tickets para ${event.title}`}
                 >
                   Comprar Tickets
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                </button>
               </div>
             </div>
           </Link>

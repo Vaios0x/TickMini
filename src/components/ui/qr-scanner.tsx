@@ -13,10 +13,10 @@ export function QRScanner({ onScan, onError, onClose, isOpen }: QRScannerProps) 
   const [isScanning, setIsScanning] = useState(false)
   const [hasPermission, setHasPermission] = useState<boolean | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
 
   const stopCamera = useCallback(() => {
     if (streamRef.current) {
@@ -435,7 +435,7 @@ export function QRScanner({ onScan, onError, onClose, isOpen }: QRScannerProps) 
       </div>
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes scan-line {
           0% { top: 0; }
           100% { top: 100%; }

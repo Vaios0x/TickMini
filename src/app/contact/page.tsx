@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, ChangeEvent, FormEvent } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/hooks/use-toast'
@@ -32,7 +32,7 @@ export default function ContactPage() {
     }
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     setIsSubmitting(true)
 
@@ -204,10 +204,11 @@ export default function ContactPage() {
                   <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                     Nombre Completo *
                   </label>
-                                     <Input
+                                     <input
+                     name="name"
                      value={formData.name}
-                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'name' } })}
-                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
+                     onChange={handleInputChange}
+                     className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none contact-input"
                      placeholder="Tu nombre completo"
                    />
                 </div>
@@ -216,11 +217,12 @@ export default function ContactPage() {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                     Email *
                   </label>
-                                     <Input
+                                     <input
+                     name="email"
                      type="email"
                      value={formData.email}
-                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'email' } })}
-                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
+                     onChange={handleInputChange}
+                     className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none contact-input"
                      placeholder="tu@email.com"
                    />
                 </div>
@@ -230,10 +232,11 @@ export default function ContactPage() {
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
                   Asunto *
                 </label>
-                                 <Input
+                                 <input
+                   name="subject"
                    value={formData.subject}
-                   onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'subject' } })}
-                   className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 contact-input"
+                   onChange={handleInputChange}
+                   className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none contact-input"
                    placeholder="¿En qué podemos ayudarte?"
                  />
               </div>
@@ -243,11 +246,12 @@ export default function ContactPage() {
                   Mensaje *
                 </label>
                                  <textarea
+                   name="message"
                    required
                    rows={5}
                    value={formData.message}
-                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInputChange({ ...e, target: { ...e.target, name: 'message' } })}
-                   className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none resize-none contact-textarea"
+                   onChange={handleInputChange}
+                   className="w-full px-4 py-3 bg-gray-800 border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-cyan-400 focus:outline-none resize-none contact-textarea"
                    placeholder="Cuéntanos más detalles sobre tu consulta..."
                  />
               </div>

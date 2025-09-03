@@ -961,7 +961,7 @@ export function DateLocationStep({ formData, updateFormData, onNext, onPrev }: D
         </div>
 
         {/* CSS para la animación de spin */}
-        <style jsx>{`
+        <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }

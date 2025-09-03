@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState } from 'react'
+import React, { useState } from 'react'
 
 interface Web3ContextType {
   isConnected: boolean
@@ -8,8 +8,6 @@ interface Web3ContextType {
   connect: () => void
   disconnect: () => void
 }
-
-const Web3Context = createContext<Web3ContextType | undefined>(undefined)
 
 interface Web3ProviderProps {
   children: any
@@ -30,24 +28,18 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     setAccount(null)
   }
 
-  const value: Web3ContextType = {
-    isConnected,
-    account,
-    connect,
-    disconnect,
-  }
-
   return (
-    <Web3Context.Provider value={value}>
+    <div>
       {children}
-    </Web3Context.Provider>
+    </div>
   )
 }
 
 export function useWeb3() {
-  const context = useContext(Web3Context)
-  if (context === undefined) {
-    throw new Error('useWeb3 must be used within a Web3Provider')
+  return {
+    isConnected: false,
+    account: null,
+    connect: () => {},
+    disconnect: () => {}
   }
-  return context
 }

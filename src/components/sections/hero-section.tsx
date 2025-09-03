@@ -104,26 +104,21 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16"
           >
-            <Button 
-              asChild 
-              size="lg" 
-              className="text-lg px-8 py-6 h-auto text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            <Link 
+              href="/events"
+              className="text-lg px-8 py-6 h-auto text-white shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               style={{
                 background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
                 border: 'none'
               }}
               tabIndex={0}
             >
-              <Link href="/events">
-                🎫 Explorar Eventos
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+              🎫 Explorar Eventos
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
             
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="text-lg px-8 py-6 h-auto transition-all duration-300"
+            <button 
+              className="text-lg px-8 py-6 h-auto transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               style={{
                 background: 'transparent',
                 border: '2px solid #ffff00',
@@ -133,7 +128,7 @@ export function HeroSection() {
             >
               <Play className="mr-2 h-5 w-5" />
               🚀 Crear Evento
-            </Button>
+            </button>
           </motion.div>
 
           {/* Stats */}

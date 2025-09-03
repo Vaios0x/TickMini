@@ -32,8 +32,8 @@ export function BulkVerification({ onVerifyMultiple, isVerifying }: BulkVerifica
     // Limpiar y formatear el texto pegado
     const cleanedText = pastedText
       .split(/[,\s\n]+/)
-      .map(id => id.trim())
-      .filter(id => id.length > 0)
+      .map((id: string) => id.trim())
+      .filter((id: string) => id.length > 0)
       .join('\n')
     
     setTicketIds(cleanedText)
@@ -290,7 +290,7 @@ export function BulkVerification({ onVerifyMultiple, isVerifying }: BulkVerifica
       )}
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideDown {
           from {
             opacity: 0;

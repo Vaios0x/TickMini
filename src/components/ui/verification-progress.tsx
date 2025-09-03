@@ -200,7 +200,7 @@ export function VerificationProgress({ current, total, isVisible, onClose }: Ver
       )}
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideInUp {
           from {
             opacity: 0;

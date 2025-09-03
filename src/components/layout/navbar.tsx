@@ -604,7 +604,7 @@ export function Navbar() {
       )}
 
       {/* CSS Animations y Responsive */}
-      <style jsx global>{`
+      <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
