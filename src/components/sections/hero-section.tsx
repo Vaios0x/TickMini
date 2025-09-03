@@ -61,7 +61,7 @@ export function HeroSection() {
             className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-8"
           >
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-sm font-medium">Construido en Base Network</span>
+            <span className="text-sm font-medium">🚀 Plataforma Web3 en Base Network</span>
           </motion.div>
 
           {/* Main Title */}
@@ -71,11 +71,11 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight"
           >
-            El Futuro del{' '}
-            <span className="gradient-text">Ticketing</span>
+            <span className="gradient-text">TickBase</span>
             <br />
-            es{' '}
-            <span className="gradient-text">NFT</span>
+            <span className="text-4xl md:text-5xl text-muted-foreground">
+              El Futuro del Ticketing NFT
+            </span>
           </motion.h1>
 
           {/* Description */}
@@ -85,8 +85,8 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            Compra, vende y valida tickets digitales de forma segura y transparente. 
-            Construido en blockchain para revolucionar la industria de eventos.
+            La plataforma líder en ticketing NFT sobre Base Network. Crea eventos únicos, 
+            compra tickets verificables y disfruta de transacciones instantáneas con tarifas mínimas.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -99,11 +99,11 @@ export function HeroSection() {
             <Button 
               asChild 
               size="lg" 
-              className="text-lg px-8 py-6 h-auto"
+              className="text-lg px-8 py-6 h-auto bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               tabIndex={0}
             >
               <Link href="/events">
-                Explorar Eventos
+                🎫 Explorar Eventos
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -111,11 +111,11 @@ export function HeroSection() {
             <Button 
               variant="outline" 
               size="lg" 
-              className="text-lg px-8 py-6 h-auto"
+              className="text-lg px-8 py-6 h-auto border-2 border-primary/30 hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
               tabIndex={0}
             >
               <Play className="mr-2 h-5 w-5" />
-              Ver Demo
+              🚀 Crear Evento
             </Button>
           </motion.div>
 
@@ -126,16 +126,19 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.9 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
           >
-            <div className="text-center">
+            <div className="text-center p-4 rounded-xl bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-all duration-300">
+              <div className="text-4xl font-bold text-primary mb-2">🎫</div>
               <div className="text-3xl font-bold text-primary mb-2">10K+</div>
-              <div className="text-muted-foreground">Tickets Vendidos</div>
+              <div className="text-muted-foreground">Tickets NFT</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">500+</div>
+            <div className="text-center p-4 rounded-xl bg-purple-500/5 border border-purple-500/20 hover:bg-purple-500/10 transition-all duration-300">
+              <div className="text-4xl font-bold text-purple-500 mb-2">🎭</div>
+              <div className="text-3xl font-bold text-purple-500 mb-2">500+</div>
               <div className="text-muted-foreground">Eventos Activos</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">99.9%</div>
+            <div className="text-center p-4 rounded-xl bg-green-500/5 border border-green-500/20 hover:bg-green-500/10 transition-all duration-300">
+              <div className="text-4xl font-bold text-green-500 mb-2">⚡</div>
+              <div className="text-3xl font-bold text-green-500 mb-2">99.9%</div>
               <div className="text-muted-foreground">Uptime</div>
             </div>
           </motion.div>
