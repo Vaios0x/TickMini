@@ -304,57 +304,168 @@ export default function HomePage() {
               isLoading={isLoading}
             />
 
-            {/* Estadísticas rápidas */}
+            {/* Estadísticas PREMIUM con funcionalidad completa */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(150px, 40vw, 200px), 1fr))',
-              gap: 'clamp(1rem, 3vw, 2rem)',
-              marginTop: 'clamp(2rem, 5vw, 4rem)'
+              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(180px, 45vw, 220px), 1fr))',
+              gap: 'clamp(1.5rem, 4vw, 2.5rem)',
+              marginTop: 'clamp(3rem, 6vw, 4rem)'
             }}>
               {[
-                { icon: '🎭', value: filteredAndSortedEvents.length, label: 'Eventos Encontrados', color: '#00ffff' },
-                { icon: '🎫', value: filteredAndSortedEvents.reduce((sum, event) => sum + event.availableTickets, 0), label: 'Tickets Disponibles', color: '#ff00ff' },
-                { icon: '💰', value: filteredAndSortedEvents.length > 0 ? (filteredAndSortedEvents.reduce((sum, event) => sum + parseFloat(event.price.split(' ')[0]), 0) / filteredAndSortedEvents.length).toFixed(2) : '0', label: 'Precio Promedio (ETH)', color: '#ffff00' }
+                { 
+                  icon: '🎭', 
+                  value: filteredAndSortedEvents.length, 
+                  label: 'Eventos Encontrados', 
+                  color: '#00ffff',
+                  gradient: 'linear-gradient(135deg, #00ffff, #0080ff)',
+                  action: 'Ver Eventos',
+                  link: '/events'
+                },
+                { 
+                  icon: '🎫', 
+                  value: filteredAndSortedEvents.reduce((sum, event) => sum + event.availableTickets, 0), 
+                  label: 'Tickets Disponibles', 
+                  color: '#ff00ff',
+                  gradient: 'linear-gradient(135deg, #ff00ff, #8000ff)',
+                  action: 'Comprar Tickets',
+                  link: '/events'
+                },
+                { 
+                  icon: '💰', 
+                  value: filteredAndSortedEvents.length > 0 ? (filteredAndSortedEvents.reduce((sum, event) => sum + parseFloat(event.price.split(' ')[0]), 0) / filteredAndSortedEvents.length).toFixed(2) : '0', 
+                  label: 'Precio Promedio (ETH)', 
+                  color: '#ffff00',
+                  gradient: 'linear-gradient(135deg, #ffff00, #ff8000)',
+                  action: 'Ver Precios',
+                  link: '/events'
+                }
               ].map((stat, index) => (
                 <div key={index} style={{
-                  padding: 'clamp(1rem, 3vw, 1.5rem)',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: 'clamp(15px, 4vw, 20px)',
-                  border: `1px solid ${stat.color}30`,
+                  position: 'relative',
+                  padding: 'clamp(1.5rem, 4vw, 2rem)',
+                  background: `linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%)`,
+                  borderRadius: 'clamp(20px, 5vw, 25px)',
+                  border: `2px solid ${stat.color}40`,
                   textAlign: 'center',
-                  backdropFilter: 'blur(20px)',
-                  transition: 'all 0.3s ease'
+                  backdropFilter: 'blur(25px)',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  boxShadow: `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-5px)'
-                  e.currentTarget.style.boxShadow = `0 20px 40px ${stat.color}20`
+                  e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'
+                  e.currentTarget.style.boxShadow = `0 25px 50px ${stat.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+                  e.currentTarget.style.borderColor = `${stat.color}80`
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                  e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+                  e.currentTarget.style.borderColor = `${stat.color}40`
                 }}
                 >
-                  <div style={{ 
-                    fontSize: 'clamp(2rem, 6vw, 3rem)', 
-                    marginBottom: 'clamp(0.5rem, 1vw, 1rem)',
-                    filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))'
-                  }}>
-                    {stat.icon}
-                  </div>
-                  <div style={{ 
-                    color: stat.color, 
-                    fontWeight: 'bold', 
-                    fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
-                    marginBottom: 'clamp(0.5rem, 1vw, 0.8rem)'
-                  }}>
-                    {stat.value}
-                  </div>
-                  <div style={{ 
-                    color: '#b0b0b0', 
-                    fontSize: 'clamp(0.8rem, 2.5vw, 1rem)',
-                    lineHeight: '1.4'
-                  }}>
-                    {stat.label}
+                  {/* Fondo animado */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: stat.gradient,
+                    opacity: 0.1,
+                    transition: 'opacity 0.3s ease'
+                  }} />
+                  
+                  {/* Efecto de brillo en hover */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '-50%',
+                    left: '-50%',
+                    width: '200%',
+                    height: '200%',
+                    background: `radial-gradient(circle, ${stat.color}20 0%, transparent 70%)`,
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease',
+                    transform: 'rotate(45deg)'
+                  }} 
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.opacity = '1'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '0'
+                  }}
+                  />
+                  
+                  {/* Contenido principal */}
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    {/* Icono con animación */}
+                    <div style={{ 
+                      fontSize: 'clamp(2.5rem, 7vw, 3.5rem)', 
+                      marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
+                      filter: `drop-shadow(0 0 20px ${stat.color}80)`,
+                      animation: 'stat-icon-float 3s ease-in-out infinite',
+                      animationDelay: `${index * 0.5}s`
+                    }}>
+                      {stat.icon}
+                    </div>
+                    
+                    {/* Valor con efecto de contador */}
+                    <div style={{ 
+                      color: stat.color, 
+                      fontWeight: '900', 
+                      fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
+                      marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
+                      textShadow: `0 0 30px ${stat.color}80`,
+                      letterSpacing: '1px'
+                    }}>
+                      {stat.value}
+                    </div>
+                    
+                    {/* Label mejorado */}
+                    <div style={{ 
+                      color: '#ffffff', 
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                      lineHeight: '1.4',
+                      fontWeight: '500',
+                      marginBottom: 'clamp(1rem, 2.5vw, 1.5rem)',
+                      opacity: 0.9
+                    }}>
+                      {stat.label}
+                    </div>
+                    
+                    {/* Botón de acción FUNCIONAL */}
+                    <Link href={stat.link} style={{ textDecoration: 'none' }}>
+                      <button style={{
+                        width: '100%',
+                        padding: 'clamp(0.8rem, 2vw, 1rem)',
+                        background: `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)`,
+                        border: `1px solid ${stat.color}60`,
+                        borderRadius: 'clamp(12px, 3vw, 15px)',
+                        color: stat.color,
+                        fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        backdropFilter: 'blur(10px)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}40, ${stat.color}20)`
+                        e.currentTarget.style.borderColor = `${stat.color}`
+                        e.currentTarget.style.transform = 'scale(1.05)'
+                        e.currentTarget.style.boxShadow = `0 5px 20px ${stat.color}40`
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)`
+                        e.currentTarget.style.borderColor = `${stat.color}60`
+                        e.currentTarget.style.transform = 'scale(1)'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                      >
+                        {stat.action}
+                      </button>
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -1045,41 +1156,134 @@ export default function HomePage() {
               role="group"
               aria-label="Botones de acción final"
             >
-              <Link href="/events">
+              {/* Botón PRIMARIO - Explorar Eventos */}
+              <Link href="/events" style={{ textDecoration: 'none' }}>
                 <button 
-                  className="btn-primary-neon"
-                  onMouseEnter={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 0 50px rgba(0, 255, 255, 0.8)'
+                  style={{
+                    position: 'relative',
+                    padding: 'clamp(1.2rem, 3vw, 1.8rem) clamp(2.5rem, 5vw, 4rem)',
+                    background: 'linear-gradient(135deg, #00ffff 0%, #0080ff 25%, #ff00ff 50%, #8000ff 75%, #00ffff 100%)',
+                    backgroundSize: '400% 400%',
+                    border: 'none',
+                    borderRadius: 'clamp(25px, 6vw, 35px)',
+                    color: '#000000',
+                    fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    boxShadow: '0 10px 40px rgba(0, 255, 255, 0.6), 0 0 80px rgba(0, 255, 255, 0.3)',
+                    overflow: 'hidden',
+                    minWidth: 'clamp(200px, 50vw, 280px)',
+                    animation: 'gradient-shift 3s ease-in-out infinite'
                   }}
-                  onMouseLeave={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 0 40px rgba(0, 255, 255, 0.6)'
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
+                    e.currentTarget.style.boxShadow = '0 20px 60px rgba(0, 255, 255, 0.8), 0 0 120px rgba(0, 255, 255, 0.5)'
+                    e.currentTarget.style.animationPlayState = 'paused'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 255, 255, 0.6), 0 0 80px rgba(0, 255, 255, 0.3)'
+                    e.currentTarget.style.animationPlayState = 'running'
                   }}
                   tabIndex={0}
                   aria-label="Explorar eventos disponibles"
                 >
-                  🎫 Explorar Eventos
+                  {/* Efecto de brillo en hover */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '-50%',
+                    left: '-50%',
+                    width: '200%',
+                    height: '200%',
+                    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease',
+                    transform: 'rotate(45deg)',
+                    pointerEvents: 'none'
+                  }} 
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.opacity = '1'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '0'
+                  }}
+                  />
+                  
+                  {/* Contenido del botón */}
+                  <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.2em' }}>🎫</span>
+                    Explorar Eventos
+                    <span style={{ fontSize: '1.2em', transition: 'transform 0.3s ease' }}>→</span>
+                  </span>
                 </button>
               </Link>
               
-              <Link href="/create-event">
+              {/* Botón SECUNDARIO - Crear Evento */}
+              <Link href="/create-event" style={{ textDecoration: 'none' }}>
                 <button 
-                  className="btn-secondary-neon"
-                  onMouseEnter={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'
+                  style={{
+                    position: 'relative',
+                    padding: 'clamp(1.2rem, 3vw, 1.8rem) clamp(2.5rem, 5vw, 4rem)',
+                    background: 'rgba(0, 0, 0, 0.8)',
+                    border: '3px solid',
+                    borderImage: 'linear-gradient(135deg, #ffff00, #ff8000, #ff0080, #8000ff) 1',
+                    borderRadius: 'clamp(25px, 6vw, 35px)',
+                    color: '#ffff00',
+                    fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    boxShadow: '0 10px 40px rgba(255, 255, 0, 0.4), 0 0 80px rgba(255, 255, 0, 0.2), inset 0 0 20px rgba(255, 255, 0, 0.1)',
+                    overflow: 'hidden',
+                    minWidth: 'clamp(200px, 50vw, 280px)',
+                    backdropFilter: 'blur(20px)'
                   }}
-                  onMouseLeave={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
+                    e.currentTarget.style.boxShadow = '0 20px 60px rgba(255, 255, 0, 0.6), 0 0 120px rgba(255, 255, 0, 0.4), inset 0 0 30px rgba(255, 255, 0, 0.2)'
+                    e.currentTarget.style.background = 'rgba(255, 255, 0, 0.1)'
+                    e.currentTarget.style.color = '#ffffff'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(255, 255, 0, 0.4), 0 0 80px rgba(255, 255, 0, 0.2), inset 0 0 20px rgba(255, 255, 0, 0.1)'
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+                    e.currentTarget.style.color = '#ffff00'
                   }}
                   tabIndex={0}
                   aria-label="Crear un nuevo evento"
                 >
-                  🚀 Crear Evento
+                  {/* Efecto de partículas flotantes */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    right: '0',
+                    bottom: '0',
+                    background: 'radial-gradient(circle at 30% 20%, rgba(255, 255, 0, 0.1) 0%, transparent 50%)',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease',
+                    pointerEvents: 'none'
+                  }} 
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.opacity = '1'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '0'
+                  }}
+                  />
+                  
+                  {/* Contenido del botón */}
+                  <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.2em' }}>🚀</span>
+                    Crear Evento
+                    <span style={{ fontSize: '1.2em', transition: 'transform 0.3s ease' }}>✨</span>
+                  </span>
                 </button>
               </Link>
             </div>
