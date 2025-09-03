@@ -47,16 +47,7 @@
       "@/utils/*": [
         "./src/utils/*"
       ]
-    },
-    "types": [
-      "node",
-      "react",
-      "react-dom"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ]
+    }
   },
   "include": [
     "next-env.d.ts",

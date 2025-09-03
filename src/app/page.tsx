@@ -5,18 +5,39 @@ import Link from 'next/link'
 import { HeroSection } from '@/components/sections/hero-section'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
 import { AdvancedSearch } from '@/components/ui/advanced-search'
-import { useEvents } from '@/hooks/use-events'
+import { useEvents, type Event } from '@/hooks/use-events'
 import './animations.css'
 import './events.css'
 import './home.css'
 import '@/components/modals/checkout-modal.css'
+
+// Definir tipos para los eventos que coincidan con el hook
+interface EventData {
+  id: number
+  title: string
+  description: string
+  price: string
+  date: string
+  time: string
+  location: string
+  organizer: string
+  category: string
+  availableTickets: number
+  totalTickets: number
+  image: string
+  tags?: string[]
+  featured?: boolean
+  rating?: number
+  eventType?: 'presential' | 'virtual' | 'hybrid'
+  distance?: number
+}
 
 export default function HomePage() {
   const [isVisible, setIsVisible] = React.useState(false)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false)
-  const [selectedEvent, setSelectedEvent] = React.useState<any>(null)
+  const [selectedEvent, setSelectedEvent] = React.useState<EventData | null>(null)
 
 
   // Hook de eventos para la búsqueda avanzada
@@ -44,7 +65,7 @@ export default function HomePage() {
   } = useEvents()
 
   // Función para abrir el modal de checkout
-  const handleOpenCheckout = (event: any) => {
+  const handleOpenCheckout = (event: EventData) => {
     console.log('🎫 handleOpenCheckout llamado con evento:', event)
     console.log('🎫 Estado actual - isCheckoutOpen:', isCheckoutOpen, 'selectedEvent:', selectedEvent)
     
@@ -323,7 +344,7 @@ export default function HomePage() {
                 },
                 { 
                   icon: '🎫', 
-                  value: filteredAndSortedEvents.reduce((sum, event) => sum + event.availableTickets, 0), 
+                  value: filteredAndSortedEvents.reduce((sum: number, event: any) => sum + (event.availableTickets || 0), 0), 
                   label: 'Tickets Disponibles', 
                   color: '#ff00ff',
                   gradient: 'linear-gradient(135deg, #ff00ff, #8000ff)',
@@ -332,7 +353,7 @@ export default function HomePage() {
                 },
                 { 
                   icon: '💰', 
-                  value: filteredAndSortedEvents.length > 0 ? (filteredAndSortedEvents.reduce((sum, event) => sum + parseFloat(event.price.split(' ')[0]), 0) / filteredAndSortedEvents.length).toFixed(2) : '0', 
+                  value: filteredAndSortedEvents.length > 0 ? (filteredAndSortedEvents.reduce((sum: number, event: any) => sum + (parseFloat(event.price?.split(' ')[0] || '0')), 0) / filteredAndSortedEvents.length).toFixed(2) : '0', 
                   label: 'Precio Promedio (ETH)', 
                   color: '#ffff00',
                   gradient: 'linear-gradient(135deg, #ffff00, #ff8000)',
@@ -353,15 +374,17 @@ export default function HomePage() {
                   overflow: 'hidden',
                   boxShadow: `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'
-                  e.currentTarget.style.boxShadow = `0 25px 50px ${stat.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
-                  e.currentTarget.style.borderColor = `${stat.color}80`
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  const target = e.currentTarget as HTMLElement
+                  target.style.transform = 'translateY(-8px) scale(1.02)'
+                  target.style.boxShadow = `0 25px 50px ${stat.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+                  target.style.borderColor = `${stat.color}80`
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                  e.currentTarget.style.boxShadow = `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
-                  e.currentTarget.style.borderColor = `${stat.color}40`
+                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  const target = e.currentTarget as HTMLElement
+                  target.style.transform = 'translateY(0) scale(1)'
+                  target.style.boxShadow = `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
+                  target.style.borderColor = `${stat.color}40`
                 }}
                 >
                   {/* Fondo animado */}
@@ -388,11 +411,13 @@ export default function HomePage() {
                     transition: 'opacity 0.3s ease',
                     transform: 'rotate(45deg)'
                   }} 
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '1'
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '0'
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '0'
                   }}
                   />
                   
@@ -434,7 +459,7 @@ export default function HomePage() {
                     </div>
                     
                     {/* Botón de acción FUNCIONAL */}
-                    <Link href={stat.link} style={{ textDecoration: 'none' }}>
+                    <a href={stat.link} style={{ textDecoration: 'none' }}>
                       <button style={{
                         width: '100%',
                         padding: 'clamp(0.8rem, 2vw, 1rem)',
@@ -450,22 +475,24 @@ export default function HomePage() {
                         letterSpacing: '0.5px',
                         backdropFilter: 'blur(10px)'
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}40, ${stat.color}20)`
-                        e.currentTarget.style.borderColor = `${stat.color}`
-                        e.currentTarget.style.transform = 'scale(1.05)'
-                        e.currentTarget.style.boxShadow = `0 5px 20px ${stat.color}40`
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)`
-                        e.currentTarget.style.borderColor = `${stat.color}60`
-                        e.currentTarget.style.transform = 'scale(1)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
+                                             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                         const target = e.currentTarget as HTMLElement
+                         target.style.background = `linear-gradient(135deg, ${stat.color}40, ${stat.color}20)`
+                         target.style.borderColor = `${stat.color}`
+                         target.style.transform = 'scale(1.05)'
+                         target.style.boxShadow = `0 5px 20px ${stat.color}40`
+                       }}
+                       onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                         const target = e.currentTarget as HTMLElement
+                         target.style.background = `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)`
+                         target.style.borderColor = `${stat.color}60`
+                         target.style.transform = 'scale(1)'
+                         target.style.boxShadow = 'none'
+                       }}
                       >
                         {stat.action}
                       </button>
-                    </Link>
+                    </a>
                   </div>
                 </div>
               ))}
@@ -476,7 +503,7 @@ export default function HomePage() {
               textAlign: 'center',
               marginTop: 'clamp(2rem, 5vw, 3rem)'
             }}>
-              <Link href="/events">
+              <a href="/events">
                 <button 
                   style={{
                     padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
@@ -492,18 +519,20 @@ export default function HomePage() {
                     letterSpacing: '1px',
                     boxShadow: '0 10px 30px rgba(0, 255, 255, 0.3)'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-3px)'
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(-3px)'
+                    target.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(0)'
+                    target.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
                   }}
                 >
                   🚀 Ver Todos los Eventos
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
         </section>
@@ -679,13 +708,15 @@ export default function HomePage() {
                         position: 'relative',
                         overflow: 'hidden'
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-5px)'
-                        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
+                      onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                        const target = e.currentTarget as HTMLElement
+                        target.style.transform = 'translateY(-5px)'
+                        target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
                       }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)'
-                        e.currentTarget.style.boxShadow = 'none'
+                      onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                        const target = e.currentTarget as HTMLElement
+                        target.style.transform = 'translateY(0)'
+                        target.style.boxShadow = 'none'
                       }}
                     >
                       {/* Background Glow */}
@@ -905,15 +936,17 @@ export default function HomePage() {
                               cursor: 'pointer',
                               transition: 'all 0.3s ease'
                             }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = 'translateY(-2px)'
-                              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 255, 255, 0.4)'
+                            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              const target = e.currentTarget as HTMLElement
+                              target.style.transform = 'translateY(-2px)'
+                              target.style.boxShadow = '0 10px 25px rgba(0, 255, 255, 0.4)'
                             }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = 'translateY(0)'
-                              e.currentTarget.style.boxShadow = 'none'
+                            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              const target = e.currentTarget as HTMLElement
+                              target.style.transform = 'translateY(0)'
+                              target.style.boxShadow = 'none'
                             }}
-                            onClick={() => handleOpenCheckout(event)}
+                                                         onClick={() => handleOpenCheckout(event as EventData)}
                           >
                             🎫 Comprar Ticket
                           </button>
@@ -929,7 +962,7 @@ export default function HomePage() {
                 textAlign: 'center',
                 marginTop: 'clamp(2rem, 5vw, 3rem)'
               }}>
-                <Link href="/events">
+                <a href="/events">
                   <button 
                     style={{
                       padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
@@ -945,18 +978,20 @@ export default function HomePage() {
                       letterSpacing: '1px',
                       boxShadow: '0 10px 30px rgba(0, 255, 255, 0.3)'
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)'
-                      e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
+                    onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      const target = e.currentTarget as HTMLElement
+                      target.style.transform = 'translateY(-3px)'
+                      target.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
                     }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                      e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
+                    onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      const target = e.currentTarget as HTMLElement
+                      target.style.transform = 'translateY(0)'
+                      target.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
                     }}
                   >
                     🚀 Ver Todos los Eventos ({filteredAndSortedEvents.length})
                   </button>
-                </Link>
+                </a>
               </div>
             </div>
           </section>
@@ -981,13 +1016,15 @@ export default function HomePage() {
                   '--feature-color': feature.color,
                   '--feature-color-50': `${feature.color}80`
                 } as React.CSSProperties}
-                onMouseEnter={(e: any) => {
-                  e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)'
-                  e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
+                onMouseEnter={(e: React.MouseEvent) => {
+                  const target = e.currentTarget as HTMLElement
+                  target.style.transform = 'translateY(-5px) scale(1.02)'
+                  target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
                 }}
-                onMouseLeave={(e: any) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                  e.currentTarget.style.boxShadow = 'none'
+                onMouseLeave={(e: React.MouseEvent) => {
+                  const target = e.currentTarget as HTMLElement
+                  target.style.transform = 'translateY(0) scale(1)'
+                  target.style.boxShadow = 'none'
                 }}
                 tabIndex={0}
                 role="button"
@@ -1157,7 +1194,7 @@ export default function HomePage() {
               aria-label="Botones de acción final"
             >
               {/* Botón PRIMARIO - Explorar Eventos */}
-              <Link href="/events" style={{ textDecoration: 'none' }}>
+              <a href="/events" style={{ textDecoration: 'none' }}>
                 <button 
                   style={{
                     position: 'relative',
@@ -1178,15 +1215,17 @@ export default function HomePage() {
                     minWidth: 'clamp(200px, 50vw, 280px)',
                     animation: 'gradient-shift 3s ease-in-out infinite'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
-                    e.currentTarget.style.boxShadow = '0 20px 60px rgba(0, 255, 255, 0.8), 0 0 120px rgba(0, 255, 255, 0.5)'
-                    e.currentTarget.style.animationPlayState = 'paused'
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(-8px) scale(1.05)'
+                    target.style.boxShadow = '0 20px 60px rgba(0, 255, 255, 0.8), 0 0 120px rgba(0, 255, 255, 0.5)'
+                    target.style.animationPlayState = 'paused'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 255, 255, 0.6), 0 0 80px rgba(0, 255, 255, 0.3)'
-                    e.currentTarget.style.animationPlayState = 'running'
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(0) scale(1)'
+                    target.style.boxShadow = '0 10px 40px rgba(0, 255, 255, 0.6), 0 0 80px rgba(0, 255, 255, 0.3)'
+                    target.style.animationPlayState = 'running'
                   }}
                   tabIndex={0}
                   aria-label="Explorar eventos disponibles"
@@ -1204,11 +1243,13 @@ export default function HomePage() {
                     transform: 'rotate(45deg)',
                     pointerEvents: 'none'
                   }} 
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '1'
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '0'
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '0'
                   }}
                   />
                   
@@ -1219,17 +1260,16 @@ export default function HomePage() {
                     <span style={{ fontSize: '1.2em', transition: 'transform 0.3s ease' }}>→</span>
                   </span>
                 </button>
-              </Link>
+              </a>
               
               {/* Botón SECUNDARIO - Crear Evento */}
-              <Link href="/create-event" style={{ textDecoration: 'none' }}>
+              <a href="/create-event" style={{ textDecoration: 'none' }}>
                 <button 
                   style={{
                     position: 'relative',
                     padding: 'clamp(1.2rem, 3vw, 1.8rem) clamp(2.5rem, 5vw, 4rem)',
                     background: 'rgba(0, 0, 0, 0.8)',
-                    border: '3px solid',
-                    borderImage: 'linear-gradient(135deg, #ffff00, #ff8000, #ff0080, #8000ff) 1',
+                    border: 'none',
                     borderRadius: 'clamp(25px, 6vw, 35px)',
                     color: '#ffff00',
                     fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
@@ -1243,17 +1283,19 @@ export default function HomePage() {
                     minWidth: 'clamp(200px, 50vw, 280px)',
                     backdropFilter: 'blur(20px)'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
-                    e.currentTarget.style.boxShadow = '0 20px 60px rgba(255, 255, 0, 0.6), 0 0 120px rgba(255, 255, 0, 0.4), inset 0 0 30px rgba(255, 255, 0, 0.2)'
-                    e.currentTarget.style.background = 'rgba(255, 255, 0, 0.1)'
-                    e.currentTarget.style.color = '#ffffff'
+                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(-8px) scale(1.05)'
+                    target.style.boxShadow = '0 20px 60px rgba(255, 255, 0, 0.6), 0 0 120px rgba(255, 255, 0, 0.4), inset 0 0 30px rgba(255, 255, 0, 0.2)'
+                    target.style.background = 'rgba(255, 255, 0, 0.1)'
+                    target.style.color = '#ffffff'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(255, 255, 0, 0.4), 0 0 80px rgba(255, 255, 0, 0.2), inset 0 0 20px rgba(255, 255, 0, 0.1)'
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
-                    e.currentTarget.style.color = '#ffff00'
+                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.transform = 'translateY(0) scale(1)'
+                    target.style.boxShadow = '0 10px 40px rgba(255, 255, 0, 0.4), 0 0 80px rgba(255, 255, 0, 0.2), inset 0 0 20px rgba(255, 255, 0, 0.1)'
+                    target.style.background = 'rgba(0, 0, 0, 0.8)'
+                    target.style.color = '#ffff00'
                   }}
                   tabIndex={0}
                   aria-label="Crear un nuevo evento"
@@ -1270,11 +1312,13 @@ export default function HomePage() {
                     transition: 'opacity 0.3s ease',
                     pointerEvents: 'none'
                   }} 
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '1'
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '0'
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    const target = e.currentTarget as HTMLElement
+                    target.style.opacity = '0'
                   }}
                   />
                   
@@ -1285,7 +1329,7 @@ export default function HomePage() {
                     <span style={{ fontSize: '1.2em', transition: 'transform 0.3s ease' }}>✨</span>
                   </span>
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
         </section>
