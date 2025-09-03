@@ -5,7 +5,7 @@ import { walletConnect } from 'wagmi/connectors'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
 // Project ID de Reown Dashboard
-export const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || 'd4181325794a773fbf713afbfbd8b348'
+export const projectId = process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || '1da85635dfe0a0a84f4ab35591ab221c'
 
 if (!projectId) {
   throw new Error('Project ID is not defined')

@@ -1,7 +1,7 @@
 export const envConfig = {
   // AppKit Configuration
   appKit: {
-    projectId: process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || 'd4181325794a773fbf713afbfbd8b348',
+            projectId: process.env.NEXT_PUBLIC_APPKIT_PROJECT_ID || '1da85635dfe0a0a84f4ab35591ab221c',
     environment: process.env.NODE_ENV || 'development',
   },
   
