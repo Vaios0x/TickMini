@@ -21,7 +21,7 @@ export function NeuralHero() {
   React.useEffect(() => {
     const createNodes = () => {
       const newNodes: NeuralNode[] = []
-      const nodeCount = 25
+      const nodeCount = 20 // Reducido de 25 a 20 para mejor rendimiento
       
       for (let i = 0; i < nodeCount; i++) {
         const x = Math.random() * 100
@@ -29,7 +29,7 @@ export function NeuralHero() {
         const connections: number[] = []
         
         // Crear conexiones aleatorias entre nodos
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < 2; j++) { // Reducido de 3 a 2 conexiones
           const target = Math.floor(Math.random() * nodeCount)
           if (target !== i && !connections.includes(target)) {
             connections.push(target)
@@ -94,10 +94,10 @@ export function NeuralHero() {
             const distToMouse = Math.sqrt((x1 - mouseX) ** 2 + (y1 - mouseY) ** 2)
             
             // Intensidad basada en la distancia al mouse
-            const intensity = Math.max(0, 1 - distToMouse / 200)
+            const intensity = Math.max(0, 1 - distToMouse / 300) // Aumentado de 200 a 300
             
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 + intensity * 0.3})`
-            ctx.lineWidth = 1 + intensity * 2
+            ctx.strokeStyle = `rgba(0, 255, 255, ${0.05 + intensity * 0.2})` // Reducida opacidad
+            ctx.lineWidth = 0.5 + intensity * 1.5 // Reducido grosor
             ctx.beginPath()
             ctx.moveTo(x1, y1)
             ctx.lineTo(x2, y2)
@@ -112,8 +112,8 @@ export function NeuralHero() {
         const y = (node.y / 100) * canvas.height
         
         // Efecto de pulso
-        node.pulse += 0.05
-        const pulseSize = Math.sin(node.pulse) * 0.3 + 1
+        node.pulse += 0.03 // Reducido de 0.05 a 0.03
+        const pulseSize = Math.sin(node.pulse) * 0.2 + 1 // Reducido de 0.3 a 0.2
         
         // Calcular distancia al mouse
         const mouseX = (mousePosition.x / 100) * canvas.width
@@ -121,25 +121,25 @@ export function NeuralHero() {
         const distToMouse = Math.sqrt((x - mouseX) ** 2 + (y - mouseY) ** 2)
         
         // Intensidad basada en la distancia al mouse
-        const intensity = Math.max(0, 1 - distToMouse / 150)
+        const intensity = Math.max(0, 1 - distToMouse / 200) // Aumentado de 150 a 200
         
         // Nodo principal
-        ctx.fillStyle = `rgba(0, 255, 255, ${0.8 + intensity * 0.2})`
+        ctx.fillStyle = `rgba(0, 255, 255, ${0.6 + intensity * 0.2})` // Reducida opacidad base
         ctx.beginPath()
-        ctx.arc(x, y, 4 * pulseSize, 0, Math.PI * 2)
+        ctx.arc(x, y, 3 * pulseSize, 0, Math.PI * 2) // Reducido de 4 a 3
         ctx.fill()
         
         // Halo exterior
-        ctx.fillStyle = `rgba(0, 255, 255, ${0.1 + intensity * 0.3})`
+        ctx.fillStyle = `rgba(0, 255, 255, ${0.05 + intensity * 0.2})` // Reducida opacidad
         ctx.beginPath()
-        ctx.arc(x, y, 8 * pulseSize, 0, Math.PI * 2)
+        ctx.arc(x, y, 6 * pulseSize, 0, Math.PI * 2) // Reducido de 8 a 6
         ctx.fill()
         
         // Efecto de brillo
-        if (intensity > 0.5) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${intensity * 0.5})`
+        if (intensity > 0.6) { // Aumentado de 0.5 a 0.6
+          ctx.fillStyle = `rgba(255, 255, 255, ${intensity * 0.3})` // Reducida opacidad
           ctx.beginPath()
-          ctx.arc(x, y, 2 * pulseSize, 0, Math.PI * 2)
+          ctx.arc(x, y, 1.5 * pulseSize, 0, Math.PI * 2) // Reducido de 2 a 1.5
           ctx.fill()
         }
       })
@@ -162,8 +162,11 @@ export function NeuralHero() {
     if (!canvas) return
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const rect = canvas.parentElement?.getBoundingClientRect()
+      if (rect) {
+        canvas.width = rect.width
+        canvas.height = rect.height
+      }
     }
 
     resizeCanvas()
@@ -172,31 +175,40 @@ export function NeuralHero() {
   }, [])
 
   return (
-    <section className="neural-hero relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="neural-hero relative h-screen flex items-center justify-center overflow-hidden">
       {/* Canvas de fondo neural */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ zIndex: 1 }}
+        style={{ 
+          zIndex: 0, // Cambiado de 1 a 0
+          pointerEvents: 'none' // Asegurar que no interfiera con clicks
+        }}
       />
       
       {/* Overlay de gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-cyan-900/40 z-10" />
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-cyan-900/30" 
+        style={{ zIndex: 1 }} // Cambiado de 10 a 1
+      />
       
       {/* Contenido principal */}
-      <div className="relative z-20 text-center px-4 max-w-6xl mx-auto">
+      <div 
+        className="relative text-center px-4 max-w-6xl mx-auto"
+        style={{ zIndex: 2 }} // Cambiado de 20 a 2
+      >
         {/* Título principal con efecto de texto neural */}
-        <h1 className="neural-title text-6xl md:text-8xl font-bold mb-8">
+        <h1 className="neural-title text-5xl md:text-7xl font-bold mb-8">
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-cyan-400 animate-gradient-x">
             TickBase
           </span>
-          <span className="block text-2xl md:text-4xl font-light text-cyan-300 mt-4 opacity-80">
+          <span className="block text-xl md:text-3xl font-light text-cyan-300 mt-4 opacity-80">
             El Futuro del Ticketing NFT
           </span>
         </h1>
         
         {/* Subtítulo */}
-        <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
           Plataforma revolucionaria de venta y gestión de boletos NFT construida sobre{' '}
           <span className="text-cyan-400 font-semibold">Base Network</span>. 
           Conecta eventos globales a través de la tecnología blockchain más avanzada.
@@ -222,7 +234,7 @@ export function NeuralHero() {
         </div>
         
         {/* Estadísticas con efecto neural */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
           {[
             { value: '10K+', label: 'Tickets NFT', icon: '🎫', color: 'from-cyan-400 to-blue-500' },
             { value: '500+', label: 'Eventos', icon: '🎭', color: 'from-purple-400 to-pink-500' },
@@ -231,16 +243,16 @@ export function NeuralHero() {
           ].map((stat, index) => (
             <div
               key={index}
-              className="neural-stat-card group relative p-6 rounded-2xl border border-cyan-400/20 bg-black/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-cyan-400/40 hover:bg-black/30"
+              className="neural-stat-card group relative p-4 rounded-xl border border-cyan-400/20 bg-black/20 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-cyan-400/40 hover:bg-black/30"
             >
-              <div className="text-4xl mb-2">{stat.icon}</div>
-              <div className={`text-3xl font-bold mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+              <div className="text-3xl mb-2">{stat.icon}</div>
+              <div className={`text-2xl font-bold mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                 {stat.value}
               </div>
-              <div className="text-sm text-gray-400">{stat.label}</div>
+              <div className="text-xs text-gray-400">{stat.label}</div>
               
               {/* Efecto de brillo neural */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
           ))}
         </div>
@@ -254,11 +266,14 @@ export function NeuralHero() {
       </div>
       
       {/* Partículas flotantes adicionales */}
-      <div className="absolute inset-0 pointer-events-none z-5">
-        {[...Array(20)].map((_, i) => (
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 1 }} // Cambiado de 5 a 1
+      >
+        {[...Array(15)].map((_, i) => ( // Reducido de 20 a 15
           <div
             key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30 animate-float"
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-20 animate-float" // Reducida opacidad de 0.3 a 0.2
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
