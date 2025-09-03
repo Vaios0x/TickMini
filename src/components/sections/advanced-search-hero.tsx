@@ -18,7 +18,7 @@ interface AdvancedSearchHeroProps {
   dateRange: [Date | null, Date | null]
   setDateRange: (range: [Date | null, Date | null]) => void
   selectedTags: string[]
-  setSelectedTags: (tags: string[]) => void
+  setSelectedTags: (tags: string[] | ((prev: string[]) => string[])) => void
   showAdvancedFilters: boolean
   setShowAdvancedFilters: (show: boolean) => void
   categories: any[]

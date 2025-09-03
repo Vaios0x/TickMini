@@ -374,13 +374,13 @@ export default function HomePage() {
                   overflow: 'hidden',
                   boxShadow: `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
                 }}
-                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                onMouseEnter={(e: any) => {
                   const target = e.currentTarget as HTMLElement
                   target.style.transform = 'translateY(-8px) scale(1.02)'
                   target.style.boxShadow = `0 25px 50px ${stat.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
                   target.style.borderColor = `${stat.color}80`
                 }}
-                onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                onMouseLeave={(e: any) => {
                   const target = e.currentTarget as HTMLElement
                   target.style.transform = 'translateY(0) scale(1)'
                   target.style.boxShadow = `0 10px 30px ${stat.color}20, inset 0 1px 0 rgba(255, 255, 255, 0.1)`
@@ -411,11 +411,11 @@ export default function HomePage() {
                     transition: 'opacity 0.3s ease',
                     transform: 'rotate(45deg)'
                   }} 
-                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '0'
                   }}
@@ -475,14 +475,14 @@ export default function HomePage() {
                         letterSpacing: '0.5px',
                         backdropFilter: 'blur(10px)'
                       }}
-                                             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                             onMouseEnter={(e: any) => {
                          const target = e.currentTarget as HTMLElement
                          target.style.background = `linear-gradient(135deg, ${stat.color}40, ${stat.color}20)`
                          target.style.borderColor = `${stat.color}`
                          target.style.transform = 'scale(1.05)'
                          target.style.boxShadow = `0 5px 20px ${stat.color}40`
                        }}
-                       onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                       onMouseLeave={(e: any) => {
                          const target = e.currentTarget as HTMLElement
                          target.style.background = `linear-gradient(135deg, ${stat.color}20, ${stat.color}10)`
                          target.style.borderColor = `${stat.color}60`
@@ -519,12 +519,12 @@ export default function HomePage() {
                     letterSpacing: '1px',
                     boxShadow: '0 10px 30px rgba(0, 255, 255, 0.3)'
                   }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(-3px)'
                     target.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(0)'
                     target.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
@@ -708,12 +708,12 @@ export default function HomePage() {
                         position: 'relative',
                         overflow: 'hidden'
                       }}
-                      onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                      onMouseEnter={(e: any) => {
                         const target = e.currentTarget as HTMLElement
                         target.style.transform = 'translateY(-5px)'
                         target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
                       }}
-                      onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                      onMouseLeave={(e: any) => {
                         const target = e.currentTarget as HTMLElement
                         target.style.transform = 'translateY(0)'
                         target.style.boxShadow = 'none'
@@ -936,12 +936,12 @@ export default function HomePage() {
                               cursor: 'pointer',
                               transition: 'all 0.3s ease'
                             }}
-                            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            onMouseEnter={(e: any) => {
                               const target = e.currentTarget as HTMLElement
                               target.style.transform = 'translateY(-2px)'
                               target.style.boxShadow = '0 10px 25px rgba(0, 255, 255, 0.4)'
                             }}
-                            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            onMouseLeave={(e: any) => {
                               const target = e.currentTarget as HTMLElement
                               target.style.transform = 'translateY(0)'
                               target.style.boxShadow = 'none'
@@ -978,12 +978,12 @@ export default function HomePage() {
                       letterSpacing: '1px',
                       boxShadow: '0 10px 30px rgba(0, 255, 255, 0.3)'
                     }}
-                    onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    onMouseEnter={(e: any) => {
                       const target = e.currentTarget as HTMLElement
                       target.style.transform = 'translateY(-3px)'
                       target.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.5)'
                     }}
-                    onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    onMouseLeave={(e: any) => {
                       const target = e.currentTarget as HTMLElement
                       target.style.transform = 'translateY(0)'
                       target.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
@@ -1016,12 +1016,12 @@ export default function HomePage() {
                   '--feature-color': feature.color,
                   '--feature-color-50': `${feature.color}80`
                 } as React.CSSProperties}
-                onMouseEnter={(e: React.MouseEvent) => {
+                onMouseEnter={(e: any) => {
                   const target = e.currentTarget as HTMLElement
                   target.style.transform = 'translateY(-5px) scale(1.02)'
                   target.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
                 }}
-                onMouseLeave={(e: React.MouseEvent) => {
+                onMouseLeave={(e: any) => {
                   const target = e.currentTarget as HTMLElement
                   target.style.transform = 'translateY(0) scale(1)'
                   target.style.boxShadow = 'none'
@@ -1215,13 +1215,13 @@ export default function HomePage() {
                     minWidth: 'clamp(200px, 50vw, 280px)',
                     animation: 'gradient-shift 3s ease-in-out infinite'
                   }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(-8px) scale(1.05)'
                     target.style.boxShadow = '0 20px 60px rgba(0, 255, 255, 0.8), 0 0 120px rgba(0, 255, 255, 0.5)'
                     target.style.animationPlayState = 'paused'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(0) scale(1)'
                     target.style.boxShadow = '0 10px 40px rgba(0, 255, 255, 0.6), 0 0 80px rgba(0, 255, 255, 0.3)'
@@ -1243,11 +1243,11 @@ export default function HomePage() {
                     transform: 'rotate(45deg)',
                     pointerEvents: 'none'
                   }} 
-                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '0'
                   }}
@@ -1283,14 +1283,14 @@ export default function HomePage() {
                     minWidth: 'clamp(200px, 50vw, 280px)',
                     backdropFilter: 'blur(20px)'
                   }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(-8px) scale(1.05)'
                     target.style.boxShadow = '0 20px 60px rgba(255, 255, 0, 0.6), 0 0 120px rgba(255, 255, 0, 0.4), inset 0 0 30px rgba(255, 255, 0, 0.2)'
                     target.style.background = 'rgba(255, 255, 0, 0.1)'
                     target.style.color = '#ffffff'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.transform = 'translateY(0) scale(1)'
                     target.style.boxShadow = '0 10px 40px rgba(255, 255, 0, 0.4), 0 0 80px rgba(255, 255, 0, 0.2), inset 0 0 20px rgba(255, 255, 0, 0.1)'
@@ -1312,11 +1312,11 @@ export default function HomePage() {
                     transition: 'opacity 0.3s ease',
                     pointerEvents: 'none'
                   }} 
-                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseEnter={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '1'
                   }}
-                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                  onMouseLeave={(e: any) => {
                     const target = e.currentTarget as HTMLElement
                     target.style.opacity = '0'
                   }}

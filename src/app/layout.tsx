@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next/types'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: {
-  children: any
+  children: React.ReactNode
 }) {
   const headersObj = await headers();
   const cookies = headersObj.get('cookie')
@@ -34,11 +34,13 @@ export default async function RootLayout({
         fontFamily: 'Inter, system-ui, sans-serif'
       }}>
         <ContextProvider cookies={cookies}>
-          <Navbar />
-          <div style={{ paddingTop: '80px' }}>
-            {children}
+          <div>
+            <Navbar />
+            <div style={{ paddingTop: '80px' }}>
+              {children}
+            </div>
+            <Footer />
           </div>
-          <Footer />
         </ContextProvider>
       </body>
     </html>

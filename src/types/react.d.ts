@@ -1,41 +1,28 @@
-declare module '*.svg' {
-  const content: any
-  export default content
-}
-
-declare module '*.png' {
-  const content: string
-  export default content
-}
-
-declare module '*.jpg' {
-  const content: string
-  export default content
-}
-
-declare module '*.jpeg' {
-  const content: string
-  export default content
-}
-
-declare module '*.gif' {
-  const content: string
-  export default content
-}
-
-// Declaración JSX global para resolver errores de TypeScript
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any
-    }
-  }
-}
+/// <reference types="react" />
+/// <reference types="react-dom" />
 
 // Extender el módulo React para asegurar que JSX funcione
 declare module 'react' {
   interface JSX {
     IntrinsicElements: {
+      [elemName: string]: any
+    }
+  }
+}
+
+// Extender el módulo React-DOM para asegurar que JSX funcione
+declare module 'react-dom' {
+  interface JSX {
+    IntrinsicElements: {
+      [elemName: string]: any
+    }
+  }
+}
+
+// Extender el namespace JSX global
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
       [elemName: string]: any
     }
   }
