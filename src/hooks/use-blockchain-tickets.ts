@@ -77,6 +77,22 @@ const KNOWN_TRANSACTIONS = [
     price: '0.05 ETH',
     timestamp: new Date('2025-09-04T18:20:18Z').getTime(), // 4 de septiembre 2025, 6:20:18 PM UTC (nuevo ticket)
     blockNumber: 30620865
+  },
+  {
+    hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12',
+    tokenId: 7,
+    eventId: 2,
+    price: '0.000000001 ETH',
+    timestamp: new Date('2025-09-04T19:30:00Z').getTime(), // 4 de septiembre 2025, 7:30:00 PM UTC (evento demo)
+    blockNumber: 30621000
+  },
+  {
+    hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab',
+    tokenId: 8,
+    eventId: 3,
+    price: '0.000000001 ETH',
+    timestamp: new Date('2025-09-04T20:45:00Z').getTime(), // 4 de septiembre 2025, 8:45:00 PM UTC (evento demo)
+    blockNumber: 30621100
   }
 ]
 
@@ -160,6 +176,28 @@ export function useBlockchainTickets() {
             category: 'finance',
             organizer: 'DeFi Latam',
             benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento', 'Networking VIP']
+          }
+        case 7:
+          return {
+            name: 'AI & Blockchain Workshop',
+            date: '15-17 Noviembre 2026',
+            location: 'Innovation Hub, Tijuana',
+            type: 'Workshop',
+            image: '🤖',
+            category: 'tech',
+            organizer: 'AI Chain Labs',
+            benefits: ['Acceso al workshop', 'Certificado NFT', 'Material digital', 'Networking', 'Coffee break']
+          }
+        case 8:
+          return {
+            name: 'Crypto Art Gallery Opening',
+            date: '3-5 Diciembre 2026',
+            location: 'Galería Digital, Mérida',
+            type: 'VIP',
+            image: '🎭',
+            category: 'art',
+            organizer: 'CryptoArt MX',
+            benefits: ['Acceso VIP', 'Certificado NFT', 'Catálogo exclusivo', 'Cocktail reception', 'Meet the artists']
           }
         default:
           return {

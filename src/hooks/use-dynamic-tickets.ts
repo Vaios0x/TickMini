@@ -183,6 +183,30 @@ export function useDynamicTickets() {
                   benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento', 'Networking VIP'],
                   price: '0.05 ETH'
                 }
+              case 7:
+                return {
+                  name: 'AI & Blockchain Workshop',
+                  date: '15-17 Noviembre 2026',
+                  location: 'Innovation Hub, Tijuana',
+                  type: 'Workshop',
+                  image: '🤖',
+                  category: 'tech',
+                  organizer: 'AI Chain Labs',
+                  benefits: ['Acceso al workshop', 'Certificado NFT', 'Material digital', 'Networking', 'Coffee break'],
+                  price: '0.000000001 ETH'
+                }
+              case 8:
+                return {
+                  name: 'Crypto Art Gallery Opening',
+                  date: '3-5 Diciembre 2026',
+                  location: 'Galería Digital, Mérida',
+                  type: 'VIP',
+                  image: '🎭',
+                  category: 'art',
+                  organizer: 'CryptoArt MX',
+                  benefits: ['Acceso VIP', 'Certificado NFT', 'Catálogo exclusivo', 'Cocktail reception', 'Meet the artists'],
+                  price: '0.000000001 ETH'
+                }
               default:
                 return {
                   name: 'Web3 Summit 2026',
@@ -208,7 +232,9 @@ export function useDynamicTickets() {
               3: '0xcbc5188852a8ebf6c1b49be4bf70e955dff1438f5ff1a523881603c7747ecbff',
               4: '0xbd290f12a70005cb7044ade85e7514a451df0ac12f7999f7604a3c27ee91c9f3',
               5: '0x6053cabfae7a87d5b390529074629a7b043a39fbbc1be200b72f0505cb6c7fe8',
-              6: '0x77338582f9dd8f58e507bf321154acb97899ae3fbb715aadc1f49a59e70c7b08'
+              6: '0x77338582f9dd8f58e507bf321154acb97899ae3fbb715aadc1f49a59e70c7b08',
+              7: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12',
+              8: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab'
             }
             return realHashes[tokenId as keyof typeof realHashes] || `0x${Math.random().toString(16).substr(2, 64)}`
           }
@@ -229,6 +255,18 @@ export function useDynamicTickets() {
                   month: 'long',
                   day: 'numeric'
                 })
+              : tokenId === 7
+              ? new Date('2025-09-04T19:30:00Z').toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
+              : tokenId === 8
+              ? new Date('2025-09-04T20:45:00Z').toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
               : new Date('2025-09-04T16:55:52Z').toLocaleDateString('es-ES', {
                   year: 'numeric',
                   month: 'long',
@@ -243,7 +281,7 @@ export function useDynamicTickets() {
             transactionHash: realHash,
             eventId: 1,
             owner: address,
-            blockNumber: tokenId === 6 ? 30620865 : 30618332 + tokenId - 1,
+            blockNumber: tokenId === 6 ? 30620865 : tokenId === 7 ? 30621000 : tokenId === 8 ? 30621100 : 30618332 + tokenId - 1,
             gasUsed: '334735',
             isValid: true,
             explorerUrl: `https://sepolia.basescan.org/tx/${realHash}`
