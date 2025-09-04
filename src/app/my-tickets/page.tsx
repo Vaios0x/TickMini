@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
+import { useSimpleTickets } from '@/hooks/use-simple-tickets'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import './my-tickets.css'
 
@@ -36,7 +36,7 @@ export default function MyTicketsPage() {
   const [showDetails, setShowDetails] = useState(false)
   const [filter, setFilter] = useState<'all' | 'valid' | 'used' | 'expired'>('all')
 
-  // Usar el hook para obtener tickets reales del contrato
+  // Usar el hook simplificado para obtener tickets
   const {
     tickets: myTickets,
     isLoading,
@@ -46,7 +46,7 @@ export default function MyTicketsPage() {
     validTickets,
     usedTickets,
     expiredTickets
-  } = useBlockchainTickets()
+  } = useSimpleTickets()
 
   const filteredTickets = myTickets.filter(ticket => {
     switch (filter) {
