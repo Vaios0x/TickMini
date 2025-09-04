@@ -147,7 +147,10 @@ export function useContractTransactions() {
           ticketData.benefits,
           ticketData.tokenURI
         ],
-        value: priceInWei
+        value: priceInWei,
+        // Configuración de gas para Base Sepolia (testnet)
+        gas: chainId === 84532 ? BigInt(500000) : undefined, // Base Sepolia
+        gasPrice: chainId === 84532 ? BigInt(1000000000) : undefined // 1 gwei para Base Sepolia
       })
 
       console.log('✅ Transacción enviada, hash:', hash)
@@ -214,7 +217,10 @@ export function useContractTransactions() {
           benefits,
           tokenURIs
         ],
-        value: totalValue
+        value: totalValue,
+        // Configuración de gas para Base Sepolia (testnet)
+        gas: chainId === 84532 ? BigInt(800000) : undefined, // Base Sepolia - más gas para batch
+        gasPrice: chainId === 84532 ? BigInt(1000000000) : undefined // 1 gwei para Base Sepolia
       })
 
       console.log('✅ Transacción batch enviada, hash:', hash)

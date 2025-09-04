@@ -1,7 +1,7 @@
 // Configuración específica para AppKit que evita problemas de WalletConnect
 export const appKitConfig = {
-  // Solo usar la red Base
-  networks: ['base'],
+  // Usar Base Sepolia para testing (GRATIS) y Base para producción
+  networks: ['baseSepolia', 'base'],
   
   // Configuración del adaptador Wagmi
   adapters: ['wagmi'],
