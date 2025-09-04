@@ -1,0 +1,385 @@
+/* Animaciones para la página de mis tickets */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+  }
+}
+
+/* Estilos para los tickets */
+.ticket-card {
+  animation: fadeIn 0.6s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ticket-card:hover {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Estilos para los filtros */
+.filter-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.filter-button:hover::before {
+  left: 100%;
+}
+
+/* Estilos para el modal */
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Estilos para el estado de carga */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Estilos para los badges de estado */
+.status-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .ticket-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .filter-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .filter-button {
+    width: 100% !important;
+    max-width: 200px !important;
+  }
+  
+  .modal-content {
+    margin: 1rem !important;
+    padding: 2rem !important;
+    max-height: calc(100vh - 2rem) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ticket-card {
+    padding: 1.5rem !important;
+  }
+  
+  .modal-content {
+    padding: 1.5rem !important;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Efectos de hover mejorados */
+.ticket-card:hover .ticket-image {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.ticket-card:hover .ticket-title {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Estilos para los beneficios */
+.benefit-tag {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+}
+
+/* Estilos para el botón de ver detalles */
+.details-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.details-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.details-button:hover::before {
+  left: 100%;
+}
+
+.details-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+}
+
+/* Estilos para el estado vacío */
+.empty-state {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.empty-state-icon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Estilos para el header */
+.page-header {
+  animation: fadeIn 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* Estilos para el botón de conectar wallet */
+.connect-wallet-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.connect-wallet-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.connect-wallet-button:hover::before {
+  left: 100%;
+}
+
+.connect-wallet-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
+}
+
+/* Estilos para el modal de detalles */
+.ticket-details-modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.ticket-details-content {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Estilos para los botones del modal */
+.modal-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.modal-button:hover::before {
+  left: 100%;
+}
+
+.modal-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Estilos para el scroll personalizado */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #00cccc, #cc00cc);
+}
+
+/* Estilos para el texto del token ID */
+.token-id {
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  color: #00ffff;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.token-id:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: rgba(0, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+/* Estilos para las transacciones */
+.transaction-hash {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #888888;
+  word-break: break-all;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos para el estado de conexión */
+.wallet-connection-state {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Estilos para los efectos de partículas */
+.particle-effect {
+  position: absolute;
+  pointer-events: none;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Estilos para el gradiente animado */
+.animated-gradient {
+  background: linear-gradient(-45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+  background-size: 400% 400%;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

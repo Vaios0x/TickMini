@@ -291,6 +291,31 @@ export function Navbar() {
               }} />
             </Link>
             
+            <Link href="/my-tickets" style={{
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              padding: '0.75rem 1.2rem',
+              borderRadius: '15px',
+              border: '1px solid transparent',
+              position: 'relative',
+              overflow: 'hidden'
+            }} className="nav-link">
+              <span style={{ position: 'relative', zIndex: 1 }}>Mis Tickets</span>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1))',
+                opacity: 0,
+                transition: 'opacity 0.3s ease'
+              }} />
+            </Link>
+            
             <Link href="/about"
               style={{
                 color: '#ffffff',
@@ -541,6 +566,27 @@ export function Navbar() {
             }} className="nav-link mobile-nav-link" onClick={closeMobileMenu}>
               <span style={{ fontSize: '2rem' }}>🔍</span>
               <span>Verificar Ticket</span>
+            </Link>
+            
+            <Link href="/my-tickets" style={{
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '1.3rem',
+              fontWeight: '500',
+              padding: '1.5rem 2rem',
+              borderRadius: '25px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              transition: 'all 0.3s ease',
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(15px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.5rem',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+              minHeight: '70px'
+            }} className="nav-link mobile-nav-link" onClick={closeMobileMenu}>
+              <span style={{ fontSize: '2rem' }}>🎫</span>
+              <span>Mis Tickets</span>
             </Link>
             
             <Link href="/about"
