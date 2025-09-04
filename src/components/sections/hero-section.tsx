@@ -76,11 +76,12 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+            className="hero-title"
+            data-text="TickBase"
           >
-            <span style={{ color: '#00ff00', textShadow: '0 0 20px rgba(0, 255, 0, 0.5)' }}>TickBase</span>
+            TickBase
             <br />
-            <span className="text-4xl md:text-5xl" style={{ color: '#ffffff' }}>
+            <span className="hero-description">
               El Futuro del Ticketing NFT
             </span>
           </motion.h1>
