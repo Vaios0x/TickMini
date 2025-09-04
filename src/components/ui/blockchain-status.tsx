@@ -23,7 +23,7 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
     refreshTickets,
     totalTickets,
     validTickets,
-    realBalance
+    balance: realBalance
   } = useRealBlockchainTickets()
 
   const {

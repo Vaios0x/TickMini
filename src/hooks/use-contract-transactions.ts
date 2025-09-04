@@ -143,7 +143,7 @@ export function useContractTransactions() {
       }))
       return null
     }
-  }, [isConnected, address, chainId, writeContractAsync, getGasConfig])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 2. MINTEAR TICKET INDIVIDUAL
   const mintTicket = useCallback(async (ticketData: TicketData): Promise<{ hash: string, tokenId: number } | null> => {
@@ -211,7 +211,7 @@ export function useContractTransactions() {
       }))
       throw error
     }
-  }, [isConnected, address, chainId, writeContractAsync, getGasConfig])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 3. MINTEAR MÚLTIPLES TICKETS (BATCH)
   const batchMintTickets = useCallback(async (
@@ -283,7 +283,7 @@ export function useContractTransactions() {
       }))
       throw error
     }
-  }, [isConnected, address, chainId, writeContractAsync, getGasConfig])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 4. USAR TICKET (VALIDACIÓN)
   const useTicket = useCallback(async (tokenId: number): Promise<string | null> => {
@@ -328,7 +328,7 @@ export function useContractTransactions() {
       }))
       return null
     }
-  }, [isConnected, address, chainId, writeContractAsync, getGasConfig])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 5. CREAR EVENTO ACTIVO POR DEFECTO
   const createDefaultActiveEvent = useCallback(async (): Promise<number | null> => {
@@ -410,7 +410,7 @@ export function useContractTransactions() {
       }))
       return null
     }
-  }, [isConnected, address, chainId, writeContractAsync, getGasConfig])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // Función para compra completa (crear evento + mintear ticket)
   const purchaseTicket = useCallback(async (eventData: EventData, ticketData: TicketData): Promise<{ hash: string, tokenId: number } | null> => {

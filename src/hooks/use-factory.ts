@@ -108,7 +108,7 @@ export function useFactory() {
       }))
       throw error
     }
-  }, [isConnected, address, chainId, writeContract, writeContractAsync])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 2. CREAR TIPO DE TICKET
   const createTicketType = useCallback(async (ticketTypeData: TicketTypeData): Promise<string | null> => {
@@ -168,7 +168,7 @@ export function useFactory() {
       }))
       throw error
     }
-  }, [isConnected, address, chainId, writeContract, writeContractAsync])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 3. MINTEAR TICKETS
   const mintTickets = useCallback(async (mintData: MintTicketsData): Promise<string | null> => {
@@ -224,7 +224,7 @@ export function useFactory() {
       }))
       throw error
     }
-  }, [isConnected, address, chainId, writeContract, writeContractAsync])
+  }, [isConnected, address, chainId, writeContractAsync])
 
   // 4. OBTENER DIRECCIÓN DEL TICKET NFT
   const useTicketNFTAddress = () => {
