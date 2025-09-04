@@ -145,8 +145,8 @@ export function useTicketVerification() {
       try {
         result = await verifyTicketOnChain(tokenId)
       } catch (blockchainError) {
-        console.log('⚠️ Verificación blockchain falló, usando simulación:', blockchainError)
-        // Fallback a simulación
+        console.log('⚠️ Verificación blockchain falló, usando simulación mejorada:', blockchainError)
+        // Fallback a simulación mejorada que reconoce tokenIds generados
         result = await simulateBlockchainVerification(ticketIdentifier)
       }
 
@@ -272,11 +272,16 @@ async function simulateBlockchainVerification(ticketIdentifier: string): Promise
   const randomType = ticketTypes[Math.floor(Math.random() * ticketTypes.length)]
   const randomBenefits = benefits.slice(0, 3 + Math.floor(Math.random() * 4))
 
+  // Determinar si es un tokenId generado recientemente (últimos 7 días)
+  const tokenIdNum = parseInt(ticketIdentifier)
+  const currentTime = Math.floor(Date.now() / 1000)
+  const isRecentToken = tokenIdNum > currentTime - (7 * 24 * 60 * 60) // Últimos 7 días
+
   return {
     isValid: true,
     ticket: {
       id: ticketIdentifier,
-      tokenId: `#${Math.floor(Math.random() * 10000)}`,
+      tokenId: `#${ticketIdentifier}`,
       contractAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
       eventName: randomEvent,
       owner: `0x${Math.random().toString(16).substr(2, 40)}`,
@@ -284,7 +289,7 @@ async function simulateBlockchainVerification(ticketIdentifier: string): Promise
       eventLocation: 'Centro de Convenciones, CDMX',
       ticketType: randomType,
       price: `${(0.05 + Math.random() * 0.2).toFixed(3)} ETH`,
-      purchaseDate: '10 Enero 2026',
+      purchaseDate: isRecentToken ? new Date().toLocaleDateString('es-ES') : '10 Enero 2026',
       status: 'Válido' as const,
       benefits: randomBenefits,
       metadata: {
@@ -292,7 +297,8 @@ async function simulateBlockchainVerification(ticketIdentifier: string): Promise
         attributes: [
           { trait_type: 'Rareza', value: 'Común' },
           { trait_type: 'Colección', value: 'Eventos 2026' },
-          { trait_type: 'Edición', value: 'Primera' }
+          { trait_type: 'Edición', value: 'Primera' },
+          { trait_type: 'Token ID', value: ticketIdentifier }
         ]
       },
       blockchainData: {

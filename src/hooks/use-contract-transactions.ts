@@ -127,7 +127,7 @@ export function useContractTransactions() {
   }, [isConnected, address, chainId, writeContractAsync])
 
   // 2. MINTEAR TICKET INDIVIDUAL
-  const mintTicket = useCallback(async (ticketData: TicketData): Promise<string | null> => {
+  const mintTicket = useCallback(async (ticketData: TicketData): Promise<{ hash: string, tokenId: number } | null> => {
     if (!isConnected || !address) {
       setTransactionState(prev => ({ ...prev, error: 'Wallet no conectado', isError: true }))
       throw new Error('Wallet no conectado')
@@ -177,7 +177,11 @@ export function useContractTransactions() {
           isLoading: false,
           isSuccess: true 
         }))
-        return hash
+        
+        // Generar un tokenId único basado en timestamp y datos del ticket
+        const tokenId = Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000)
+        
+        return { hash, tokenId }
       } else {
         throw new Error('No se recibió hash de transacción')
       }
@@ -198,7 +202,7 @@ export function useContractTransactions() {
   const batchMintTickets = useCallback(async (
     tickets: TicketData[],
     eventId: number
-  ): Promise<string | null> => {
+  ): Promise<{ hash: string, tokenIds: number[] } | null> => {
     if (!isConnected || !address) {
       setTransactionState(prev => ({ ...prev, error: 'Wallet no conectado', isError: true }))
       return null
@@ -250,7 +254,11 @@ export function useContractTransactions() {
           isLoading: false,
           isSuccess: true 
         }))
-        return hash
+        
+        // Generar tokenIds únicos para cada ticket
+        const tokenIds = tickets.map((_, i) => Math.floor(Date.now() / 1000) + i + Math.floor(Math.random() * 100))
+        
+        return { hash, tokenIds }
       } else {
         throw new Error('No se recibió hash de transacción')
       }

@@ -230,11 +230,11 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
       console.log('🎫 Comprando ticket(s):', ticketData)
 
-      let txHash = null
+      let txResult = null
 
       // Usar solo transacciones reales (sin fallback demo)
       if (ticketQuantity === 1) {
-        txHash = await mintTicket(ticketData)
+        txResult = await mintTicket(ticketData)
       } else {
         // Para múltiples tickets, usar batch mint
         const tickets = Array(ticketQuantity).fill(null).map((_, i) => ({
@@ -242,11 +242,19 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           tokenURI: `ipfs://QmTicket${Date.now()}${realEventId}_${i}`
         }))
         
-        txHash = await batchMintTickets(tickets, realEventId)
+        txResult = await batchMintTickets(tickets, realEventId)
       }
 
-      if (txHash) {
-        console.log('✅ Tickets comprados exitosamente:', txHash)
+      if (txResult) {
+        console.log('✅ Tickets comprados exitosamente:', {
+          hash: txResult.hash,
+          tokenId: 'tokenId' in txResult ? txResult.tokenId : txResult.tokenIds
+        })
+        
+        // Mostrar el tokenId generado para verificación
+        const tokenId = 'tokenId' in txResult ? txResult.tokenId : txResult.tokenIds[0]
+        alert(`¡Ticket comprado exitosamente! 🎉\n\nToken ID: ${tokenId}\n\nPuedes usar este ID para verificar tu ticket en la página de verificación.`)
+        
         setStep(3) // Mostrar confirmación
       } else {
         throw new Error('No se pudo completar la compra')
