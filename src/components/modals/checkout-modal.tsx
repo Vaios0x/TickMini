@@ -31,6 +31,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const [walletAddress, setWalletAddress] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [step, setStep] = useState(1)
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false)
 
   // Use custom hook for modal scroll management
   useModalScroll(isOpen)
@@ -165,13 +166,13 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     
     setIsProcessing(true)
     resetTransactionState()
-    // resetSponsoredState() - DESACTIVADO (no se usa)
     
     try {
       let realEventId = event.id
 
       // Si es un evento de demostración, crear el evento real en blockchain primero
-      if (event.isDemo) {
+      if (event.isDemo && !isCreatingEvent) {
+        setIsCreatingEvent(true)
         console.log('🎭 Creando evento real en blockchain para evento de demostración...')
         
         // Convertir fecha de string a timestamp
@@ -194,7 +195,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
           // Esperar un poco para que la transacción se confirme
           console.log('⏳ Esperando confirmación de creación de evento...')
-          await new Promise(resolve => setTimeout(resolve, 2000))
+          await new Promise(resolve => setTimeout(resolve, 3000)) // Aumentar tiempo de espera
 
           // Usar el eventId real devuelto por la función
           realEventId = createEventResult.eventId
@@ -207,6 +208,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           // Si falla la creación, intentar usar eventId = 1 directamente
           realEventId = 1
           console.log('⚠️ Usando eventId = 1 directamente debido a error en creación')
+        } finally {
+          setIsCreatingEvent(false)
         }
       }
 

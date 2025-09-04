@@ -102,7 +102,8 @@ export function useEvents() {
       tags: ['nft', 'metaverse', 'art', 'blockchain'],
       rating: 4.7,
       eventType: 'hybrid',
-      distance: 12.8
+      distance: 12.8,
+      isDemo: true
     },
     {
       id: 4,
@@ -120,7 +121,8 @@ export function useEvents() {
       tags: ['startup', 'business', 'pitch', 'investment'],
       rating: 4.5,
       eventType: 'presential',
-      distance: 8.3
+      distance: 8.3,
+      isDemo: true
     },
     {
       id: 5,
@@ -138,7 +140,8 @@ export function useEvents() {
       tags: ['gaming', 'tournament', 'esports', 'competition'],
       rating: 4.9,
       eventType: 'presential',
-      distance: 15.7
+      distance: 15.7,
+      isDemo: true
     },
     {
       id: 6,
@@ -156,7 +159,8 @@ export function useEvents() {
       tags: ['food', 'tech', 'innovation', 'culinary'],
       rating: 4.4,
       eventType: 'hybrid',
-      distance: 22.1
+      distance: 22.1,
+      isDemo: true
     },
     {
       id: 7,
@@ -174,7 +178,8 @@ export function useEvents() {
       tags: ['sports', 'nft', 'extreme', 'action'],
       rating: 4.6,
       eventType: 'presential',
-      distance: 18.9
+      distance: 18.9,
+      isDemo: true
     },
     {
       id: 8,
@@ -192,7 +197,8 @@ export function useEvents() {
       tags: ['ai', 'machine-learning', 'tech', 'workshop'],
       rating: 4.8,
       eventType: 'hybrid',
-      distance: 31.4
+      distance: 31.4,
+      isDemo: true
     },
     {
       id: 9,
@@ -210,7 +216,8 @@ export function useEvents() {
       tags: ['jazz', 'blues', 'music', 'festival'],
       rating: 4.7,
       eventType: 'presential',
-      distance: 25.6
+      distance: 25.6,
+      isDemo: true
     },
     {
       id: 10,
@@ -246,7 +253,8 @@ export function useEvents() {
       tags: ['crypto', 'trading', 'defi', 'workshop'],
       rating: 4.9,
       eventType: 'presential',
-      distance: 7.8
+      distance: 7.8,
+      isDemo: true
     },
     {
       id: 12,
