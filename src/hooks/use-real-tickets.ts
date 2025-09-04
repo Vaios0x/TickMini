@@ -40,14 +40,17 @@ export function useRealTickets() {
   // Función para obtener el balance de tokens del usuario
   const getUserTokenBalance = useCallback(async (): Promise<number> => {
     try {
+      if (!address || !isConnected) return 0
+      
       // En una implementación real, usarías balanceOf del contrato ERC721
       // Por ahora, simularemos basándose en transacciones conocidas
+      // TODO: Implementar balanceOf real del contrato
       return 5 // Número de tickets que sabemos que se compraron
     } catch (error) {
       console.error('Error obteniendo balance de tokens:', error)
       return 0
     }
-  }, [])
+  }, [address, isConnected])
 
   // Función para obtener todos los tokenIds del usuario
   const getUserTokenIds = useCallback(async (balance: number): Promise<number[]> => {

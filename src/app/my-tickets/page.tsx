@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { useRealTickets } from '@/hooks/use-real-tickets'
+import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import './my-tickets.css'
 
@@ -27,6 +27,7 @@ interface MyTicket {
   blockNumber?: number
   gasUsed?: string
   isValid?: boolean
+  explorerUrl?: string
 }
 
 export default function MyTicketsPage() {
@@ -41,11 +42,12 @@ export default function MyTicketsPage() {
     isLoading,
     error,
     refreshTickets,
+    addNewTicket,
     totalTickets,
     validTickets,
     usedTickets,
     expiredTickets
-  } = useRealTickets()
+  } = useBlockchainTickets()
 
   const filteredTickets = myTickets.filter(ticket => {
     switch (filter) {
@@ -693,8 +695,67 @@ export default function MyTicketsPage() {
                 <div>
                   <h4 style={{ color: '#ffffff', marginBottom: '0.5rem' }}>🔗 Información Blockchain</h4>
                   <div style={{ color: '#b0b0b0', lineHeight: '1.6', fontSize: '0.9rem' }}>
-                    <div><strong>Contrato:</strong> {selectedTicket.contractAddress}</div>
-                    <div><strong>Transacción:</strong> {selectedTicket.transactionHash}</div>
+                    <div style={{ marginBottom: '0.5rem' }}>
+                      <strong>Contrato:</strong> 
+                      <div style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        wordBreak: 'break-all',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        padding: '0.3rem',
+                        borderRadius: '6px',
+                        marginTop: '0.2rem'
+                      }}>
+                        {selectedTicket.contractAddress}
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: '0.5rem' }}>
+                      <strong>Transacción:</strong>
+                      <div style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        wordBreak: 'break-all',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        padding: '0.3rem',
+                        borderRadius: '6px',
+                        marginTop: '0.2rem'
+                      }}>
+                        {selectedTicket.transactionHash}
+                      </div>
+                    </div>
+                    {selectedTicket.explorerUrl && (
+                      <div style={{ marginTop: '1rem' }}>
+                        <a
+                          href={selectedTicket.explorerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-block',
+                            color: '#00ffff',
+                            textDecoration: 'none',
+                            fontSize: '0.9rem',
+                            padding: '0.6rem 1.2rem',
+                            background: 'rgba(0, 255, 255, 0.1)',
+                            border: '1px solid rgba(0, 255, 255, 0.3)',
+                            borderRadius: '10px',
+                            transition: 'all 0.3s ease',
+                            fontWeight: '500'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(0, 255, 255, 0.2)'
+                            e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.5)'
+                            e.currentTarget.style.transform = 'translateY(-2px)'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(0, 255, 255, 0.1)'
+                            e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.3)'
+                            e.currentTarget.style.transform = 'translateY(0)'
+                          }}
+                        >
+                          🔗 Ver en BaseScan
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
