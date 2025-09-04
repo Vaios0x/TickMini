@@ -149,13 +149,13 @@ export function Footer() {
               }} className="footer-link">
                 🎫 Eventos
               </Link>
-              <Link href="/marketplace" style={{
+              <Link href="/events" style={{
                 color: '#b0b0b0',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
                 fontSize: '1rem'
               }} className="footer-link">
-                🏪 Marketplace
+                🎫 Eventos
               </Link>
               <Link href="/about" style={{
                 color: '#b0b0b0',
