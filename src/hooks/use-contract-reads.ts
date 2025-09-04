@@ -216,7 +216,7 @@ export function useContractReads() {
       }
 
       fetchEvents()
-    }, [contractAddress, eventCounter, count])
+    }, [eventCounter, count])
 
     return {
       events,
