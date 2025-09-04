@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, XCircle, Loader2, ExternalLink, RefreshCw } from 'lucide-react'
@@ -69,9 +69,9 @@ export function TransactionProgress({
   const isLoading = steps.some(step => step.status === 'loading')
 
   return (
-    <Card className={className}>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center justify-between">
+    <div className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className || ''}`}>
+      <div className="flex flex-col space-y-1.5 p-6 pb-3">
+        <h3 className="text-lg font-semibold flex items-center justify-between">
           <span>Progreso de Transacción</span>
           <div className="flex gap-2">
             {hasError && onRetry && (
@@ -96,9 +96,9 @@ export function TransactionProgress({
               </Button>
             )}
           </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </h3>
+      </div>
+      <div className="p-6 pt-0 space-y-4">
         {steps.map((step, index) => (
           <div
             key={step.id}
@@ -177,7 +177,7 @@ export function TransactionProgress({
             </Badge>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

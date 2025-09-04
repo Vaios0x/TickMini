@@ -4,7 +4,7 @@ import { useAccount, useChainId } from 'wagmi'
 import { useRealBlockchainTickets } from '@/hooks/use-real-blockchain-tickets'
 import { useRealEvents } from '@/hooks/use-real-events'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
@@ -71,26 +71,26 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
 
   if (!isConnected) {
     return (
-      <Card className={className}>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+      <div className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className || ''}`}>
+        <div className="flex flex-col space-y-1.5 p-6 pb-3">
+          <h3 className="text-sm font-medium flex items-center gap-2">
             <AlertCircle className="h-4 w-4 text-yellow-500" />
             Estado de Blockchain
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        </div>
+        <div className="p-6 pt-0">
           <p className="text-sm text-muted-foreground">
             Conecta tu wallet para ver el estado de la blockchain
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className={className}>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium flex items-center justify-between">
+    <div className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className || ''}`}>
+      <div className="flex flex-col space-y-1.5 p-6 pb-3">
+        <h3 className="text-sm font-medium flex items-center justify-between">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
             Estado de Blockchain
@@ -106,9 +106,9 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
           >
             <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
+        </h3>
+      </div>
+      <div className="p-6 pt-0 space-y-3">
         {/* Estado general */}
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Estado:</span>
@@ -186,7 +186,7 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
             </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
