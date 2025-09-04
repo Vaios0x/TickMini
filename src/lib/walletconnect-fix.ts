@@ -25,8 +25,8 @@ export const walletConnectFix = {
 export const appKitConfig = {
   // Evitar problemas de SSR
   ssr: false,
-  // Configuración de red Base
-  networks: ['base'],
+  // Configuración de red Base Sepolia para testing
+  networks: ['baseSepolia', 'base'],
   // Configuración de adaptadores
   adapters: ['wagmi'],
 }

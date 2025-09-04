@@ -15,11 +15,11 @@ export const envConfig = {
     description: 'NFT Ticketing Marketplace en Base Network',
   },
   
-  // Base Network Configuration
+  // Base Network Configuration - Usar Base Sepolia por defecto para testing
   base: {
-    chainId: process.env.NEXT_PUBLIC_CHAIN_ID || '8453',
-    rpcUrl: process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org',
-    explorer: process.env.NEXT_PUBLIC_BASE_EXPLORER || 'https://basescan.org',
+    chainId: process.env.NEXT_PUBLIC_CHAIN_ID || '84532', // Base Sepolia
+    rpcUrl: process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://sepolia.base.org',
+    explorer: process.env.NEXT_PUBLIC_BASE_EXPLORER || 'https://sepolia.basescan.org',
   },
   
   // Authentication
