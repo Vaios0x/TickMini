@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react'
+import { useRealEvents, RealEventData } from './use-real-events'
 
 export interface Event {
   id: number
@@ -43,6 +44,108 @@ export function useEvents() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  // Usar el hook de lectura real de eventos
+  const {
+    events: realEvents,
+    isLoading: realLoading,
+    error: realError,
+    refreshEvents: refreshRealEvents,
+    getEventById: getRealEventById,
+    getActiveEvents: getRealActiveEvents,
+    getAvailableEvents: getRealAvailableEvents,
+    getUpcomingEvents: getRealUpcomingEvents,
+    totalEvents: realTotalEvents,
+    activeEvents: realActiveEvents,
+    availableEvents: realAvailableEvents,
+    upcomingEvents: realUpcomingEvents,
+    eventCounter: realEventCounter
+  } = useRealEvents()
+
+  // Función para convertir eventos reales de blockchain a formato de UI
+  const convertRealEventToUI = useCallback((realEvent: RealEventData): Event => {
+    // Obtener información adicional basada en el eventId
+    const getEventDetails = (eventId: number) => {
+      switch (eventId) {
+        case 1:
+          return {
+            image: '🚀',
+            category: 'tech',
+            price: '0.13 ETH',
+            time: '09:00',
+            tags: ['blockchain', 'web3', 'tech'],
+            rating: 4.8,
+            eventType: 'presential' as const,
+            distance: 2.5
+          }
+        case 2:
+          return {
+            image: '🤖',
+            category: 'tech',
+            price: '0.000000001 ETH',
+            time: '10:00',
+            tags: ['ai', 'blockchain', 'workshop'],
+            rating: 4.9,
+            eventType: 'hybrid' as const,
+            distance: 1.2
+          }
+        case 3:
+          return {
+            image: '🎭',
+            category: 'art',
+            price: '0.000000001 ETH',
+            time: '18:00',
+            tags: ['art', 'nft', 'gallery'],
+            rating: 4.7,
+            eventType: 'presential' as const,
+            distance: 3.8
+          }
+        default:
+          return {
+            image: '🎫',
+            category: 'general',
+            price: '0.05 ETH',
+            time: '19:00',
+            tags: ['event', 'nft'],
+            rating: 4.5,
+            eventType: 'presential' as const,
+            distance: 0
+          }
+      }
+    }
+
+    const details = getEventDetails(realEvent.eventId)
+    const eventDate = new Date(realEvent.eventDate * 1000)
+    
+    return {
+      id: realEvent.eventId,
+      title: realEvent.name,
+      description: realEvent.description,
+      date: eventDate.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      time: details.time,
+      location: realEvent.location,
+      price: details.price,
+      image: details.image,
+      category: details.category,
+      organizer: realEvent.organizer,
+      availableTickets: realEvent.availableTickets,
+      totalTickets: realEvent.totalTickets,
+      featured: realEvent.eventId <= 3, // Los primeros 3 eventos son destacados
+      tags: details.tags,
+      rating: details.rating,
+      eventType: details.eventType,
+      distance: details.distance
+    }
+  }, [])
+
+  // Convertir eventos reales a formato de UI
+  const formattedRealEvents = useMemo(() => {
+    return realEvents.map(convertRealEventToUI)
+  }, [realEvents, convertRealEventToUI])
 
   // Datos de eventos de ejemplo - Memoizados para evitar recreación
   // NOTA: Estos son eventos de demostración. En producción, usar eventos reales del contrato
@@ -315,9 +418,15 @@ export function useEvents() {
     }
   ], [])
 
-  // Usar eventos de demostración por ahora
-  // TODO: Integrar con eventos reales del contrato blockchain
-  const events = demoEvents
+  // Combinar eventos reales con eventos de demostración
+  const events = useMemo(() => {
+    // Si hay eventos reales, usarlos; si no, usar eventos de demostración
+    if (formattedRealEvents.length > 0) {
+      // Combinar eventos reales con algunos eventos de demostración para tener más variedad
+      return [...formattedRealEvents, ...demoEvents.slice(3)] // Usar eventos reales + demo events desde el 4to
+    }
+    return demoEvents
+  }, [formattedRealEvents, demoEvents])
 
   // Categorías memoizadas
   const categories = useMemo(() => [
@@ -496,12 +605,21 @@ export function useEvents() {
     setSelectedTags,
     showAdvancedFilters,
     setShowAdvancedFilters,
-    isLoading,
+    isLoading: isLoading || realLoading,
     clearAllFilters,
     toggleTag,
     getCategoryColor,
     getCategoryInfo,
     getTagInfo,
-    performSearch
+    performSearch,
+    // Datos adicionales de blockchain real
+    realEvents: formattedRealEvents,
+    realTotalEvents,
+    realActiveEvents,
+    realAvailableEvents,
+    realUpcomingEvents,
+    realEventCounter,
+    hasRealData: formattedRealEvents.length > 0,
+    refreshRealEvents
   }
 }

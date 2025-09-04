@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 import { getContractAddress } from '@/lib/contracts/contract-addresses'
+import { useRealBlockchainTickets, RealTicketData } from './use-real-blockchain-tickets'
+import { formatEther } from 'viem'
 
 export interface BlockchainTicket {
   id: number
@@ -126,9 +128,134 @@ const KNOWN_TRANSACTIONS = [
 export function useBlockchainTickets() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
-  const [tickets, setTickets] = useState<BlockchainTicket[]>([])
+  
+  // Usar el hook de lectura real de blockchain
+  const {
+    tickets: realTickets,
+    isLoading: realLoading,
+    error: realError,
+    refreshTickets: refreshRealTickets,
+    getTicketByTokenId: getRealTicketByTokenId,
+    getTicketsByEvent: getRealTicketsByEvent,
+    getValidTickets: getRealValidTickets,
+    getUsedTickets: getRealUsedTickets,
+    totalTickets: realTotalTickets,
+    validTickets: realValidTickets,
+    usedTickets: realUsedTickets,
+    balance: realBalance
+  } = useRealBlockchainTickets()
+
+  // Estado local para tickets agregados manualmente (fallback)
+  const [localTickets, setLocalTickets] = useState<BlockchainTicket[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Función para convertir datos reales de blockchain a formato de UI
+  const convertRealTicketToUI = useCallback((realTicket: RealTicketData): BlockchainTicket => {
+    const contractAddress = getContractAddress('TICKET_NFT', chainId) || ''
+    const explorerUrl = `https://sepolia.basescan.org/tx/${realTicket.tokenId}` // Temporal
+    
+    // Obtener información del evento basada en el eventId
+    const getEventInfo = (eventId: number) => {
+      switch (eventId) {
+        case 1:
+          return {
+            name: 'Web3 Summit 2026',
+            date: '15-17 Marzo 2026',
+            location: 'Centro de Convenciones, CDMX',
+            type: 'VIP',
+            image: '🚀',
+            category: 'tech',
+            organizer: 'Web3 Latam',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento']
+          }
+        case 2:
+          return {
+            name: 'AI & Blockchain Workshop',
+            date: '15-17 Noviembre 2026',
+            location: 'Innovation Hub, Tijuana',
+            type: 'Workshop',
+            image: '🤖',
+            category: 'tech',
+            organizer: 'AI Chain Labs',
+            benefits: ['Acceso al workshop', 'Certificado NFT', 'Material digital', 'Networking', 'Coffee break']
+          }
+        case 3:
+          return {
+            name: 'Crypto Art Gallery Opening',
+            date: '3-5 Diciembre 2026',
+            location: 'Galería Digital, Mérida',
+            type: 'VIP',
+            image: '🎭',
+            category: 'art',
+            organizer: 'CryptoArt MX',
+            benefits: ['Acceso VIP', 'Certificado NFT', 'Catálogo exclusivo', 'Cocktail reception', 'Meet the artists']
+          }
+        default:
+          return {
+            name: realTicket.eventInfo.name || 'Evento NFT',
+            date: new Date(Number(realTicket.eventInfo.eventDate) * 1000).toLocaleDateString('es-ES'),
+            location: realTicket.eventInfo.location || 'Ubicación por definir',
+            type: getTicketTypeName(Number(realTicket.ticketInfo.ticketType)),
+            image: '🎫',
+            category: 'general',
+            organizer: realTicket.eventInfo.organizer || 'TickBase',
+            benefits: realTicket.ticketInfo.benefits || ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento']
+          }
+      }
+    }
+
+    const eventData = getEventInfo(Number(realTicket.ticketInfo.eventId))
+    
+    return {
+      id: realTicket.tokenId,
+      tokenId: realTicket.tokenId.toString(),
+      eventName: eventData.name,
+      eventDate: eventData.date,
+      eventLocation: eventData.location,
+      ticketType: eventData.type,
+      price: formatEther(realTicket.ticketInfo.price) + ' ETH',
+      purchaseDate: new Date(Number(realTicket.ticketInfo.purchaseDate) * 1000).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      status: realTicket.isValid ? 'Válido' : 'Usado',
+      benefits: eventData.benefits,
+      image: eventData.image,
+      category: eventData.category,
+      organizer: eventData.organizer,
+      contractAddress,
+      transactionHash: 'N/A', // Se puede obtener de eventos
+      eventId: Number(realTicket.ticketInfo.eventId),
+      owner: realTicket.owner,
+      blockNumber: Number(realTicket.ticketInfo.purchaseDate),
+      gasUsed: '334747',
+      isValid: realTicket.isValid,
+      explorerUrl
+    }
+  }, [chainId])
+
+  // Función para obtener nombre del tipo de ticket
+  const getTicketTypeName = (ticketType: number): string => {
+    switch (ticketType) {
+      case 1: return 'General'
+      case 2: return 'VIP'
+      case 3: return 'Premium'
+      case 4: return 'Executive'
+      default: return 'General'
+    }
+  }
+
+  // Convertir tickets reales a formato de UI
+  const formattedTickets = useMemo(() => {
+    return realTickets.map(convertRealTicketToUI)
+  }, [realTickets, convertRealTicketToUI])
+
+  // Combinar tickets reales con tickets locales
+  const allTickets = useMemo(() => {
+    return [...formattedTickets, ...localTickets]
+  }, [formattedTickets, localTickets])
 
   // Función para crear un ticket basado en datos de transacción
   const createTicketFromTransaction = useCallback((tx: typeof KNOWN_TRANSACTIONS[0], userAddress: string): BlockchainTicket => {
@@ -271,58 +398,18 @@ export function useBlockchainTickets() {
     }
   }, [chainId])
 
-  // Función para cargar tickets del usuario
-  const loadUserTickets = useCallback(async () => {
-    if (!isConnected || !address) {
-      setTickets([])
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      console.log('🔍 Cargando tickets reales de blockchain para:', address)
-      console.log('🌐 Red:', chainId)
-
-      // Filtrar tickets que realmente pertenecen a esta wallet
-      const userTickets = KNOWN_TRANSACTIONS
-        .filter(tx => tx.to.toLowerCase() === address.toLowerCase()) // Solo tickets de esta wallet
-        .map(tx => createTicketFromTransaction(tx, address))
-      
-      // Filtrar tickets duplicados por tokenId
-      const uniqueTickets = userTickets.filter((ticket, index, self) => 
-        index === self.findIndex(t => t.tokenId === ticket.tokenId)
-      )
-
-      console.log('🎫 Tickets encontrados:', uniqueTickets.length)
-      
-      setTickets(uniqueTickets)
-    } catch (err) {
-      console.error('Error cargando tickets del usuario:', err)
-      setError('Error al cargar los tickets desde la blockchain')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [isConnected, address, chainId, createTicketFromTransaction])
-
-  // Cargar tickets cuando cambie la conexión o dirección
-  useEffect(() => {
-    loadUserTickets()
-  }, [loadUserTickets])
-
-  // Función para refrescar tickets
+  // Función para refrescar tickets (ahora usa el hook real)
   const refreshTickets = useCallback(() => {
-    loadUserTickets()
-  }, [loadUserTickets])
+    refreshRealTickets()
+  }, [refreshRealTickets])
 
-  // Función para agregar un nuevo ticket (cuando se compre uno nuevo)
-  const addNewTicket = useCallback((transactionHash: string, tokenId: number, eventId: number, price: string, eventInfo?: any) => {
+  // Función para agregar ticket local (fallback para nuevos tickets)
+  const addLocalTicket = useCallback((transactionHash: string, tokenId: number, eventId: number, price: string, eventInfo?: any) => {
     if (!address) {
       console.error('No hay dirección de wallet para agregar ticket')
       return
     }
+    
     const currentDate = new Date()
     
     // Obtener información del evento basada en el eventId o usar la información proporcionada
@@ -413,13 +500,13 @@ export function useBlockchainTickets() {
       transactionHash,
       eventId,
       owner: address || '',
-      blockNumber: Math.floor(currentDate.getTime() / 1000), // Timestamp como block number temporal
+      blockNumber: Math.floor(currentDate.getTime() / 1000),
       gasUsed: '334747',
       isValid: true,
       explorerUrl: `https://sepolia.basescan.org/tx/${transactionHash}`
     }
 
-    setTickets(prev => {
+    setLocalTickets(prev => {
       // Verificar que no exista ya un ticket con el mismo tokenId
       const exists = prev.some(ticket => ticket.tokenId === tokenId.toString())
       if (exists) {
@@ -427,66 +514,56 @@ export function useBlockchainTickets() {
         return prev
       }
       
-      console.log('✅ Nuevo ticket agregado:', newTicket)
+      console.log('✅ Nuevo ticket agregado localmente:', newTicket)
       return [...prev, newTicket]
     })
-    
-    // También agregar a la lista de transacciones conocidas para futuras cargas
-    const newTransaction = {
-      hash: transactionHash,
-      tokenId: tokenId,
-      eventId: eventId,
-      price: price,
-      timestamp: currentDate.getTime(),
-      blockNumber: Math.floor(currentDate.getTime() / 1000),
-      to: address
-    }
-    
-    // Agregar a KNOWN_TRANSACTIONS (esto persiste durante la sesión)
-    KNOWN_TRANSACTIONS.push(newTransaction)
-    console.log('📝 Nueva transacción agregada a KNOWN_TRANSACTIONS:', newTransaction)
   }, [address, chainId])
 
-  // Funciones de utilidad
+
+  // Funciones de utilidad que usan todos los tickets (reales + locales)
   const getTicketByTokenId = useCallback((tokenId: string) => {
-    return tickets.find(ticket => ticket.tokenId === tokenId)
-  }, [tickets])
+    return allTickets.find(ticket => ticket.tokenId === tokenId)
+  }, [allTickets])
 
   const getTicketsByEvent = useCallback((eventId: number) => {
-    return tickets.filter(ticket => ticket.eventId === eventId)
-  }, [tickets])
+    return allTickets.filter(ticket => ticket.eventId === eventId)
+  }, [allTickets])
 
   const getTicketsByStatus = useCallback((status: BlockchainTicket['status']) => {
-    return tickets.filter(ticket => ticket.status === status)
-  }, [tickets])
+    return allTickets.filter(ticket => ticket.status === status)
+  }, [allTickets])
 
   const getValidTickets = useCallback(() => {
-    return tickets.filter(ticket => ticket.status === 'Válido')
-  }, [tickets])
+    return allTickets.filter(ticket => ticket.status === 'Válido')
+  }, [allTickets])
 
   const getUsedTickets = useCallback(() => {
-    return tickets.filter(ticket => ticket.status === 'Usado')
-  }, [tickets])
+    return allTickets.filter(ticket => ticket.status === 'Usado')
+  }, [allTickets])
 
   const getExpiredTickets = useCallback(() => {
-    return tickets.filter(ticket => ticket.status === 'Expirado')
-  }, [tickets])
+    return allTickets.filter(ticket => ticket.status === 'Expirado')
+  }, [allTickets])
 
   return {
-    tickets,
-    isLoading,
-    error,
+    tickets: allTickets,
+    isLoading: realLoading,
+    error: realError,
     refreshTickets,
-    addNewTicket,
+    addNewTicket: addLocalTicket, // Usar la función local como fallback
     getTicketByTokenId,
     getTicketsByEvent,
     getTicketsByStatus,
     getValidTickets,
     getUsedTickets,
     getExpiredTickets,
-    totalTickets: tickets.length,
+    totalTickets: allTickets.length,
     validTickets: getValidTickets().length,
     usedTickets: getUsedTickets().length,
-    expiredTickets: getExpiredTickets().length
+    expiredTickets: getExpiredTickets().length,
+    // Datos adicionales de blockchain real
+    realBalance: realBalance,
+    realTicketsCount: realTotalTickets,
+    hasRealData: realTickets.length > 0
   }
 }

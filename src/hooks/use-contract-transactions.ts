@@ -44,6 +44,29 @@ export function useContractTransactions() {
     txHash: null
   })
 
+  // Función para obtener configuración de gas optimizada
+  const getGasConfig = useCallback((functionName: string) => {
+    const baseConfig = {
+      maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
+      maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
+    }
+
+    // Configuraciones específicas por función
+    const gasLimits = {
+      createEvent: BigInt(600000), // Más gas para createEvent
+      mintTicket: BigInt(500000), // Gas estándar para mint
+      batchMintTickets: BigInt(800000), // Más gas para batch
+      useTicket: BigInt(200000), // Menos gas para useTicket
+      transferFrom: BigInt(300000), // Gas estándar para transfer
+      approve: BigInt(200000) // Menos gas para approve
+    }
+
+    return {
+      ...baseConfig,
+      gas: gasLimits[functionName as keyof typeof gasLimits] || BigInt(500000)
+    }
+  }, [])
+
   // Hook para escribir contratos
   const { writeContract, writeContractAsync, data: writeData, isPending: isWritePending, error: writeError } = useWriteContract()
   
@@ -88,11 +111,7 @@ export function useContractTransactions() {
           eventData.metadataURI
         ],
         // Configuración de gas optimizada para Base Sepolia (testnet)
-        ...(chainId === 84532 ? {
-          gas: BigInt(300000),
-          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
-          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
-        } : {})
+        ...(chainId === 84532 ? getGasConfig('createEvent') : {})
       })
 
       console.log('✅ Evento creado, hash:', hash)
@@ -161,11 +180,7 @@ export function useContractTransactions() {
         ],
         value: priceInWei,
         // Configuración de gas optimizada para Base Sepolia (testnet)
-        ...(chainId === 84532 ? {
-          gas: BigInt(500000),
-          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
-          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
-        } : {})
+        ...(chainId === 84532 ? getGasConfig('mintTicket') : {})
       })
 
       console.log('✅ Transacción enviada, hash:', hash)
@@ -238,11 +253,7 @@ export function useContractTransactions() {
         ],
         value: totalValue,
         // Configuración de gas optimizada para Base Sepolia (testnet)
-        ...(chainId === 84532 ? {
-          gas: BigInt(800000), // Más gas para batch
-          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
-          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
-        } : {})
+        ...(chainId === 84532 ? getGasConfig('batchMintTickets') : {})
       })
 
       console.log('✅ Transacción batch enviada, hash:', hash)
@@ -401,6 +412,56 @@ export function useContractTransactions() {
     }
   }, [isConnected, address, chainId, writeContractAsync])
 
+  // Función para compra completa (crear evento + mintear ticket)
+  const purchaseTicket = useCallback(async (eventData: EventData, ticketData: TicketData): Promise<{ hash: string, tokenId: number } | null> => {
+    if (!isConnected || !address) {
+      setTransactionState(prev => ({ ...prev, error: 'Wallet no conectado', isError: true }))
+      return null
+    }
+
+    try {
+      setTransactionState(prev => ({ ...prev, isLoading: true, error: null }))
+      
+      console.log('🛒 Iniciando compra completa de ticket...')
+      
+      // Paso 1: Crear evento si es necesario
+      let eventId = ticketData.eventId
+      if (eventId === 0 || !eventId) {
+        console.log('📝 Creando evento...')
+        const eventResult = await createEvent(eventData)
+        if (!eventResult) {
+          throw new Error('Error al crear el evento')
+        }
+        eventId = eventResult.eventId
+        console.log('✅ Evento creado con ID:', eventId)
+      }
+
+      // Paso 2: Mintear ticket
+      console.log('🎫 Minteando ticket...')
+      const ticketResult = await mintTicket({
+        ...ticketData,
+        eventId: eventId
+      })
+      
+      if (!ticketResult) {
+        throw new Error('Error al mintear el ticket')
+      }
+
+      console.log('✅ Compra completada exitosamente')
+      return ticketResult
+
+    } catch (error: any) {
+      console.error('❌ Error en compra completa:', error)
+      setTransactionState(prev => ({ 
+        ...prev, 
+        error: error.message || 'Error en la compra', 
+        isError: true,
+        isLoading: false
+      }))
+      return null
+    }
+  }, [isConnected, address, createEvent, mintTicket])
+
   return {
     // Estados
     isConnected,
@@ -417,6 +478,7 @@ export function useContractTransactions() {
     useTicket,
     transferTicket,
     createDefaultActiveEvent,
+    purchaseTicket, // Nueva función para compra completa
     resetTransactionState,
     
     // Estados de transacción
