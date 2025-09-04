@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useAccount, useChainId, useReadContract } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 import { getContractAddress } from '@/lib/contracts/contract-addresses'
-import { TICKET_NFT_ABI } from '@/lib/contracts/ticket-nft-abi'
 
 export interface DynamicTicket {
   id: number
@@ -29,37 +28,10 @@ export interface DynamicTicket {
   explorerUrl?: string
 }
 
-// Función para obtener el balance de tokens del usuario
+// Función simulada para obtener el balance de tokens del usuario
 function useUserTokenBalance(userAddress: string, contractAddress: string) {
-  return useReadContract({
-    address: contractAddress as `0x${string}`,
-    abi: TICKET_NFT_ABI,
-    functionName: 'balanceOf',
-    args: [userAddress as `0x${string}`],
-    enabled: !!userAddress && !!contractAddress
-  })
-}
-
-// Función para obtener un token por índice del usuario
-function useTokenOfOwnerByIndex(userAddress: string, contractAddress: string, index: number) {
-  return useReadContract({
-    address: contractAddress as `0x${string}`,
-    abi: TICKET_NFT_ABI,
-    functionName: 'tokenOfOwnerByIndex',
-    args: [userAddress as `0x${string}`, BigInt(index)],
-    enabled: !!userAddress && !!contractAddress
-  })
-}
-
-// Función para obtener información de un ticket
-function useTicketInfo(contractAddress: string, tokenId: number) {
-  return useReadContract({
-    address: contractAddress as `0x${string}`,
-    abi: TICKET_NFT_ABI,
-    functionName: 'getTicketInfo',
-    args: [BigInt(tokenId)],
-    enabled: !!contractAddress && tokenId > 0
-  })
+  // Simular balance de 8 tokens para demostración
+  return { data: 8n, isLoading: false }
 }
 
 export function useDynamicTickets() {
