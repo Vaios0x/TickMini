@@ -1,4 +1,4 @@
-# TickBase - NFT Ticketing Marketplace
+# 🎫 TickBase - NFT Ticketing Marketplace
 
 Una plataforma completa de venta y gestión de boletos NFT construida con Next.js 14+ y desplegada en Base Network.
 
@@ -19,7 +19,7 @@ Una plataforma completa de venta y gestión de boletos NFT construida con Next.j
 ### Frontend
 - **Framework**: Next.js 14+ con App Router
 - **Styling**: Tailwind CSS + Shadcn/UI
-- **State Management**: Zustand
+- **State Management**: React Context + Custom Hooks
 - **Animaciones**: Framer Motion
 - **UI Components**: Radix UI + Shadcn/UI
 - **Forms**: React Hook Form + Zod validation
@@ -56,8 +56,6 @@ cd tickbase-nft-marketplace
 2. **Instalar dependencias**
 ```bash
 npm install
-# o
-yarn install
 ```
 
 3. **Configurar variables de entorno**
@@ -89,22 +87,15 @@ NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your-project-id
 # IPFS Configuration
 PINATA_JWT=your-pinata-jwt-token
 PINATA_GATEWAY=https://gateway.pinata.cloud/ipfs/
-
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
 4. **Configurar base de datos**
 ```bash
 # Generar cliente Prisma
-npm run db:generate
+npx prisma generate
 
 # Ejecutar migraciones
-npm run db:push
-
-# Abrir Prisma Studio (opcional)
-npm run db:studio
+npx prisma db push
 ```
 
 5. **Ejecutar en desarrollo**
@@ -123,18 +114,10 @@ npm run build        # Construir para producción
 npm run start        # Servidor de producción
 npm run lint         # Linting del código
 
-# Base de datos
-npm run db:generate  # Generar cliente Prisma
-npm run db:push      # Sincronizar base de datos
-npm run db:studio    # Abrir Prisma Studio
-
 # Smart Contracts
-npm run contract:compile  # Compilar contratos
-npm run contract:deploy   # Desplegar contratos
-
-# Testing
-npm run test         # Ejecutar tests
-npm run test:watch   # Tests en modo watch
+npx hardhat compile  # Compilar contratos
+npx hardhat deploy   # Desplegar contratos
+npx hardhat test     # Ejecutar tests de contratos
 ```
 
 ## 📁 Estructura del Proyecto
@@ -142,29 +125,35 @@ npm run test:watch   # Tests en modo watch
 ```
 src/
 ├── app/                    # App Router de Next.js
-│   ├── (auth)/            # Rutas de autenticación
-│   ├── (dashboard)/       # Rutas del dashboard
-│   ├── events/            # Gestión de eventos
-│   ├── marketplace/       # Marketplace de tickets
 │   ├── api/               # API Routes
+│   ├── create-event/      # Creación de eventos
+│   ├── events/            # Listado de eventos
+│   ├── verify-ticket/     # Verificación de tickets
 │   ├── globals.css        # Estilos globales
 │   ├── layout.tsx         # Layout principal
 │   └── page.tsx           # Página principal
 ├── components/            # Componentes React
 │   ├── ui/               # Componentes UI base
-│   ├── web3/             # Componentes Web3
-│   ├── events/            # Componentes de eventos
-│   ├── tickets/           # Componentes de tickets
-│   ├── layout/            # Componentes de layout
-│   └── sections/          # Secciones de página
+│   ├── modals/           # Modales
+│   ├── layout/           # Componentes de layout
+│   └── sections/         # Secciones de página
 ├── lib/                   # Utilidades y configuraciones
-│   ├── contracts/         # ABI y configs de contratos
-│   ├── db/                # Configuración de base de datos
-│   ├── utils/             # Funciones utilitarias
-│   └── validations/       # Esquemas de validación
+│   ├── contracts/        # ABI y configs de contratos
+│   ├── utils/            # Funciones utilitarias
+│   └── config.ts         # Configuración principal
 ├── hooks/                 # Custom hooks
-├── store/                 # Estado global (Zustand)
 └── types/                 # Tipos TypeScript
+
+contracts/                 # Smart Contracts
+├── TicketNFT.sol         # Contrato principal ERC-721
+├── TicketMarketplace.sol # Marketplace secundario
+├── TicketValidator.sol   # Validación de tickets
+└── SimpleTicketFactory.sol # Factory de tickets
+
+scripts/                   # Scripts de despliegue
+├── deploy-all.js         # Despliegue completo
+├── simple-deploy.js      # Despliegue simple
+└── test-contracts.js     # Testing de contratos
 ```
 
 ## 🌐 Despliegue
@@ -174,11 +163,14 @@ src/
 2. Configurar variables de entorno
 3. Desplegar automáticamente
 
-### Otros Proveedores
-- **Netlify**: Similar a Vercel
-- **Railway**: Para backend y base de datos
-- **PlanetScale**: Base de datos PostgreSQL
-- **Supabase**: Backend como servicio
+### Smart Contracts
+```bash
+# Desplegar en Base Sepolia (testnet)
+npx hardhat run scripts/deploy-all.js --network baseSepolia
+
+# Desplegar en Base Mainnet
+npx hardhat run scripts/deploy-all.js --network base
+```
 
 ## 🔒 Seguridad
 
@@ -198,14 +190,11 @@ src/
 ## 🧪 Testing
 
 ```bash
-# Ejecutar tests unitarios
+# Ejecutar tests de contratos
+npx hardhat test
+
+# Ejecutar tests del frontend
 npm run test
-
-# Tests en modo watch
-npm run test:watch
-
-# Coverage report
-npm run test:coverage
 ```
 
 ## 🤝 Contribuir

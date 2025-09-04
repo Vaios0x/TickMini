@@ -7,6 +7,8 @@ import { DateLocationStep } from '@/components/create-event/date-location-step'
 import { TicketConfigStep } from '@/components/create-event/ticket-config-step'
 import { MultimediaStep } from '@/components/create-event/multimedia-step'
 import { FinalConfigStep } from '@/components/create-event/final-config-step'
+import { useContractTransactions } from '@/hooks/use-contract-transactions'
+import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
 
 export interface EventFormData {
   // Información básica
@@ -81,6 +83,26 @@ export default function CreateEventPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
+  
+  // Hooks para transacciones blockchain
+  const {
+    createEvent,
+    isTransactionLoading,
+    isTransactionSuccess,
+    isTransactionError,
+    transactionError,
+    transactionHash,
+    resetTransactionState
+  } = useContractTransactions()
+  
+  // Hook para transacciones patrocinadas (DESACTIVADO - no se usa)
+  // const {
+  //   executeDemoTransaction,
+  //   isSponsoredTxLoading,
+  //   sponsoredTxError,
+  //   sponsoredTxHash,
+  //   resetSponsoredState
+  // } = useSponsoredTransactions()
 
   // Monitorear cambios en currentStep
   React.useEffect(() => {
@@ -141,15 +163,36 @@ export default function CreateEventPage() {
       }
 
       setIsSubmitting(true)
+      resetTransactionState()
+      // resetSponsoredState() - DESACTIVADO (no se usa)
       
-      // Simular envío a blockchain
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Preparar datos del evento para blockchain
+      const eventDate = new Date(`${formData.startDate} ${formData.startTime}`).getTime() / 1000
+      const totalTickets = formData.ticketTypes.reduce((sum, ticket) => sum + ticket.quantity, 0)
       
-      alert('¡Evento creado exitosamente en Base Network! 🎉')
-      
-      // Resetear formulario
-      setFormData(initialFormData)
-      setCurrentStep(1)
+      const eventData = {
+        name: formData.title,
+        description: formData.description,
+        eventDate: Math.floor(eventDate),
+        location: `${formData.location}, ${formData.city}, ${formData.country}`,
+        totalTickets,
+        metadataURI: `ipfs://QmDemo${Date.now()}` // En producción, subir a IPFS real
+      }
+
+      console.log('🚀 Creando evento en blockchain:', eventData)
+
+      // Usar solo transacciones reales (sin fallback demo)
+      const txHash = await createEvent(eventData)
+
+      if (txHash) {
+        alert(`¡Evento creado exitosamente! 🎉\n\nTransaction Hash: ${txHash}\n\nEste evento ahora existe como NFTs en Base Network.`)
+        
+        // Resetear formulario
+        setFormData(initialFormData)
+        setCurrentStep(1)
+      } else {
+        throw new Error('No se pudo crear el evento')
+      }
     } catch (error) {
       alert(`Error: ${error instanceof Error ? error.message : 'Error desconocido'}`)
     } finally {

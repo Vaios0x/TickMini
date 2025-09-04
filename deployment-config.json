@@ -1,0 +1,18 @@
+{
+  "network": {
+    "name": "Base Sepolia",
+    "chainId": 84532,
+    "rpcUrl": "https://sepolia.base.org",
+    "explorer": "https://sepolia.basescan.org"
+  },
+  "contracts": {
+    "TICKET_NFT": "0x0000000000000000000000000000000000000000",
+    "MARKETPLACE": "0x0000000000000000000000000000000000000000",
+    "VALIDATOR": "0x0000000000000000000000000000000000000000",
+    "FACTORY": "0x0000000000000000000000000000000000000000"
+  },
+  "status": {
+    "deployed": false,
+    "lastDeployment": null
+  }
+}

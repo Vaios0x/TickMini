@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Daaps\\TickBase\\src\\components\\modals/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\components\\create-event/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\app\\verify-ticket/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\config/**)",
+      "WebFetch(domain:docs.reown.com)",
+      "Read(/C:\\Daaps\\TickBase\\src\\app\\create-event/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\app/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\app\\create-event/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\app\\create-event/**)",
+      "Bash(npm run build:*)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\hooks/**)",
+      "Read(/C:\\Daaps\\TickBase\\src\\lib\\contracts/**)",
+      "Bash(npm pkg set:*)",
+      "Bash(npx hardhat compile:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

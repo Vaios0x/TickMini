@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useModalScroll } from '@/hooks/use-modal-scroll'
+import { useContractTransactions } from '@/hooks/use-contract-transactions'
+import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
 import './checkout-modal.css'
 
 interface CheckoutModalProps {
@@ -30,6 +32,28 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
   // Use custom hook for modal scroll management
   useModalScroll(isOpen)
+  
+  // Hooks para transacciones blockchain
+  const {
+    mintTicket,
+    batchMintTickets,
+    isTransactionLoading,
+    isTransactionSuccess,
+    isTransactionError,
+    transactionError,
+    transactionHash,
+    resetTransactionState,
+    address
+  } = useContractTransactions()
+  
+  // Hook para transacciones patrocinadas (DESACTIVADO - no se usa)
+  // const {
+  //   executeDemoTransaction,
+  //   isSponsoredTxLoading,
+  //   sponsoredTxError,
+  //   sponsoredTxHash,
+  //   resetSponsoredState
+  // } = useSponsoredTransactions()
 
   // Reset state when modal opens
   useEffect(() => {
@@ -134,11 +158,58 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const finalTotal = totalPrice + serviceFee
 
   const handlePurchase = async () => {
+    if (!event) return
+    
     setIsProcessing(true)
-    // Simular proceso de compra
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsProcessing(false)
-    setStep(3) // Mostrar confirmación
+    resetTransactionState()
+    // resetSponsoredState() - DESACTIVADO (no se usa)
+    
+    try {
+      // Preparar datos del ticket para blockchain
+      const ticketData = {
+        to: address || walletAddress,
+        eventId: event.id,
+        ticketType: 1, // General ticket
+        price: (priceInEth * ticketQuantity).toString(),
+        benefits: [
+          'Acceso al evento',
+          'Certificado NFT',
+          'WiFi gratuito',
+          'Material del evento'
+        ],
+        tokenURI: `ipfs://QmTicket${Date.now()}${event.id}` // En producción, generar metadata real
+      }
+
+      console.log('🎫 Comprando ticket(s):', ticketData)
+
+      let txHash = null
+
+      // Usar solo transacciones reales (sin fallback demo)
+      if (ticketQuantity === 1) {
+        txHash = await mintTicket(ticketData)
+      } else {
+        // Para múltiples tickets, usar batch mint
+        const tickets = Array(ticketQuantity).fill(null).map((_, i) => ({
+          ...ticketData,
+          tokenURI: `ipfs://QmTicket${Date.now()}${event.id}_${i}`
+        }))
+        
+        txHash = await batchMintTickets(tickets, event.id)
+      }
+
+      if (txHash) {
+        console.log('✅ Tickets comprados exitosamente:', txHash)
+        setStep(3) // Mostrar confirmación
+      } else {
+        throw new Error('No se pudo completar la compra')
+      }
+
+    } catch (error: any) {
+      console.error('Error en compra:', error)
+      alert(`Error en la compra: ${error.message || 'Error desconocido'}`)
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
   const handleClose = () => {

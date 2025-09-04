@@ -1,5 +1,5 @@
 import { cookieStorage, createStorage, http } from '@wagmi/core'
-import { base } from 'wagmi/chains'
+import { base, baseSepolia } from 'wagmi/chains'
 import { createConfig } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
@@ -11,8 +11,9 @@ if (!projectId) {
   throw new Error('Project ID is not defined')
 }
 
-// Solo usar la red Base
-export const networks = [base]
+// Usar Base Sepolia para demo y testing (GRATIS)
+// Cambiar a [base] solo para producción con ETH real
+export const networks = [baseSepolia, base]
 
 // Create the Wagmi Adapter
 export const wagmiAdapter = new WagmiAdapter({
