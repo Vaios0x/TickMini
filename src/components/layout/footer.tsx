@@ -141,22 +141,22 @@ export function Footer() {
               flexDirection: 'column',
               gap: '0.75rem'
             }}>
-              <Link href="/events" style={{
-                color: '#b0b0b0',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                fontSize: '1rem'
-              }} className="footer-link">
-                🎫 Eventos
-              </Link>
-              <Link href="/events" style={{
-                color: '#b0b0b0',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                fontSize: '1rem'
-              }} className="footer-link">
-                🎫 Eventos
-              </Link>
+                             <Link href="/events" style={{
+                 color: '#b0b0b0',
+                 textDecoration: 'none',
+                 transition: 'all 0.3s ease',
+                 fontSize: '1rem'
+               }} className="footer-link">
+                 🎫 Eventos
+               </Link>
+               <Link href="/create-event" style={{
+                 color: '#b0b0b0',
+                 textDecoration: 'none',
+                 transition: 'all 0.3s ease',
+                 fontSize: '1rem'
+               }} className="footer-link">
+                 🚀 Crear Evento
+               </Link>
               <Link href="/about" style={{
                 color: '#b0b0b0',
                 textDecoration: 'none',
