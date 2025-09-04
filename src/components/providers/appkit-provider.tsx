@@ -20,15 +20,7 @@ export function AppKitProvider({ children }: { children: React.ReactNode }) {
           adapters: [wagmiAdapter],
           projectId,
           networks,
-          metadata,
-          // Configuración del tamaño del modal para que quepa mejor
-          modal: {
-            size: 'compact', // Hacer el modal más compacto
-            width: '400px',  // Ancho máximo del modal
-            height: '600px', // Altura máxima del modal
-            maxWidth: '90vw', // Máximo 90% del ancho de la ventana
-            maxHeight: '80vh' // Máximo 80% de la altura de la ventana
-          }
+          metadata
         })
         
         appKitInstance = modal
