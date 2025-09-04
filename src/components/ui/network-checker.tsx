@@ -65,14 +65,15 @@ export function NetworkChecker() {
           backdropFilter: 'blur(20px)',
           borderRadius: 'clamp(12px, 3vw, 20px)',
           border: '2px solid rgba(255, 0, 0, 0.5)',
-          padding: 'clamp(1rem, 4vw, 1.5rem)',
-          width: 'clamp(280px, 85vw, 400px)',
-          maxWidth: 'calc(100vw - 1rem)',
-          maxHeight: 'calc(100vh - 1rem)',
+          padding: 'clamp(0.8rem, 3vw, 1.2rem)',
+          width: 'clamp(260px, 80vw, 380px)',
+          maxWidth: 'calc(100vw - 2rem)',
+          maxHeight: 'calc(100vh - 2rem)',
           overflow: 'auto',
           boxShadow: '0 15px 30px rgba(255, 0, 0, 0.3), 0 0 60px rgba(255, 0, 0, 0.2)',
           textAlign: 'center',
-          color: '#ffffff'
+          color: '#ffffff',
+          margin: '1rem'
         }}
       >
         {/* Icono de advertencia */}
@@ -302,24 +303,31 @@ export function NetworkChecker() {
           /* Mejoras responsive para mobile */
           @media (max-width: 480px) {
             .network-modal {
-              margin: 0.5rem !important;
-              max-height: calc(100vh - 1rem) !important;
+              margin: 1rem !important;
+              max-height: calc(100vh - 2rem) !important;
               padding: 0.8rem !important;
+              width: calc(100vw - 2rem) !important;
+              max-width: calc(100vw - 2rem) !important;
+              left: 50% !important;
+              transform: translate(-50%, -50%) !important;
             }
           }
 
           @media (max-width: 360px) {
             .network-modal {
               padding: 0.6rem !important;
-              margin: 0.25rem !important;
-              width: calc(100vw - 0.5rem) !important;
+              margin: 0.75rem !important;
+              width: calc(100vw - 1.5rem) !important;
+              max-width: calc(100vw - 1.5rem) !important;
             }
           }
 
           @media (max-width: 320px) {
             .network-modal {
               padding: 0.5rem !important;
-              margin: 0.25rem !important;
+              margin: 0.5rem !important;
+              width: calc(100vw - 1rem) !important;
+              max-width: calc(100vw - 1rem) !important;
             }
           }
 
