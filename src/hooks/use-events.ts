@@ -274,6 +274,44 @@ export function useEvents() {
       eventType: 'hybrid',
       distance: 16.2,
       isDemo: true
+    },
+    {
+      id: 13,
+      title: "AI & Blockchain Workshop",
+      description: "Workshop práctico sobre inteligencia artificial y blockchain. Aprende las últimas tecnologías y aplicaciones.",
+      date: "15-17 Noviembre 2026",
+      time: "9:00 AM - 5:00 PM",
+      location: "Innovation Hub, Tijuana",
+      price: "0.0003 ETH",
+      image: "🤖",
+      category: "tech",
+      organizer: "AI Chain Labs",
+      availableTickets: 25,
+      totalTickets: 50,
+      tags: ['ai', 'blockchain', 'workshop', 'tech'],
+      rating: 4.9,
+      eventType: 'presential',
+      distance: 8.5,
+      isDemo: true
+    },
+    {
+      id: 14,
+      title: "Crypto Art Gallery Opening",
+      description: "Apertura exclusiva de la galería de arte cripto. Obras únicas de artistas digitales emergentes.",
+      date: "3-5 Diciembre 2026",
+      time: "6:00 PM - 10:00 PM",
+      location: "Galería Digital, Mérida",
+      price: "0.0003 ETH",
+      image: "🎭",
+      category: "art",
+      organizer: "CryptoArt MX",
+      availableTickets: 15,
+      totalTickets: 30,
+      tags: ['crypto-art', 'nft', 'gallery', 'exhibition'],
+      rating: 4.8,
+      eventType: 'presential',
+      distance: 12.3,
+      isDemo: true
     }
   ], [])
 

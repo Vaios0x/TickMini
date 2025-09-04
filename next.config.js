@@ -3,8 +3,6 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose',
   },
-  // Deshabilitar el prerendering estático para evitar problemas
-  output: 'standalone',
   // Configuración para evitar problemas de build
   typescript: {
     ignoreBuildErrors: false,
@@ -12,7 +10,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // Resolver problemas con AppKit y WalletConnect
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -41,6 +39,17 @@ const nextConfig = {
     // Agregar externals para evitar problemas
     config.externals = config.externals || []
     config.externals.push('pino-pretty', 'lokijs', 'encoding')
+
+    // Configuración adicional para resolver problemas de webpack
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+    }
+
+    // Configuración para manejar módulos ESM
+    config.experiments = {
+      ...config.experiments,
+    }
 
     return config
   },

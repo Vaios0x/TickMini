@@ -319,7 +319,36 @@ export function useContractTransactions() {
     }
   }, [isConnected, address, chainId, writeContractAsync])
 
-  // 5. TRANSFERIR TICKET
+  // 5. CREAR EVENTO ACTIVO POR DEFECTO
+  const createDefaultActiveEvent = useCallback(async (): Promise<number | null> => {
+    if (!isConnected || !address) {
+      return null
+    }
+
+    try {
+      // Crear un evento activo por defecto
+      const eventData = {
+        name: 'Evento Activo por Defecto',
+        description: 'Evento creado automáticamente para permitir compras',
+        eventDate: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 días en el futuro
+        location: 'Ubicación por definir',
+        totalTickets: 1000,
+        metadataURI: `ipfs://QmDefaultEvent${Date.now()}`
+      }
+
+      const result = await createEvent(eventData)
+      if (result) {
+        console.log('✅ Evento activo por defecto creado:', result.eventId)
+        return result.eventId
+      }
+      return null
+    } catch (error: any) {
+      console.error('Error creando evento por defecto:', error)
+      return null
+    }
+  }, [isConnected, address, createEvent])
+
+  // 6. TRANSFERIR TICKET
   const transferTicket = useCallback(async (
     from: string,
     to: string,
@@ -387,6 +416,7 @@ export function useContractTransactions() {
     batchMintTickets,
     useTicket,
     transferTicket,
+    createDefaultActiveEvent,
     resetTransactionState,
     
     // Estados de transacción

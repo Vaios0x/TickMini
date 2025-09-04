@@ -4,6 +4,7 @@ import React from 'react'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
 import { AdvancedSearch } from '@/components/ui/advanced-search'
 import { useEvents } from '@/hooks/use-events'
+import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
 import Link from 'next/link'
 
 interface Event {
@@ -52,6 +53,9 @@ export default function EventsPage() {
     toggleTag
   } = useEvents()
   
+  // Hook para verificar tickets comprados
+  const { tickets: purchasedTickets } = useBlockchainTickets()
+  
   const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false)
   const [selectedEvent, setSelectedEvent] = React.useState<Event | null>(null)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
@@ -87,152 +91,24 @@ export default function EventsPage() {
     }
   }, [])
 
-  const events: Event[] = [
-    {
-      id: 1,
-      title: "Web3 Summit 2026",
-      description: "La conferencia más importante de blockchain y Web3 en Latinoamérica. Networking, workshops y las últimas tendencias.",
-      date: "15-17 Marzo 2026",
-      time: "9:00 AM - 6:00 PM",
-      location: "Centro de Convenciones, CDMX",
-      price: "0.15 ETH",
-      image: "🚀",
-      category: "tech",
-      organizer: "Web3 Latam",
-      availableTickets: 45,
-      totalTickets: 500
-    },
-    {
-      id: 2,
-      title: "Festival de Música Electrónica",
-      description: "3 días de música electrónica con los mejores DJs internacionales. Experiencia inmersiva con tecnología LED.",
-      date: "22-24 Abril 2026",
-      time: "4:00 PM - 2:00 AM",
-      location: "Parque Metropolitano, Guadalajara",
-      price: "0.08 ETH",
-      image: "🎵",
-      category: "music",
-      organizer: "ElectroFest MX",
-      availableTickets: 120,
-      totalTickets: 2000
-    },
-    {
-      id: 3,
-      title: "Expo NFT & Metaverso",
-      description: "Explora el futuro del arte digital y los metaversos. Galerías NFT, realidad virtual y networking.",
-      date: "8-10 Mayo 2026",
-      time: "10:00 AM - 8:00 PM",
-      location: "Museo de Arte Moderno, Monterrey",
-      price: "0.12 ETH",
-      image: "🎨",
-      category: "art",
-      organizer: "NFT México",
-      availableTickets: 78,
-      totalTickets: 300
-    },
-    {
-      id: 4,
-      title: "Startup Pitch Competition",
-      description: "Competencia de startups innovadoras. Presenta tu idea ante inversores y gana hasta $50,000 USD.",
-      date: "20 Junio 2026",
-      time: "2:00 PM - 8:00 PM",
-      location: "Centro de Innovación, Querétaro",
-      price: "0.05 ETH",
-      image: "💼",
-      category: "business",
-      organizer: "Innovation Hub MX",
-      availableTickets: 95,
-      totalTickets: 200
-    },
-    {
-      id: 5,
-      title: "Gaming Championship 2026",
-      description: "Torneo de videojuegos con premios en ETH. Compite en League of Legends, Valorant y más.",
-      date: "12-14 Julio 2026",
-      time: "11:00 AM - 10:00 PM",
-      location: "Arena Gaming, Puebla",
-      price: "0.06 ETH",
-      image: "🎮",
-      category: "gaming",
-      organizer: "Gaming MX",
-      availableTickets: 156,
-      totalTickets: 500
-    },
-    {
-      id: 6,
-      title: "Food & Tech Festival",
-      description: "Fusión de gastronomía y tecnología. Robots chefs, comida molecular y experiencias culinarias únicas.",
-      date: "25-27 Agosto 2026",
-      time: "12:00 PM - 11:00 PM",
-      location: "Centro Gastronómico, Oaxaca",
-      price: "0.09 ETH",
-      image: "🍕",
-      category: "food",
-      organizer: "FoodTech MX",
-      availableTickets: 89,
-      totalTickets: 400
-    },
-    {
-      id: 7,
-      title: "Deportes Extremos NFT",
-      description: "Evento deportivo donde cada acción se convierte en NFT. Skateboarding, BMX y parkour.",
-      date: "10 Septiembre 2026",
-      time: "1:00 PM - 7:00 PM",
-      location: "Parque de Deportes, Tijuana",
-      price: "0.07 ETH",
-      image: "⚽",
-      category: "sports",
-      organizer: "Extreme Sports MX",
-      availableTickets: 134,
-      totalTickets: 300
-    },
-    {
-      id: 8,
-      title: "AI & Machine Learning Summit",
-      description: "Conferencia sobre inteligencia artificial y machine learning. Workshops prácticos y networking.",
-      date: "18-20 Octubre 2026",
-      time: "9:00 AM - 6:00 PM",
-      location: "Universidad Tecnológica, Mérida",
-      price: "0.14 ETH",
-      image: "🤖",
-      category: "tech",
-      organizer: "AI México",
-      availableTickets: 67,
-      totalTickets: 250
-    },
-    {
-      id: 9,
-      title: "Jazz & Blues Festival",
-      description: "Festival de jazz y blues con artistas internacionales. Ambiente íntimo y música de calidad.",
-      date: "5-7 Noviembre 2026",
-      time: "6:00 PM - 12:00 AM",
-      location: "Teatro Principal, León",
-      price: "0.11 ETH",
-      image: "🎷",
-      category: "music",
-      organizer: "Jazz MX",
-      availableTickets: 112,
-      totalTickets: 400
-    },
-    {
-      id: 10,
-      title: "Arte Digital & Blockchain",
-      description: "Exposición de arte digital con tecnología blockchain. Artistas emergentes y obras únicas.",
-      date: "15-17 Diciembre 2026",
-      time: "11:00 AM - 9:00 PM",
-      location: "Galería Digital, Cancún",
-      price: "0.10 ETH",
-      image: "🖼️",
-      category: "art",
-      organizer: "Digital Art MX",
-      availableTickets: 88,
-      totalTickets: 200
-    }
-  ]
+  // Usar los eventos del hook useEvents
+  const events = filteredAndSortedEvents
 
 
+
+
+  // Función para verificar si un evento ya fue comprado
+  const isEventPurchased = (eventId: number) => {
+    return purchasedTickets.some(ticket => ticket.eventId === eventId)
+  }
 
   const handleBuyTicket = (event: Event) => {
+    // Verificar si el evento ya fue comprado
+    if (isEventPurchased(event.id)) {
+      alert('Ya has comprado un ticket para este evento. Puedes verlo en "Mis Tickets".')
+      return
+    }
+    
     setSelectedEvent(event)
     setIsCheckoutOpen(true)
   }
@@ -395,8 +271,8 @@ export default function EventsPage() {
               }}>
                 {[
                   { icon: '🎭', value: events.length, label: 'Eventos', color: '#00ffff' },
-                  { icon: '🎫', value: '3,250', label: 'Tickets Disponibles', color: '#ff00ff' },
-                  { icon: '💰', value: '0.97 ETH', label: 'Precio Promedio', color: '#ffff00' }
+                  { icon: '🎫', value: events.reduce((sum, event) => sum + event.availableTickets, 0), label: 'Tickets Disponibles', color: '#ff00ff' },
+                  { icon: '💰', value: events.length > 0 ? (events.reduce((sum, event) => sum + parseFloat(event.price.split(' ')[0]), 0) / events.length).toFixed(2) + ' ETH' : '0 ETH', label: 'Precio Promedio', color: '#ffff00' }
                 ].map((stat, index) => (
                   <div
                     key={index}
@@ -517,6 +393,7 @@ export default function EventsPage() {
             </Link>
           </div>
         </div>
+
 
         {/* Events Grid - Completamente Responsivo */}
         <div style={{
@@ -916,35 +793,47 @@ export default function EventsPage() {
               }}>
                 <button
                   onClick={() => handleBuyTicket(event)}
+                  disabled={isEventPurchased(event.id)}
                   style={{
                     flex: 1,
-                    background: `linear-gradient(135deg, ${getCategoryColor(event.category)}, ${getCategoryColor(event.category)}80)`,
-                    color: '#000000',
+                    background: isEventPurchased(event.id) 
+                      ? 'linear-gradient(135deg, #666666, #888888)'
+                      : `linear-gradient(135deg, ${getCategoryColor(event.category)}, ${getCategoryColor(event.category)}80)`,
+                    color: isEventPurchased(event.id) ? '#cccccc' : '#000000',
                     border: 'none',
                     padding: 'clamp(1rem, 2.5vw, 1.2rem)',
                     borderRadius: 'clamp(15px, 4vw, 20px)',
                     fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                     fontWeight: '900',
-                    cursor: 'pointer',
+                    cursor: isEventPurchased(event.id) ? 'not-allowed' : 'pointer',
                     transition: 'all 0.3s ease',
                     textTransform: 'uppercase',
                     letterSpacing: '1px',
-                    boxShadow: `0 10px 30px ${getCategoryColor(event.category)}40`,
+                    boxShadow: isEventPurchased(event.id) 
+                      ? '0 5px 15px rgba(102, 102, 102, 0.3)'
+                      : `0 10px 30px ${getCategoryColor(event.category)}40`,
                     transform: 'translateY(0)',
-                    minHeight: 'clamp(45px, 8vw, 55px)'
+                    minHeight: 'clamp(45px, 8vw, 55px)',
+                    opacity: isEventPurchased(event.id) ? 0.7 : 1
                   }}
                   onMouseEnter={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(-3px)'
-                    e.currentTarget.style.boxShadow = `0 15px 40px ${getCategoryColor(event.category)}60`
+                    if (!isEventPurchased(event.id)) {
+                      e.currentTarget.style.transform = 'translateY(-3px)'
+                      e.currentTarget.style.boxShadow = `0 15px 40px ${getCategoryColor(event.category)}60`
+                    }
                   }}
                   onMouseLeave={(e: any) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = `0 10px 30px ${getCategoryColor(event.category)}40`
+                    if (!isEventPurchased(event.id)) {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.boxShadow = `0 10px 30px ${getCategoryColor(event.category)}40`
+                    }
                   }}
                   tabIndex={0}
-                  aria-label={`Comprar ticket para ${event.title}`}
+                  aria-label={isEventPurchased(event.id) 
+                    ? `Ya comprado - ${event.title}` 
+                    : `Comprar ticket para ${event.title}`}
                 >
-                  🎫 Comprar Ticket
+                  {isEventPurchased(event.id) ? '✅ Ya Comprado' : '🎫 Comprar Ticket'}
                 </button>
                 <button style={{
                   padding: 'clamp(1rem, 2.5vw, 1.2rem)',

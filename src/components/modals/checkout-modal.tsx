@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useModalScroll } from '@/hooks/use-modal-scroll'
 import { useContractTransactions } from '@/hooks/use-contract-transactions'
 import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
+import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
 import './checkout-modal.css'
 
 interface CheckoutModalProps {
@@ -41,6 +42,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     createEvent,
     mintTicket,
     batchMintTickets,
+    createDefaultActiveEvent,
     isTransactionLoading,
     isTransactionSuccess,
     isTransactionError,
@@ -49,6 +51,9 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     resetTransactionState,
     address
   } = useContractTransactions()
+  
+  // Hook para manejar tickets comprados
+  const { addNewTicket } = useBlockchainTickets()
   
   // Hook para transacciones patrocinadas (DESACTIVADO - no se usa)
   // const {
@@ -205,9 +210,14 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           })
         } catch (createError) {
           console.error('Error creando evento:', createError)
-          // Si falla la creación, intentar usar eventId = 1 directamente
-          realEventId = 1
-          console.log('⚠️ Usando eventId = 1 directamente debido a error en creación')
+          // Si falla la creación, crear un evento activo por defecto
+          const defaultEventId = await createDefaultActiveEvent()
+          if (defaultEventId) {
+            realEventId = defaultEventId
+            console.log('✅ Usando evento activo por defecto:', defaultEventId)
+          } else {
+            throw new Error('No se pudo crear ningún evento activo')
+          }
         } finally {
           setIsCreatingEvent(false)
         }
@@ -230,7 +240,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
       console.log('🎫 Comprando ticket(s):', ticketData)
 
-      let txResult = null
+      let txResult: { hash: string, tokenId?: number, tokenIds?: number[] } | null = null
 
       // Usar solo transacciones reales (sin fallback demo)
       if (ticketQuantity === 1) {
@@ -251,9 +261,38 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           tokenId: 'tokenId' in txResult ? txResult.tokenId : txResult.tokenIds
         })
         
+        // Agregar tickets comprados a "Mis Tickets"
+        if (txResult && 'tokenId' in txResult && txResult.tokenId) {
+          // Ticket individual
+          addNewTicket(
+            txResult.hash,
+            txResult.tokenId,
+            realEventId,
+            ticketData.price,
+            event // Pasar información del evento
+          )
+        } else if (txResult && 'tokenIds' in txResult && txResult.tokenIds) {
+          // Múltiples tickets
+          txResult.tokenIds.forEach((tokenId: number, index: number) => {
+            if (txResult) {
+              addNewTicket(
+                txResult.hash,
+                tokenId,
+                realEventId,
+                ticketData.price,
+                event // Pasar información del evento
+              )
+            }
+          })
+        }
+        
         // Mostrar el tokenId generado para verificación
-        const tokenId = 'tokenId' in txResult ? txResult.tokenId : txResult.tokenIds[0]
-        alert(`¡Ticket comprado exitosamente! 🎉\n\nToken ID: ${tokenId}\n\nPuedes usar este ID para verificar tu ticket en la página de verificación.`)
+        const tokenId = txResult && 'tokenId' in txResult && txResult.tokenId 
+          ? txResult.tokenId 
+          : txResult && 'tokenIds' in txResult && txResult.tokenIds 
+            ? txResult.tokenIds[0] 
+            : 'N/A'
+        alert(`¡Ticket comprado exitosamente! 🎉\n\nToken ID: ${tokenId}\n\nTu ticket aparecerá en "Mis Tickets" con la información de la transacción.\n\nHash: ${txResult.hash}`)
         
         setStep(3) // Mostrar confirmación
       } else {
@@ -325,7 +364,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
         {/* Close Button mejorado */}
         <button
-          onClick={(e) => {
+          onClick={(e: any) => {
             e.preventDefault()
             e.stopPropagation()
             onClose()
