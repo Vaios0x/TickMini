@@ -8,12 +8,20 @@ export function useAppKitConnection() {
   })
 
   const handleConnect = () => {
+    // Evitar múltiples llamadas
+    if (typeof window === 'undefined') return
+    
     // Import modal directly and call open
     import('@/context').then(({ modal }) => {
-      if (modal) {
+      if (modal && modal.open) {
+        console.log('🔗 Abriendo modal de conexión...')
         modal.open()
+      } else {
+        console.warn('⚠️ Modal no disponible')
       }
-    }).catch(console.error)
+    }).catch((error) => {
+      console.error('Error abriendo modal:', error)
+    })
   }
 
   const handleDisconnect = () => {

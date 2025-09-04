@@ -32,6 +32,14 @@ export function ConnectButtonSimple({ onConnect }: ConnectButtonSimpleProps = {}
     } else {
       console.log('Connect button clicked!')
       if (connect) {
+        // Evitar múltiples clics rápidos
+        const now = Date.now()
+        if ((window as any).lastConnectClick && now - (window as any).lastConnectClick < 1000) {
+          console.log('⏳ Evitando múltiples clics de conexión')
+          return
+        }
+        ;(window as any).lastConnectClick = now
+        
         connect()
         onConnect?.() // Call onConnect callback if provided
       } else {

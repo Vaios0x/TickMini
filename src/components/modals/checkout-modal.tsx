@@ -186,14 +186,25 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           metadataURI: `ipfs://QmDemoEvent${Date.now()}`
         }
 
-        const createEventHash = await createEvent(eventData)
-        if (!createEventHash) {
-          throw new Error('No se pudo crear el evento en blockchain')
-        }
+        try {
+          const createEventHash = await createEvent(eventData)
+          if (!createEventHash) {
+            throw new Error('No se pudo crear el evento en blockchain')
+          }
 
-        // Para eventos de demo, usar eventId = 1 (primer evento del contrato)
-        realEventId = 1
-        console.log('✅ Evento creado en blockchain, usando eventId:', realEventId)
+          // Esperar un poco para que la transacción se confirme
+          console.log('⏳ Esperando confirmación de creación de evento...')
+          await new Promise(resolve => setTimeout(resolve, 2000))
+
+          // Para eventos de demo, usar eventId = 1 (primer evento del contrato)
+          realEventId = 1
+          console.log('✅ Evento creado en blockchain, usando eventId:', realEventId)
+        } catch (createError) {
+          console.error('Error creando evento:', createError)
+          // Si falla la creación, intentar usar eventId = 1 directamente
+          realEventId = 1
+          console.log('⚠️ Usando eventId = 1 directamente debido a error en creación')
+        }
       }
 
       // Preparar datos del ticket para blockchain
