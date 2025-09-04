@@ -63,23 +63,23 @@ export function NetworkChecker() {
           zIndex: 10001,
           background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.95) 0%, rgba(139, 0, 0, 0.95) 100%)',
           backdropFilter: 'blur(20px)',
-          borderRadius: 'clamp(16px, 4vw, 24px)',
+          borderRadius: 'clamp(12px, 3vw, 20px)',
           border: '2px solid rgba(255, 0, 0, 0.5)',
-          padding: 'clamp(1.5rem, 5vw, 2.5rem)',
-          width: 'clamp(320px, 90vw, 500px)',
-          maxWidth: 'calc(100vw - 2rem)',
-          maxHeight: 'calc(100vh - 2rem)',
+          padding: 'clamp(1rem, 4vw, 1.5rem)',
+          width: 'clamp(280px, 85vw, 400px)',
+          maxWidth: 'calc(100vw - 1rem)',
+          maxHeight: 'calc(100vh - 1rem)',
           overflow: 'auto',
-          boxShadow: '0 20px 40px rgba(255, 0, 0, 0.3), 0 0 80px rgba(255, 0, 0, 0.2)',
+          boxShadow: '0 15px 30px rgba(255, 0, 0, 0.3), 0 0 60px rgba(255, 0, 0, 0.2)',
           textAlign: 'center',
           color: '#ffffff'
         }}
       >
         {/* Icono de advertencia */}
         <div style={{
-          fontSize: 'clamp(3rem, 8vw, 4.5rem)',
-          marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
-          filter: 'drop-shadow(0 0 20px rgba(255, 255, 0, 0.8))',
+          fontSize: 'clamp(2rem, 6vw, 3rem)',
+          marginBottom: 'clamp(0.5rem, 2vw, 1rem)',
+          filter: 'drop-shadow(0 0 15px rgba(255, 255, 0, 0.8))',
           animation: 'pulse 2s ease-in-out infinite'
         }}>
           ⚠️
@@ -88,10 +88,10 @@ export function NetworkChecker() {
         {/* Título */}
         <h2 style={{
           color: '#ffffff',
-          fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
-          marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
+          fontSize: 'clamp(1rem, 3.5vw, 1.4rem)',
+          marginBottom: 'clamp(0.5rem, 2vw, 1rem)',
           fontWeight: 'bold',
-          textShadow: '0 0 20px rgba(255, 0, 0, 0.5)',
+          textShadow: '0 0 15px rgba(255, 0, 0, 0.5)',
           lineHeight: '1.2'
         }}>
           Red Incorrecta Detectada
@@ -99,18 +99,18 @@ export function NetworkChecker() {
 
         {/* Descripción */}
         <div style={{
-          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
-          lineHeight: '1.6'
+          marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
+          lineHeight: '1.5'
         }}>
           <p style={{ 
-            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+            marginBottom: 'clamp(0.5rem, 1.5vw, 0.8rem)',
+            fontSize: 'clamp(0.8rem, 2.2vw, 1rem)'
           }}>
             Estás conectado a <strong style={{ color: '#ffcccc' }}>{getCurrentNetworkName()}</strong>
           </p>
           <p style={{ 
-            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+            marginBottom: 'clamp(0.5rem, 1.5vw, 0.8rem)',
+            fontSize: 'clamp(0.8rem, 2.2vw, 1rem)'
           }}>
             Para usar TickBase de forma <strong style={{ color: '#00ff00' }}>GRATUITA</strong>, 
             necesitas cambiar a:
@@ -118,20 +118,20 @@ export function NetworkChecker() {
           <div style={{
             background: 'rgba(0, 255, 0, 0.1)',
             border: '2px solid rgba(0, 255, 0, 0.3)',
-            borderRadius: 'clamp(8px, 2vw, 12px)',
-            padding: 'clamp(0.8rem, 3vw, 1.2rem)',
-            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)'
+            borderRadius: 'clamp(6px, 1.5vw, 10px)',
+            padding: 'clamp(0.6rem, 2vw, 0.8rem)',
+            marginBottom: 'clamp(0.5rem, 1.5vw, 0.8rem)'
           }}>
             <div style={{ 
               color: '#00ff00', 
               fontWeight: 'bold', 
-              fontSize: 'clamp(1rem, 3vw, 1.2rem)',
-              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
+              fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+              marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)'
             }}>
               🔵 Base Sepolia (Testnet)
             </div>
             <div style={{ 
-              fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', 
+              fontSize: 'clamp(0.7rem, 1.8vw, 0.85rem)', 
               color: '#cccccc' 
             }}>
               Chain ID: 84532 • Transacciones GRATUITAS
@@ -143,33 +143,33 @@ export function NetworkChecker() {
         <div style={{
           background: 'rgba(255, 255, 0, 0.1)',
           border: '1px solid rgba(255, 255, 0, 0.3)',
-          borderRadius: 'clamp(8px, 2vw, 12px)',
-          padding: 'clamp(0.8rem, 3vw, 1.2rem)',
-          marginBottom: 'clamp(1.2rem, 3vw, 1.8rem)',
+          borderRadius: 'clamp(6px, 1.5vw, 10px)',
+          padding: 'clamp(0.6rem, 2vw, 0.8rem)',
+          marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
           textAlign: 'left'
         }}>
           <div style={{ 
             color: '#ffff00', 
             fontWeight: 'bold', 
-            marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+            marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)',
             textAlign: 'center',
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+            fontSize: 'clamp(0.8rem, 2.2vw, 1rem)'
           }}>
             💡 ¿Por qué Base Sepolia?
           </div>
           <ul style={{ 
-            fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', 
-            lineHeight: '1.5',
-            paddingLeft: 'clamp(0.8rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(0.7rem, 1.8vw, 0.85rem)', 
+            lineHeight: '1.4',
+            paddingLeft: 'clamp(0.6rem, 1.5vw, 0.8rem)',
             margin: 0
           }}>
-            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+            <li style={{ marginBottom: 'clamp(0.2rem, 0.8vw, 0.3rem)' }}>
               ✅ <strong>Completamente GRATIS</strong> - No gastas ETH real
             </li>
-            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+            <li style={{ marginBottom: 'clamp(0.2rem, 0.8vw, 0.3rem)' }}>
               🔄 Funciones idénticas a mainnet
             </li>
-            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+            <li style={{ marginBottom: 'clamp(0.2rem, 0.8vw, 0.3rem)' }}>
               🧪 Perfecto para testing y demos
             </li>
             <li>
@@ -189,18 +189,18 @@ export function NetworkChecker() {
               : 'linear-gradient(135deg, #00ff00, #00ffff)',
             color: isPending ? '#cccccc' : '#000000',
             border: 'none',
-            padding: 'clamp(0.8rem, 3vw, 1.2rem) clamp(1.5rem, 4vw, 2.5rem)',
-            borderRadius: 'clamp(8px, 2vw, 12px)',
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+            padding: 'clamp(0.6rem, 2.5vw, 0.8rem) clamp(1rem, 3vw, 1.5rem)',
+            borderRadius: 'clamp(6px, 1.5vw, 10px)',
+            fontSize: 'clamp(0.8rem, 2.2vw, 1rem)',
             fontWeight: 'bold',
             cursor: isPending ? 'not-allowed' : 'pointer',
             transition: 'all 0.3s ease',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 'clamp(0.4rem, 1vw, 0.6rem)',
-            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
-            minHeight: 'clamp(44px, 8vw, 56px)'
+            gap: 'clamp(0.3rem, 0.8vw, 0.4rem)',
+            marginBottom: 'clamp(0.5rem, 1.5vw, 0.8rem)',
+            minHeight: 'clamp(36px, 6vw, 44px)'
           }}
           onMouseEnter={(e) => {
             if (!isPending) {
@@ -236,15 +236,15 @@ export function NetworkChecker() {
 
         {/* Instrucciones manuales */}
         <details style={{ 
-          marginTop: 'clamp(0.8rem, 2vw, 1.2rem)', 
+          marginTop: 'clamp(0.5rem, 1.5vw, 0.8rem)', 
           cursor: 'pointer' 
         }}>
           <summary style={{ 
             color: '#cccccc', 
-            fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
-            marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
-            padding: 'clamp(0.4rem, 1vw, 0.6rem)',
-            borderRadius: 'clamp(4px, 1vw, 6px)',
+            fontSize: 'clamp(0.7rem, 1.8vw, 0.85rem)',
+            marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)',
+            padding: 'clamp(0.3rem, 0.8vw, 0.4rem)',
+            borderRadius: 'clamp(3px, 0.8vw, 5px)',
             background: 'rgba(255, 255, 255, 0.05)',
             transition: 'background 0.2s ease'
           }}>
@@ -252,32 +252,32 @@ export function NetworkChecker() {
           </summary>
           <div style={{
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: 'clamp(6px, 1.5vw, 8px)',
-            padding: 'clamp(0.8rem, 2vw, 1.2rem)',
-            fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
+            borderRadius: 'clamp(4px, 1vw, 6px)',
+            padding: 'clamp(0.5rem, 1.5vw, 0.8rem)',
+            fontSize: 'clamp(0.65rem, 1.5vw, 0.75rem)',
             textAlign: 'left',
             color: '#cccccc',
-            marginTop: 'clamp(0.4rem, 1vw, 0.6rem)'
+            marginTop: 'clamp(0.3rem, 0.8vw, 0.4rem)'
           }}>
             <div style={{ 
-              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+              marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)',
               wordBreak: 'break-all'
             }}>
               <strong>Network Name:</strong> Base Sepolia
             </div>
             <div style={{ 
-              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+              marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)',
               wordBreak: 'break-all'
             }}>
               <strong>RPC URL:</strong> https://sepolia.base.org
             </div>
             <div style={{ 
-              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
+              marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)'
             }}>
               <strong>Chain ID:</strong> 84532
             </div>
             <div style={{ 
-              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
+              marginBottom: 'clamp(0.3rem, 0.8vw, 0.4rem)'
             }}>
               <strong>Currency:</strong> ETH
             </div>
@@ -291,7 +291,7 @@ export function NetworkChecker() {
         <style>{`
           @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
           }
           
           @keyframes spin {
@@ -299,31 +299,48 @@ export function NetworkChecker() {
             100% { transform: rotate(360deg); }
           }
 
-          /* Mejoras responsive adicionales */
+          /* Mejoras responsive para mobile */
           @media (max-width: 480px) {
             .network-modal {
-              margin: 1rem !important;
-              max-height: calc(100vh - 2rem) !important;
+              margin: 0.5rem !important;
+              max-height: calc(100vh - 1rem) !important;
+              padding: 0.8rem !important;
+            }
+          }
+
+          @media (max-width: 360px) {
+            .network-modal {
+              padding: 0.6rem !important;
+              margin: 0.25rem !important;
+              width: calc(100vw - 0.5rem) !important;
             }
           }
 
           @media (max-width: 320px) {
             .network-modal {
-              padding: 1rem !important;
-              margin: 0.5rem !important;
+              padding: 0.5rem !important;
+              margin: 0.25rem !important;
             }
           }
 
           /* Mejorar legibilidad en pantallas pequeñas */
           @media (max-width: 768px) {
             .network-modal * {
-              line-height: 1.4 !important;
+              line-height: 1.3 !important;
             }
           }
 
           /* Hover effects para summary */
           details summary:hover {
             background: rgba(255, 255, 255, 0.1) !important;
+          }
+
+          /* Mejorar scroll en mobile */
+          @media (max-width: 768px) {
+            .network-modal {
+              -webkit-overflow-scrolling: touch;
+              overscroll-behavior: contain;
+            }
           }
         `}</style>
       </motion.div>
