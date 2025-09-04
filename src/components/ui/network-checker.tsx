@@ -31,10 +31,30 @@ export function NetworkChecker() {
 
   return (
     <AnimatePresence>
+      {/* Overlay de fondo */}
       <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          zIndex: 10000,
+          backdropFilter: 'blur(8px)'
+        }}
+      />
+      
+      {/* Modal principal */}
+      <motion.div
+        className="network-modal"
+        initial={{ opacity: 0, scale: 0.8, y: -50 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.8, y: -50 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
         style={{
           position: 'fixed',
           top: '50%',
@@ -43,33 +63,22 @@ export function NetworkChecker() {
           zIndex: 10001,
           background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.95) 0%, rgba(139, 0, 0, 0.95) 100%)',
           backdropFilter: 'blur(20px)',
-          borderRadius: '20px',
+          borderRadius: 'clamp(16px, 4vw, 24px)',
           border: '2px solid rgba(255, 0, 0, 0.5)',
-          padding: '2rem',
-          minWidth: '400px',
-          maxWidth: '500px',
+          padding: 'clamp(1.5rem, 5vw, 2.5rem)',
+          width: 'clamp(320px, 90vw, 500px)',
+          maxWidth: 'calc(100vw - 2rem)',
+          maxHeight: 'calc(100vh - 2rem)',
+          overflow: 'auto',
           boxShadow: '0 20px 40px rgba(255, 0, 0, 0.3), 0 0 80px rgba(255, 0, 0, 0.2)',
           textAlign: 'center',
           color: '#ffffff'
         }}
       >
-        {/* Overlay de fondo */}
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
-            zIndex: -1
-          }}
-        />
-
         {/* Icono de advertencia */}
         <div style={{
-          fontSize: '4rem',
-          marginBottom: '1rem',
+          fontSize: 'clamp(3rem, 8vw, 4.5rem)',
+          marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
           filter: 'drop-shadow(0 0 20px rgba(255, 255, 0, 0.8))',
           animation: 'pulse 2s ease-in-out infinite'
         }}>
@@ -79,42 +88,52 @@ export function NetworkChecker() {
         {/* Título */}
         <h2 style={{
           color: '#ffffff',
-          fontSize: '1.5rem',
-          marginBottom: '1rem',
+          fontSize: 'clamp(1.2rem, 4vw, 1.8rem)',
+          marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
           fontWeight: 'bold',
-          textShadow: '0 0 20px rgba(255, 0, 0, 0.5)'
+          textShadow: '0 0 20px rgba(255, 0, 0, 0.5)',
+          lineHeight: '1.2'
         }}>
           Red Incorrecta Detectada
         </h2>
 
         {/* Descripción */}
         <div style={{
-          marginBottom: '1.5rem',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
           lineHeight: '1.6'
         }}>
-          <p style={{ marginBottom: '1rem' }}>
+          <p style={{ 
+            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+          }}>
             Estás conectado a <strong style={{ color: '#ffcccc' }}>{getCurrentNetworkName()}</strong>
           </p>
-          <p style={{ marginBottom: '1rem' }}>
+          <p style={{ 
+            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
+          }}>
             Para usar TickBase de forma <strong style={{ color: '#00ff00' }}>GRATUITA</strong>, 
             necesitas cambiar a:
           </p>
           <div style={{
             background: 'rgba(0, 255, 0, 0.1)',
             border: '2px solid rgba(0, 255, 0, 0.3)',
-            borderRadius: '12px',
-            padding: '1rem',
-            marginBottom: '1rem'
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(0.8rem, 3vw, 1.2rem)',
+            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)'
           }}>
             <div style={{ 
               color: '#00ff00', 
               fontWeight: 'bold', 
-              fontSize: '1.1rem',
-              marginBottom: '0.5rem'
+              fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
             }}>
               🔵 Base Sepolia (Testnet)
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#cccccc' }}>
+            <div style={{ 
+              fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', 
+              color: '#cccccc' 
+            }}>
               Chain ID: 84532 • Transacciones GRATUITAS
             </div>
           </div>
@@ -124,29 +143,38 @@ export function NetworkChecker() {
         <div style={{
           background: 'rgba(255, 255, 0, 0.1)',
           border: '1px solid rgba(255, 255, 0, 0.3)',
-          borderRadius: '12px',
-          padding: '1rem',
-          marginBottom: '1.5rem',
+          borderRadius: 'clamp(8px, 2vw, 12px)',
+          padding: 'clamp(0.8rem, 3vw, 1.2rem)',
+          marginBottom: 'clamp(1.2rem, 3vw, 1.8rem)',
           textAlign: 'left'
         }}>
           <div style={{ 
             color: '#ffff00', 
             fontWeight: 'bold', 
-            marginBottom: '0.5rem',
-            textAlign: 'center'
+            marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+            textAlign: 'center',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)'
           }}>
             💡 ¿Por qué Base Sepolia?
           </div>
           <ul style={{ 
-            fontSize: '0.9rem', 
+            fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', 
             lineHeight: '1.5',
-            paddingLeft: '1rem',
+            paddingLeft: 'clamp(0.8rem, 2vw, 1.2rem)',
             margin: 0
           }}>
-            <li>✅ <strong>Completamente GRATIS</strong> - No gastas ETH real</li>
-            <li>🔄 Funciones idénticas a mainnet</li>
-            <li>🧪 Perfecto para testing y demos</li>
-            <li>🚀 Mismo rendimiento que Base</li>
+            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+              ✅ <strong>Completamente GRATIS</strong> - No gastas ETH real
+            </li>
+            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+              🔄 Funciones idénticas a mainnet
+            </li>
+            <li style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>
+              🧪 Perfecto para testing y demos
+            </li>
+            <li>
+              🚀 Mismo rendimiento que Base
+            </li>
           </ul>
         </div>
 
@@ -161,17 +189,18 @@ export function NetworkChecker() {
               : 'linear-gradient(135deg, #00ff00, #00ffff)',
             color: isPending ? '#cccccc' : '#000000',
             border: 'none',
-            padding: '1rem 2rem',
-            borderRadius: '12px',
-            fontSize: '1rem',
+            padding: 'clamp(0.8rem, 3vw, 1.2rem) clamp(1.5rem, 4vw, 2.5rem)',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
             fontWeight: 'bold',
             cursor: isPending ? 'not-allowed' : 'pointer',
             transition: 'all 0.3s ease',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.5rem',
-            marginBottom: '1rem'
+            gap: 'clamp(0.4rem, 1vw, 0.6rem)',
+            marginBottom: 'clamp(0.8rem, 2vw, 1.2rem)',
+            minHeight: 'clamp(44px, 8vw, 56px)'
           }}
           onMouseEnter={(e) => {
             if (!isPending) {
@@ -206,41 +235,59 @@ export function NetworkChecker() {
         </button>
 
         {/* Instrucciones manuales */}
-        <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
+        <details style={{ 
+          marginTop: 'clamp(0.8rem, 2vw, 1.2rem)', 
+          cursor: 'pointer' 
+        }}>
           <summary style={{ 
             color: '#cccccc', 
-            fontSize: '0.9rem',
-            marginBottom: '0.5rem'
+            fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
+            marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+            padding: 'clamp(0.4rem, 1vw, 0.6rem)',
+            borderRadius: 'clamp(4px, 1vw, 6px)',
+            background: 'rgba(255, 255, 255, 0.05)',
+            transition: 'background 0.2s ease'
           }}>
             📖 Cambiar manualmente en MetaMask
           </summary>
           <div style={{
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '8px',
-            padding: '1rem',
-            fontSize: '0.8rem',
+            borderRadius: 'clamp(6px, 1.5vw, 8px)',
+            padding: 'clamp(0.8rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
             textAlign: 'left',
-            color: '#cccccc'
+            color: '#cccccc',
+            marginTop: 'clamp(0.4rem, 1vw, 0.6rem)'
           }}>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ 
+              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+              wordBreak: 'break-all'
+            }}>
               <strong>Network Name:</strong> Base Sepolia
             </div>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ 
+              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)',
+              wordBreak: 'break-all'
+            }}>
               <strong>RPC URL:</strong> https://sepolia.base.org
             </div>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ 
+              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
+            }}>
               <strong>Chain ID:</strong> 84532
             </div>
-            <div style={{ marginBottom: '0.5rem' }}>
+            <div style={{ 
+              marginBottom: 'clamp(0.4rem, 1vw, 0.6rem)'
+            }}>
               <strong>Currency:</strong> ETH
             </div>
-            <div>
+            <div style={{ wordBreak: 'break-all' }}>
               <strong>Explorer:</strong> https://sepolia.basescan.org
             </div>
           </div>
         </details>
 
-        {/* CSS Animations */}
+        {/* CSS Animations y estilos responsive */}
         <style>{`
           @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -250,6 +297,33 @@ export function NetworkChecker() {
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+          }
+
+          /* Mejoras responsive adicionales */
+          @media (max-width: 480px) {
+            .network-modal {
+              margin: 1rem !important;
+              max-height: calc(100vh - 2rem) !important;
+            }
+          }
+
+          @media (max-width: 320px) {
+            .network-modal {
+              padding: 1rem !important;
+              margin: 0.5rem !important;
+            }
+          }
+
+          /* Mejorar legibilidad en pantallas pequeñas */
+          @media (max-width: 768px) {
+            .network-modal * {
+              line-height: 1.4 !important;
+            }
+          }
+
+          /* Hover effects para summary */
+          details summary:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
           }
         `}</style>
       </motion.div>
