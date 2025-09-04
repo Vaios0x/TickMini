@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useAccount, useChainId } from 'wagmi'
 import { useRealBlockchainTickets } from '@/hooks/use-real-blockchain-tickets'
 import { useRealEvents } from '@/hooks/use-real-events'
@@ -113,7 +114,7 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Estado:</span>
           <Badge className={getStatusColor()}>
-            {getStatusText()}
+            {getStatusText() as React.ReactNode}
           </Badge>
         </div>
 
