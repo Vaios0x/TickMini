@@ -133,6 +133,12 @@ export function useContractReads() {
     })
   }
 
+  // 8. OBTENER EL ÚLTIMO EVENTO CREADO
+  const useLastEventId = () => {
+    const { data: eventCounter } = useEventCounter()
+    return eventCounter ? Number(eventCounter) : 0
+  }
+
   // 8. HOOK PERSONALIZADO PARA VERIFICACIÓN COMPLETA DE TICKET
   const useTicketVerification = (tokenId: number) => {
     const ticketInfo = useTicketInfo(tokenId)
@@ -234,6 +240,7 @@ export function useContractReads() {
     useTokenURI,
     useUserBalance,
     useEventCounter,
+    useLastEventId,
     
     // Hooks compuestos
     useTicketVerification,

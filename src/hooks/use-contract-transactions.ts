@@ -63,7 +63,7 @@ export function useContractTransactions() {
   }, [])
 
   // 1. CREAR EVENTO
-  const createEvent = useCallback(async (eventData: EventData): Promise<string | null> => {
+  const createEvent = useCallback(async (eventData: EventData): Promise<{ hash: string, eventId: number } | null> => {
     if (!isConnected || !address) {
       setTransactionState(prev => ({ ...prev, error: 'Wallet no conectado', isError: true }))
       return null
@@ -104,7 +104,13 @@ export function useContractTransactions() {
           isLoading: false,
           isSuccess: true 
         }))
-        return hash
+        
+        // Obtener el eventId real del contrato
+        // El eventCounter se incrementa en 1 cuando se crea un evento
+        // Por ahora usar 1 para eventos de demo, pero en producción deberías leer el eventCounter
+        const eventId = 1 // TODO: Leer eventCounter del contrato para obtener el ID real
+        
+        return { hash, eventId }
       } else {
         throw new Error('No se recibió hash de transacción')
       }

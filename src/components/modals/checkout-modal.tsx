@@ -187,8 +187,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         }
 
         try {
-          const createEventHash = await createEvent(eventData)
-          if (!createEventHash) {
+          const createEventResult = await createEvent(eventData)
+          if (!createEventResult) {
             throw new Error('No se pudo crear el evento en blockchain')
           }
 
@@ -196,9 +196,12 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           console.log('⏳ Esperando confirmación de creación de evento...')
           await new Promise(resolve => setTimeout(resolve, 2000))
 
-          // Para eventos de demo, usar eventId = 1 (primer evento del contrato)
-          realEventId = 1
-          console.log('✅ Evento creado en blockchain, usando eventId:', realEventId)
+          // Usar el eventId real devuelto por la función
+          realEventId = createEventResult.eventId
+          console.log('✅ Evento creado en blockchain:', {
+            hash: createEventResult.hash,
+            eventId: realEventId
+          })
         } catch (createError) {
           console.error('Error creando evento:', createError)
           // Si falla la creación, intentar usar eventId = 1 directamente
