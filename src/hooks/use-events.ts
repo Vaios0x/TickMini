@@ -45,7 +45,8 @@ export function useEvents() {
   const [isLoading, setIsLoading] = useState(false)
 
   // Datos de eventos de ejemplo - Memoizados para evitar recreación
-  const events = useMemo(() => [
+  // NOTA: Estos son eventos de demostración. En producción, usar eventos reales del contrato
+  const demoEvents = useMemo(() => [
     {
       id: 1,
       title: "Web3 Summit 2026",
@@ -63,7 +64,8 @@ export function useEvents() {
       tags: ['web3', 'blockchain', 'nft', 'defi'],
       rating: 4.8,
       eventType: 'presential',
-      distance: 0
+      distance: 0,
+      isDemo: true // Marcar como evento de demostración
     },
     {
       id: 2,
@@ -81,7 +83,8 @@ export function useEvents() {
       tags: ['music', 'festival', 'electronic'],
       rating: 4.6,
       eventType: 'presential',
-      distance: 5.2
+      distance: 5.2,
+      isDemo: true
     },
     {
       id: 3,
@@ -261,9 +264,14 @@ export function useEvents() {
       tags: ['vr', 'gaming', 'virtual-reality', 'tech'],
       rating: 4.7,
       eventType: 'hybrid',
-      distance: 16.2
+      distance: 16.2,
+      isDemo: true
     }
   ], [])
+
+  // Usar eventos de demostración por ahora
+  // TODO: Integrar con eventos reales del contrato blockchain
+  const events = demoEvents
 
   // Categorías memoizadas
   const categories = useMemo(() => [

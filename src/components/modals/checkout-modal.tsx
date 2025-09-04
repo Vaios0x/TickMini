@@ -35,6 +35,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   
   // Hooks para transacciones blockchain
   const {
+    createEvent,
     mintTicket,
     batchMintTickets,
     isTransactionLoading,
@@ -165,10 +166,38 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     // resetSponsoredState() - DESACTIVADO (no se usa)
     
     try {
+      let realEventId = event.id
+
+      // Si es un evento de demostración, crear el evento real en blockchain primero
+      if (event.isDemo) {
+        console.log('🎭 Creando evento real en blockchain para evento de demostración...')
+        
+        // Convertir fecha de string a timestamp
+        const eventDate = new Date('2026-03-15 09:00:00').getTime() / 1000 // Fecha futura para el demo
+        
+        const eventData = {
+          name: event.title,
+          description: event.description,
+          eventDate: Math.floor(eventDate),
+          location: event.location,
+          totalTickets: event.totalTickets || 100,
+          metadataURI: `ipfs://QmDemoEvent${Date.now()}`
+        }
+
+        const createEventHash = await createEvent(eventData)
+        if (!createEventHash) {
+          throw new Error('No se pudo crear el evento en blockchain')
+        }
+
+        // Para eventos de demo, usar eventId = 1 (primer evento del contrato)
+        realEventId = 1
+        console.log('✅ Evento creado en blockchain, usando eventId:', realEventId)
+      }
+
       // Preparar datos del ticket para blockchain
       const ticketData = {
         to: address || walletAddress,
-        eventId: event.id,
+        eventId: realEventId,
         ticketType: 1, // General ticket
         price: (priceInEth * ticketQuantity).toString(),
         benefits: [
@@ -177,7 +206,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           'WiFi gratuito',
           'Material del evento'
         ],
-        tokenURI: `ipfs://QmTicket${Date.now()}${event.id}` // En producción, generar metadata real
+        tokenURI: `ipfs://QmTicket${Date.now()}${realEventId}` // En producción, generar metadata real
       }
 
       console.log('🎫 Comprando ticket(s):', ticketData)
@@ -191,10 +220,10 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         // Para múltiples tickets, usar batch mint
         const tickets = Array(ticketQuantity).fill(null).map((_, i) => ({
           ...ticketData,
-          tokenURI: `ipfs://QmTicket${Date.now()}${event.id}_${i}`
+          tokenURI: `ipfs://QmTicket${Date.now()}${realEventId}_${i}`
         }))
         
-        txHash = await batchMintTickets(tickets, event.id)
+        txHash = await batchMintTickets(tickets, realEventId)
       }
 
       if (txHash) {
