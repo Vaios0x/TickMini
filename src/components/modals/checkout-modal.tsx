@@ -20,6 +20,8 @@ interface CheckoutModalProps {
     image: string
     category: string
     organizer: string
+    totalTickets?: number
+    isDemo?: boolean
   } | null
 }
 
