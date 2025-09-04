@@ -1,0 +1,242 @@
+/* Estilos para TutorialHero */
+
+.tutorial-hero {
+  padding: clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem);
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-background {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(255, 0, 255, 0.08) 50%, rgba(0, 255, 255, 0.08) 100%);
+  backdrop-filter: blur(30px);
+  border-radius: clamp(20px, 5vw, 40px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: clamp(2rem, 5vw, 4rem);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 120px rgba(0, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.hero-glow-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0080, #8000ff);
+  background-size: 300% 100%;
+  animation: gradientShift 4s ease infinite;
+  opacity: 0.8;
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-icon {
+  font-size: clamp(3rem, 8vw, 5rem);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.6));
+  animation: float 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  background: linear-gradient(45deg, #00ffff 0%, #ff00ff 25%, #ffff00 50%, #00ff00 75%, #00ffff 100%);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  font-weight: 900;
+  text-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+  letter-spacing: clamp(2px, 1vw, 4px);
+  animation: gradientShift 4s ease-in-out infinite;
+  line-height: 1.1;
+}
+
+.title-accent {
+  display: block;
+  font-size: 0.8em;
+  opacity: 0.9;
+}
+
+.hero-description {
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  color: #e0e0e0;
+  max-width: clamp(300px, 90vw, 900px);
+  margin: 0 auto clamp(1.5rem, 4vw, 3rem) auto;
+  line-height: 1.8;
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 40vw, 180px), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  max-width: clamp(500px, 80vw, 700px);
+  margin: 0 auto clamp(2rem, 5vw, 3rem) auto;
+}
+
+.stat-item {
+  text-align: center;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: clamp(15px, 4vw, 25px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+}
+
+.stat-value {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: #00ffff;
+  font-weight: 900;
+  margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.stat-label {
+  color: #d0d0d0;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+
+.btn-primary-neon,
+.btn-secondary-neon {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  padding: clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem);
+  border-radius: clamp(30px, 8vw, 50px);
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  min-width: clamp(180px, 50vw, 250px);
+  justify-content: center;
+}
+
+.btn-primary-neon {
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  color: #000000;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+}
+
+.btn-primary-neon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+}
+
+.btn-secondary-neon {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary-neon:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-icon {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.hero-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  left: var(--x);
+  top: var(--y);
+  animation: float-particle 6s ease-in-out infinite;
+  animation-delay: var(--delay);
+  opacity: 0.6;
+}
+
+.hero-glow-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8000ff, #ff0080, #00ff00, #ffff00, #ff00ff, #00ffff);
+  background-size: 300% 100%;
+  animation: gradientShift 4s ease infinite reverse;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tutorial-hero {
+    padding: clamp(2rem, 6vw, 3rem) clamp(0.5rem, 3vw, 1rem);
+  }
+  
+  .hero-background {
+    padding: clamp(1.5rem, 4vw, 2rem);
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-title {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+  
+  .hero-description {
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+  }
+}
