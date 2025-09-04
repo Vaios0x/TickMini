@@ -69,6 +69,14 @@ const KNOWN_TRANSACTIONS = [
     price: '0.13 ETH',
     timestamp: new Date('2025-09-04T16:55:52Z').getTime(), // 4 de septiembre 2025, 4:55:52 PM UTC
     blockNumber: 30618336
+  },
+  {
+    hash: '0x77338582f9dd8f58e507bf321154acb97899ae3fbb715aadc1f49a59e70c7b08',
+    tokenId: 6,
+    eventId: 1,
+    price: '0.05 ETH',
+    timestamp: new Date('2025-09-04T18:20:18Z').getTime(), // 4 de septiembre 2025, 6:20:18 PM UTC (nuevo ticket)
+    blockNumber: 30620865
   }
 ]
 
@@ -84,13 +92,98 @@ export function useBlockchainTickets() {
     const contractAddress = getContractAddress('TICKET_NFT', chainId) || ''
     const explorerUrl = `https://sepolia.basescan.org/tx/${tx.hash}`
     
+    // Definir diferentes eventos basados en el tokenId
+    const getEventInfo = (tokenId: number) => {
+      switch (tokenId) {
+        case 1:
+          return {
+            name: 'Web3 Summit 2026',
+            date: '15-17 Marzo 2026',
+            location: 'Centro de Convenciones, CDMX',
+            type: 'VIP',
+            image: '🚀',
+            category: 'tech',
+            organizer: 'Web3 Latam',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento']
+          }
+        case 2:
+          return {
+            name: 'Festival de Música Electrónica',
+            date: '22-24 Abril 2026',
+            location: 'Parque Metropolitano, Guadalajara',
+            type: 'General',
+            image: '🎵',
+            category: 'music',
+            organizer: 'ElectroFest MX',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito']
+          }
+        case 3:
+          return {
+            name: 'Gaming Championship 2026',
+            date: '12-14 Julio 2026',
+            location: 'Arena Gaming, Puebla',
+            type: 'Premium',
+            image: '🎮',
+            category: 'gaming',
+            organizer: 'Gaming MX',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento', 'Networking']
+          }
+        case 4:
+          return {
+            name: 'Blockchain Developers Meetup',
+            date: '8-10 Junio 2026',
+            location: 'Tech Hub, Monterrey',
+            type: 'Developer',
+            image: '💻',
+            category: 'tech',
+            organizer: 'DevChain MX',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Workshops', 'Networking']
+          }
+        case 5:
+          return {
+            name: 'NFT Art Exhibition',
+            date: '20-22 Mayo 2026',
+            location: 'Museo de Arte Digital, CDMX',
+            type: 'VIP',
+            image: '🎨',
+            category: 'art',
+            organizer: 'ArtChain Collective',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Catálogo digital']
+          }
+        case 6:
+          return {
+            name: 'DeFi Conference 2026',
+            date: '5-7 Octubre 2026',
+            location: 'Centro Financiero, CDMX',
+            type: 'Executive',
+            image: '💰',
+            category: 'finance',
+            organizer: 'DeFi Latam',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento', 'Networking VIP']
+          }
+        default:
+          return {
+            name: 'Web3 Summit 2026',
+            date: '15-17 Marzo 2026',
+            location: 'Centro de Convenciones, CDMX',
+            type: 'VIP',
+            image: '🚀',
+            category: 'tech',
+            organizer: 'Web3 Latam',
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento']
+          }
+      }
+    }
+    
+    const eventInfo = getEventInfo(tx.tokenId)
+    
     return {
       id: tx.tokenId,
       tokenId: tx.tokenId.toString(),
-      eventName: 'Web3 Summit 2026',
-      eventDate: '15-17 Marzo 2026',
-      eventLocation: 'Centro de Convenciones, CDMX',
-      ticketType: 'VIP',
+      eventName: eventInfo.name,
+      eventDate: eventInfo.date,
+      eventLocation: eventInfo.location,
+      ticketType: eventInfo.type,
       price: tx.price,
       purchaseDate: new Date(tx.timestamp).toLocaleDateString('es-ES', {
         year: 'numeric',
@@ -98,15 +191,10 @@ export function useBlockchainTickets() {
         day: 'numeric'
       }),
       status: 'Válido',
-      benefits: [
-        'Acceso al evento',
-        'Certificado NFT',
-        'WiFi gratuito',
-        'Material del evento'
-      ],
-      image: '🚀',
-      category: 'tech',
-      organizer: 'Web3 Latam',
+      benefits: eventInfo.benefits,
+      image: eventInfo.image,
+      category: eventInfo.category,
+      organizer: eventInfo.organizer,
       contractAddress,
       transactionHash: tx.hash,
       eventId: tx.eventId,
