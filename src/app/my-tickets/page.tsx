@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { useDynamicTickets } from '@/hooks/use-dynamic-tickets'
+import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import './my-tickets.css'
 
@@ -36,7 +36,7 @@ export default function MyTicketsPage() {
   const [showDetails, setShowDetails] = useState(false)
   const [filter, setFilter] = useState<'all' | 'valid' | 'used' | 'expired'>('all')
 
-  // Usar el hook para obtener tickets dinámicos del contrato
+  // Usar el hook para obtener tickets reales del contrato
   const {
     tickets: myTickets,
     isLoading,
@@ -45,9 +45,8 @@ export default function MyTicketsPage() {
     totalTickets,
     validTickets,
     usedTickets,
-    expiredTickets,
-    balance
-  } = useDynamicTickets()
+    expiredTickets
+  } = useBlockchainTickets()
 
   const filteredTickets = myTickets.filter(ticket => {
     switch (filter) {
@@ -184,7 +183,7 @@ export default function MyTicketsPage() {
               fontSize: '0.9rem',
               fontWeight: '500'
             }}>
-              📊 Total: {totalTickets} (Balance: {balance})
+              📊 Total: {totalTickets}
             </div>
             <div style={{
               background: 'rgba(0, 255, 0, 0.1)',
