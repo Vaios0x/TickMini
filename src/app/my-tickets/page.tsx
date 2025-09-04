@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { useContractReads } from '@/hooks/use-contract-reads'
+import { useRealTickets } from '@/hooks/use-real-tickets'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import './my-tickets.css'
 
@@ -22,81 +22,30 @@ interface MyTicket {
   organizer: string
   contractAddress: string
   transactionHash: string
+  eventId: number
+  owner: string
+  blockNumber?: number
+  gasUsed?: string
+  isValid?: boolean
 }
 
 export default function MyTicketsPage() {
   const { address, isConnected } = useAccount()
-  const [myTickets, setMyTickets] = useState<MyTicket[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [selectedTicket, setSelectedTicket] = useState<MyTicket | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [filter, setFilter] = useState<'all' | 'valid' | 'used' | 'expired'>('all')
 
-  // Simular tickets comprados (en producción vendrían del contrato)
-  useEffect(() => {
-    if (isConnected && address) {
-      // Simular delay de carga
-      setTimeout(() => {
-        const mockTickets: MyTicket[] = [
-          {
-            id: 1,
-            tokenId: '1735123456',
-            eventName: 'Web3 Summit 2026',
-            eventDate: '15-17 Marzo 2026',
-            eventLocation: 'Centro de Convenciones, CDMX',
-            ticketType: 'VIP',
-            price: '0.15 ETH',
-            purchaseDate: new Date().toLocaleDateString('es-ES'),
-            status: 'Válido',
-            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento'],
-            image: '🚀',
-            category: 'tech',
-            organizer: 'Web3 Latam',
-            contractAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-            transactionHash: '0x1234567890abcdef1234567890abcdef12345678'
-          },
-          {
-            id: 2,
-            tokenId: '1735123457',
-            eventName: 'Festival de Música Electrónica',
-            eventDate: '22-24 Abril 2026',
-            eventLocation: 'Parque Metropolitano, Guadalajara',
-            ticketType: 'General',
-            price: '0.08 ETH',
-            purchaseDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES'),
-            status: 'Válido',
-            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito'],
-            image: '🎵',
-            category: 'music',
-            organizer: 'ElectroFest MX',
-            contractAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-            transactionHash: '0xabcdef1234567890abcdef1234567890abcdef12'
-          },
-          {
-            id: 3,
-            tokenId: '1735123458',
-            eventName: 'Gaming Championship 2026',
-            eventDate: '12-14 Julio 2026',
-            eventLocation: 'Arena Gaming, Puebla',
-            ticketType: 'Premium',
-            price: '0.06 ETH',
-            purchaseDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES'),
-            status: 'Usado',
-            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito', 'Material del evento', 'Networking'],
-            image: '🎮',
-            category: 'gaming',
-            organizer: 'Gaming MX',
-            contractAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-            transactionHash: '0x567890abcdef1234567890abcdef1234567890ab'
-          }
-        ]
-        setMyTickets(mockTickets)
-        setIsLoading(false)
-      }, 1500)
-    } else {
-      setIsLoading(false)
-    }
-  }, [isConnected, address])
+  // Usar el hook para obtener tickets reales del contrato
+  const {
+    tickets: myTickets,
+    isLoading,
+    error,
+    refreshTickets,
+    totalTickets,
+    validTickets,
+    usedTickets,
+    expiredTickets
+  } = useRealTickets()
 
   const filteredTickets = myTickets.filter(ticket => {
     switch (filter) {
@@ -209,6 +158,132 @@ export default function MyTicketsPage() {
             Gestiona y verifica todos tus tickets NFT comprados
           </p>
         </div>
+
+        {/* Botón de refresh y estadísticas */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{
+              background: 'rgba(0, 255, 255, 0.1)',
+              border: '1px solid rgba(0, 255, 255, 0.3)',
+              borderRadius: '15px',
+              padding: '0.8rem 1.2rem',
+              color: '#00ffff',
+              fontSize: '0.9rem',
+              fontWeight: '500'
+            }}>
+              📊 Total: {totalTickets}
+            </div>
+            <div style={{
+              background: 'rgba(0, 255, 0, 0.1)',
+              border: '1px solid rgba(0, 255, 0, 0.3)',
+              borderRadius: '15px',
+              padding: '0.8rem 1.2rem',
+              color: '#00ff00',
+              fontSize: '0.9rem',
+              fontWeight: '500'
+            }}>
+              ✅ Válidos: {validTickets}
+            </div>
+            <div style={{
+              background: 'rgba(255, 170, 0, 0.1)',
+              border: '1px solid rgba(255, 170, 0, 0.3)',
+              borderRadius: '15px',
+              padding: '0.8rem 1.2rem',
+              color: '#ffaa00',
+              fontSize: '0.9rem',
+              fontWeight: '500'
+            }}>
+              🔒 Usados: {usedTickets}
+            </div>
+          </div>
+          
+          <button
+            onClick={refreshTickets}
+            disabled={isLoading}
+            style={{
+              background: isLoading 
+                ? 'rgba(255, 255, 255, 0.1)'
+                : 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
+              color: isLoading ? '#666666' : '#000000',
+              border: 'none',
+              padding: '0.8rem 1.5rem',
+              borderRadius: '15px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: isLoading ? 'none' : '0 8px 25px rgba(0, 255, 255, 0.3)'
+            }}
+          >
+            {isLoading ? (
+              <>
+                <div style={{
+                  width: '16px',
+                  height: '16px',
+                  border: '2px solid #666666',
+                  borderTop: '2px solid transparent',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                Cargando...
+              </>
+            ) : (
+              <>
+                🔄 Refrescar
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Mostrar error si existe */}
+        {error && (
+          <div style={{
+            background: 'rgba(255, 0, 0, 0.1)',
+            border: '1px solid rgba(255, 0, 0, 0.3)',
+            borderRadius: '15px',
+            padding: '1.5rem',
+            marginBottom: '2rem',
+            textAlign: 'center'
+          }}>
+            <div style={{ color: '#ff6b6b', fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              ⚠️ Error al cargar tickets
+            </div>
+            <div style={{ color: '#b0b0b0', fontSize: '0.9rem' }}>
+              {error}
+            </div>
+            <button
+              onClick={refreshTickets}
+              style={{
+                background: 'linear-gradient(135deg, #ff4444 0%, #ff0080 100%)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '0.8rem 1.5rem',
+                borderRadius: '12px',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                marginTop: '1rem',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              🔄 Reintentar
+            </button>
+          </div>
+        )}
 
         {/* Filtros */}
         <div style={{
