@@ -78,12 +78,32 @@ export function Navbar() {
 
     return () => {
       document.body.style.overflow = 'unset'
+      document.body.classList.remove('menu-transitioning')
     }
   }, [isMobileMenuOpen, isMobile])
 
   // Función para cerrar el menú mobile
   const closeMobileMenu = () => {
+    // Agregar clase para prevenir animaciones durante la transición
+    document.body.classList.add('menu-transitioning')
     setIsMobileMenuOpen(false)
+    
+    // Remover la clase después de que la transición termine
+    setTimeout(() => {
+      document.body.classList.remove('menu-transitioning')
+    }, 300)
+  }
+
+  // Función para abrir el menú mobile
+  const openMobileMenu = () => {
+    // Agregar clase para prevenir animaciones durante la transición
+    document.body.classList.add('menu-transitioning')
+    setIsMobileMenuOpen(true)
+    
+    // Remover la clase después de que la transición termine
+    setTimeout(() => {
+      document.body.classList.remove('menu-transitioning')
+    }, 300)
   }
 
   return (
@@ -110,7 +130,7 @@ export function Navbar() {
           ? '0 8px 32px rgba(0, 255, 255, 0.15)' 
           : '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}>
-        {/* Efecto de brillo superior */}
+        {/* Efecto de brillo superior con animación */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -118,10 +138,8 @@ export function Navbar() {
           right: 0,
           height: '2px',
           background: 'linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0080, #8000ff)',
-          backgroundSize: '300% 100%',
-          animation: 'gradientShift 4s ease infinite',
-          opacity: isScrolled ? 1 : 0.7
-        }} />
+          opacity: isScrolled ? 0.8 : 0.5
+        }} className="navbar-gradient" />
 
         {/* Logo con efectos premium */}
         <div style={{
@@ -136,7 +154,6 @@ export function Navbar() {
           <div style={{
             fontSize: '2rem',
             filter: 'drop-shadow(0 0 20px rgba(0, 255, 255, 0.6))',
-            animation: 'float 3s ease-in-out infinite',
             position: 'relative'
           }}>
             🎫
@@ -149,7 +166,7 @@ export function Navbar() {
               bottom: '-10px',
               background: 'radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%)',
               borderRadius: '50%',
-              animation: 'pulse 2s ease-in-out infinite'
+              opacity: 0.6
             }} />
           </div>
           
@@ -172,7 +189,7 @@ export function Navbar() {
               right: 0,
               bottom: 0,
               background: 'linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent)',
-              animation: 'shimmer 2s ease-in-out infinite',
+              opacity: 0.3,
               borderRadius: '4px'
             }} />
           </Link>
@@ -390,7 +407,7 @@ export function Navbar() {
               height: '40px',
               background: 'radial-gradient(circle, rgba(102, 0, 255, 0.2) 0%, transparent 70%)',
               borderRadius: '50%',
-              animation: 'float 4s ease-in-out infinite',
+              opacity: 0.4,
               pointerEvents: 'none'
             }} />
           </div>
@@ -399,7 +416,7 @@ export function Navbar() {
         {/* Botón del menú mobile - Solo visible en mobile */}
         {isMobile && (
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => isMobileMenuOpen ? closeMobileMenu() : openMobileMenu()}
             style={{
               display: 'flex',
               background: 'rgba(0, 255, 255, 0.1)',

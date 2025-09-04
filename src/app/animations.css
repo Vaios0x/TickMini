@@ -55,15 +55,15 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: 0;
+  width: 0;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover::before {
-  left: 100%;
+  width: 100%;
 }
 
 .nav-link:hover {
@@ -82,15 +82,15 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: 0;
+  width: 0;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: width 0.3s ease;
 }
 
 .btn-outline-neon:hover::before {
-  left: 100%;
+  width: 100%;
 }
 
 .btn-outline-neon:hover {
@@ -108,15 +108,15 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: 0;
+  width: 0;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transition: width 0.3s ease;
 }
 
 .btn-primary-neon:hover::before {
-  left: 100%;
+  width: 100%;
 }
 
 .btn-primary-neon:hover {
@@ -160,15 +160,15 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: 0;
+  width: 0;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
-  transition: left 0.5s;
+  transition: width 0.3s ease;
 }
 
 .social-icon:hover::before {
-  left: 100%;
+  width: 100%;
 }
 
 .social-icon:hover {
@@ -303,5 +303,56 @@ input:focus, select:focus {
   
   .event-card {
     min-width: 100%;
+  }
+  
+  /* Disable most animations on mobile but keep navbar gradient animation */
+  *:not(nav):not(nav *):not(.navbar-gradient) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  
+  /* Keep navbar gradient animation active on mobile */
+  nav {
+    animation-duration: unset !important;
+    animation-delay: unset !important;
+    transition-duration: unset !important;
+    transition-delay: unset !important;
+  }
+  
+  /* Force navbar gradient animation to work on mobile */
+  .navbar-gradient {
+    animation: gradientShift 3s ease infinite !important;
+    background-size: 200% 100% !important;
+    animation-duration: 3s !important;
+    animation-delay: 0s !important;
+    transition-duration: unset !important;
+    transition-delay: unset !important;
+  }
+  
+  .nav-link:hover::before,
+  .btn-outline-neon::before,
+  .btn-primary-neon::before,
+  .footer-link::before,
+  .social-icon::before,
+  .vai0sx-link::before,
+  .event-card::before,
+  .event-card::after {
+    display: none !important;
+  }
+  
+  .nav-link:hover,
+  .btn-outline-neon:hover,
+  .btn-primary-neon:hover,
+  .footer-link:hover,
+  .social-icon:hover,
+  .vai0sx-link:hover,
+  .event-card:hover,
+  input:focus,
+  select:focus {
+    transform: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 }

@@ -4,6 +4,12 @@
   100% { background-position: 0% 50%; }
 }
 
+/* Clase específica para la animación del gradiente del navbar */
+.navbar-gradient {
+  animation: gradientShift 3s ease infinite !important;
+  background-size: 200% 100% !important;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -71,4 +77,61 @@
 /* Prevenir scroll del body cuando el menú está abierto */
 body.menu-open {
   overflow: hidden !important;
+}
+
+/* Prevenir animaciones problemáticas durante transiciones de menú */
+.menu-transitioning * {
+  animation-play-state: paused !important;
+}
+
+.menu-transitioning .nav-link::before,
+.menu-transitioning .btn-outline-neon::before,
+.menu-transitioning .btn-primary-neon::before,
+.menu-transitioning .social-icon::before {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Disable animations on mobile but keep navbar gradient */
+@media (max-width: 768px) {
+  *:not(nav):not(nav *):not(.navbar-gradient) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  
+  /* Keep navbar gradient animation active on mobile */
+  nav {
+    animation-duration: unset !important;
+    animation-delay: unset !important;
+    transition-duration: unset !important;
+    transition-delay: unset !important;
+  }
+  
+  /* Force navbar gradient animation to work on mobile */
+  .navbar-gradient {
+    animation: gradientShift 3s ease infinite !important;
+    background-size: 200% 100% !important;
+    animation-duration: 3s !important;
+    animation-delay: 0s !important;
+    transition-duration: unset !important;
+    transition-delay: unset !important;
+  }
+  
+  .nav-link:hover,
+  .mobile-nav-link:hover,
+  .mobile-menu-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Keep gradientShift animation for navbar */
+  @keyframes float,
+  @keyframes pulse,
+  @keyframes shimmer,
+  @keyframes slideIn {
+    from { opacity: 1; }
+    to { opacity: 1; }
+  }
 }
