@@ -86,7 +86,13 @@ export function useContractTransactions() {
           eventData.location,
           BigInt(eventData.totalTickets),
           eventData.metadataURI
-        ]
+        ],
+        // Configuración de gas optimizada para Base Sepolia (testnet)
+        ...(chainId === 84532 ? {
+          gas: BigInt(300000),
+          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
+          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
+        } : {})
       })
 
       console.log('✅ Evento creado, hash:', hash)
@@ -148,9 +154,12 @@ export function useContractTransactions() {
           ticketData.tokenURI
         ],
         value: priceInWei,
-        // Configuración de gas para Base Sepolia (testnet)
-        gas: chainId === 84532 ? BigInt(500000) : undefined, // Base Sepolia
-        gasPrice: chainId === 84532 ? BigInt(1000000000) : undefined // 1 gwei para Base Sepolia
+        // Configuración de gas optimizada para Base Sepolia (testnet)
+        ...(chainId === 84532 ? {
+          gas: BigInt(500000),
+          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
+          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
+        } : {})
       })
 
       console.log('✅ Transacción enviada, hash:', hash)
@@ -218,9 +227,12 @@ export function useContractTransactions() {
           tokenURIs
         ],
         value: totalValue,
-        // Configuración de gas para Base Sepolia (testnet)
-        gas: chainId === 84532 ? BigInt(800000) : undefined, // Base Sepolia - más gas para batch
-        gasPrice: chainId === 84532 ? BigInt(1000000000) : undefined // 1 gwei para Base Sepolia
+        // Configuración de gas optimizada para Base Sepolia (testnet)
+        ...(chainId === 84532 ? {
+          gas: BigInt(800000), // Más gas para batch
+          maxFeePerGas: BigInt(2000000000), // 2 gwei max fee
+          maxPriorityFeePerGas: BigInt(1000000000) // 1 gwei priority fee
+        } : {})
       })
 
       console.log('✅ Transacción batch enviada, hash:', hash)
