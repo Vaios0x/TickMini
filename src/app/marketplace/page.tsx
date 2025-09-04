@@ -9,7 +9,7 @@ import {
   Heart, 
   Eye,
   TrendingUp,
-  Fire,
+  Flame,
   Zap
 } from 'lucide-react'
 import './marketplace.css'
@@ -97,7 +97,7 @@ export default function MarketplacePage() {
               Trending
             </button>
             <button className="filter-tab">
-              <Fire className="tab-icon" />
+              <Flame className="tab-icon" />
               Hot
             </button>
             <button className="filter-tab">
@@ -137,7 +137,7 @@ export default function MarketplacePage() {
               )}
               {item.hot && (
                 <div className="hot-badge">
-                  <Fire className="badge-icon" />
+                  <Flame className="badge-icon" />
                   Hot
                 </div>
               )}
