@@ -72,8 +72,7 @@ export function NetworkChecker() {
           overflow: 'auto',
           boxShadow: '0 15px 30px rgba(255, 0, 0, 0.3), 0 0 60px rgba(255, 0, 0, 0.2)',
           textAlign: 'center',
-          color: '#ffffff',
-          margin: '1rem'
+          color: '#ffffff'
         }}
       >
         {/* Icono de advertencia */}
@@ -303,31 +302,38 @@ export function NetworkChecker() {
           /* Mejoras responsive para mobile */
           @media (max-width: 480px) {
             .network-modal {
-              margin: 1rem !important;
               max-height: calc(100vh - 2rem) !important;
               padding: 0.8rem !important;
               width: calc(100vw - 2rem) !important;
               max-width: calc(100vw - 2rem) !important;
               left: 50% !important;
+              top: 50% !important;
               transform: translate(-50%, -50%) !important;
+              margin: 0 !important;
             }
           }
 
           @media (max-width: 360px) {
             .network-modal {
               padding: 0.6rem !important;
-              margin: 0.75rem !important;
               width: calc(100vw - 1.5rem) !important;
               max-width: calc(100vw - 1.5rem) !important;
+              left: 50% !important;
+              top: 50% !important;
+              transform: translate(-50%, -50%) !important;
+              margin: 0 !important;
             }
           }
 
           @media (max-width: 320px) {
             .network-modal {
               padding: 0.5rem !important;
-              margin: 0.5rem !important;
               width: calc(100vw - 1rem) !important;
               max-width: calc(100vw - 1rem) !important;
+              left: 50% !important;
+              top: 50% !important;
+              transform: translate(-50%, -50%) !important;
+              margin: 0 !important;
             }
           }
 
