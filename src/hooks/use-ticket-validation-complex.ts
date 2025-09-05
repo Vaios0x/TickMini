@@ -139,7 +139,7 @@ export function useTicketValidation() {
       }
 
       // Obtener información de validación del contrato
-      const publicClient = getPublicClient()
+      const publicClient = getPublicClient({ chainId })
       const validationInfo = await publicClient.readContract({
         address: validatorAddress as `0x${string}`,
         abi: VALIDATOR_ABI,
@@ -425,7 +425,7 @@ export function useTicketValidation() {
 
       if (tokenId) {
         // Obtener historial de un ticket específico
-        const publicClient = getPublicClient()
+        const publicClient = getPublicClient({ chainId })
         const history = await publicClient.readContract({
           address: contractAddress as `0x${string}`,
           abi: VALIDATOR_ABI,

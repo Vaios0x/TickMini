@@ -291,7 +291,7 @@ export function useMarketplace() {
       }
 
       // Obtener el número total de listings
-      const publicClient = getPublicClient()
+      const publicClient = getPublicClient({ chainId })
       const totalListings = await publicClient.readContract({
         address: contractAddress as `0x${string}`,
         abi: MARKETPLACE_ABI,
@@ -356,7 +356,7 @@ export function useMarketplace() {
         throw new Error('Dirección del marketplace no configurada para esta red')
       }
 
-      const publicClient = getPublicClient()
+      const publicClient = getPublicClient({ chainId })
       const sellerListingIds = await publicClient.readContract({
         address: contractAddress as `0x${string}`,
         abi: MARKETPLACE_ABI,
