@@ -5,7 +5,6 @@ import './appkit-modal.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { DemoBanner } from '@/components/ui/demo-banner'
-import { NetworkChecker } from '@/components/ui/network-checker'
 import { TickBatoChatbot } from '@/components/chatbot'
 import { headers } from 'next/headers'
 import ContextProvider from '@/context'
@@ -40,7 +39,6 @@ export default async function RootLayout({
         <ContextProvider cookies={cookies}>
           <div>
             <DemoBanner />
-            <NetworkChecker />
             <Navbar />
             <div style={{ paddingTop: '80px' }}>
               {children}
