@@ -89,11 +89,11 @@ export function useRobustBlockchainTickets() {
       const tokenURI = await safeContractCall('tokenURI', [tokenId])
 
       // Convertir valores BigInt que vienen como strings
-      const eventIdBigInt = safeStringToBigInt(ticketInfo.eventId) || 0n
-      const eventDateBigInt = safeStringToBigInt(eventInfo.eventDate) || 0n
-      const ticketTypeBigInt = safeStringToBigInt(ticketInfo.ticketType) || 0n
-      const priceBigInt = safeStringToBigInt(ticketInfo.price) || 0n
-      const purchaseDateBigInt = safeStringToBigInt(ticketInfo.purchaseDate) || 0n
+      const eventIdBigInt = safeStringToBigInt(ticketInfo.eventId) || BigInt(0)
+      const eventDateBigInt = safeStringToBigInt(eventInfo.eventDate) || BigInt(0)
+      const ticketTypeBigInt = safeStringToBigInt(ticketInfo.ticketType) || BigInt(0)
+      const priceBigInt = safeStringToBigInt(ticketInfo.price) || BigInt(0)
+      const purchaseDateBigInt = safeStringToBigInt(ticketInfo.purchaseDate) || BigInt(0)
 
       return {
         tokenId,

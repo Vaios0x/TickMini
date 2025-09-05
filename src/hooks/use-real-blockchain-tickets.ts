@@ -189,18 +189,18 @@ export function useRealBlockchainTickets() {
       // Convertir los valores BigInt que vienen como strings de vuelta a BigInt
       const processedTicketInfo = {
         ...ticketInfo.data,
-        eventId: safeStringToBigInt(ticketInfo.data.eventId) || 0n,
-        ticketType: safeStringToBigInt(ticketInfo.data.ticketType) || 0n,
-        price: safeStringToBigInt(ticketInfo.data.price) || 0n,
-        purchaseDate: safeStringToBigInt(ticketInfo.data.purchaseDate) || 0n
+        eventId: safeStringToBigInt(ticketInfo.data.eventId) || BigInt(0),
+        ticketType: safeStringToBigInt(ticketInfo.data.ticketType) || BigInt(0),
+        price: safeStringToBigInt(ticketInfo.data.price) || BigInt(0),
+        purchaseDate: safeStringToBigInt(ticketInfo.data.purchaseDate) || BigInt(0)
       }
 
       const processedEventInfo = {
         ...eventInfoCorrect.data,
-        eventId: safeStringToBigInt(eventInfoCorrect.data.eventId) || 0n,
-        eventDate: safeStringToBigInt(eventInfoCorrect.data.eventDate) || 0n,
-        totalTickets: safeStringToBigInt(eventInfoCorrect.data.totalTickets) || 0n,
-        soldTickets: safeStringToBigInt(eventInfoCorrect.data.soldTickets) || 0n
+        eventId: safeStringToBigInt(eventInfoCorrect.data.eventId) || BigInt(0),
+        eventDate: safeStringToBigInt(eventInfoCorrect.data.eventDate) || BigInt(0),
+        totalTickets: safeStringToBigInt(eventInfoCorrect.data.totalTickets) || BigInt(0),
+        soldTickets: safeStringToBigInt(eventInfoCorrect.data.soldTickets) || BigInt(0)
       }
 
       return {
