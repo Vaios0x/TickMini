@@ -1,8 +1,8 @@
 'use client'
 
+import React, { useState, useCallback, useEffect } from 'react'
 import { useWriteContract, useReadContract, useAccount, useChainId, useWaitForTransactionReceipt } from 'wagmi'
 import { parseEther } from 'viem'
-import { useState, useCallback } from 'react'
 import { MARKETPLACE_ABI } from '@/lib/contracts/marketplace-abi'
 import { getContractAddress } from '@/lib/contracts/contract-addresses'
 
@@ -20,6 +20,30 @@ export interface MarketplaceState {
   isSuccess: boolean
 }
 
+export interface MarketplaceListing {
+  listingId: number
+  seller: string
+  nftContract: string
+  tokenId: number
+  price: string
+  isActive: boolean
+  createdAt: number
+  expiresAt: number
+  eventInfo?: {
+    eventId: number
+    name: string
+    description: string
+    eventDate: number
+    location: string
+    organizer: string
+  }
+  ticketInfo?: {
+    ticketType: number
+    benefits: string[]
+    isTransferable: boolean
+  }
+}
+
 export function useMarketplace() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
@@ -32,6 +56,10 @@ export function useMarketplace() {
     transactionHash: null,
     isSuccess: false
   })
+
+  const [listings, setListings] = useState<MarketplaceListing[]>([])
+  const [myListings, setMyListings] = useState<MarketplaceListing[]>([])
+  const [isLoadingListings, setIsLoadingListings] = useState(false)
 
   // 1. LISTAR TICKET PARA VENTA
   const listTicket = useCallback(async (listingData: ListingData): Promise<string | null> => {
@@ -248,6 +276,198 @@ export function useMarketplace() {
     }
   }, [isConnected, address, chainId, writeContractAsync])
 
+  // 5. OBTENER TODOS LOS LISTINGS ACTIVOS
+  const fetchAllListings = useCallback(async (): Promise<MarketplaceListing[]> => {
+    if (!isConnected) return []
+
+    try {
+      setIsLoadingListings(true)
+      console.log('🏪 Obteniendo todos los listings del marketplace')
+      
+      const contractAddress = getContractAddress('MARKETPLACE', chainId)
+      if (!contractAddress) {
+        throw new Error('Dirección del marketplace no configurada para esta red')
+      }
+
+      // Obtener el número total de listings
+      const totalListings = await useReadContract({
+        address: contractAddress as `0x${string}`,
+        abi: MARKETPLACE_ABI,
+        functionName: 'getTotalListings'
+      })
+
+      const fetchedListings: MarketplaceListing[] = []
+      
+      // Obtener cada listing individualmente
+      for (let i = 1; i <= Number(totalListings || 0); i++) {
+        try {
+          const listing = await useReadContract({
+            address: contractAddress as `0x${string}`,
+            abi: MARKETPLACE_ABI,
+            functionName: 'getListing',
+            args: [BigInt(i)]
+          })
+
+          if (listing && listing.isActive) {
+            fetchedListings.push({
+              listingId: Number(listing.listingId),
+              seller: listing.seller,
+              nftContract: listing.nftContract,
+              tokenId: Number(listing.tokenId),
+              price: listing.price.toString(),
+              isActive: listing.isActive,
+              createdAt: Number(listing.createdAt),
+              expiresAt: Number(listing.expiresAt)
+            })
+          }
+        } catch (error) {
+          console.warn(`Error fetching listing ${i}:`, error)
+        }
+      }
+
+      setListings(fetchedListings)
+      return fetchedListings
+      
+    } catch (error: any) {
+      console.error('Error fetching all listings:', error)
+      setMarketplaceState(prev => ({ 
+        ...prev, 
+        isError: true, 
+        error: error.message || 'Error al obtener listings' 
+      }))
+      return []
+    } finally {
+      setIsLoadingListings(false)
+    }
+  }, [isConnected, chainId])
+
+  // 6. OBTENER MIS LISTINGS
+  const fetchMyListings = useCallback(async (): Promise<MarketplaceListing[]> => {
+    if (!isConnected || !address) return []
+
+    try {
+      setIsLoadingListings(true)
+      console.log('👤 Obteniendo mis listings')
+      
+      const contractAddress = getContractAddress('MARKETPLACE', chainId)
+      if (!contractAddress) {
+        throw new Error('Dirección del marketplace no configurada para esta red')
+      }
+
+      const sellerListingIds = await useReadContract({
+        address: contractAddress as `0x${string}`,
+        abi: MARKETPLACE_ABI,
+        functionName: 'getSellerListings',
+        args: [address]
+      })
+
+      const fetchedMyListings: MarketplaceListing[] = []
+      
+      if (sellerListingIds && Array.isArray(sellerListingIds)) {
+        for (const listingId of sellerListingIds) {
+          try {
+            const listing = await useReadContract({
+              address: contractAddress as `0x${string}`,
+              abi: MARKETPLACE_ABI,
+              functionName: 'getListing',
+              args: [listingId]
+            })
+
+            if (listing) {
+              fetchedMyListings.push({
+                listingId: Number(listing.listingId),
+                seller: listing.seller,
+                nftContract: listing.nftContract,
+                tokenId: Number(listing.tokenId),
+                price: listing.price.toString(),
+                isActive: listing.isActive,
+                createdAt: Number(listing.createdAt),
+                expiresAt: Number(listing.expiresAt)
+              })
+            }
+          } catch (error) {
+            console.warn(`Error fetching my listing ${listingId}:`, error)
+          }
+        }
+      }
+
+      setMyListings(fetchedMyListings)
+      return fetchedMyListings
+      
+    } catch (error: any) {
+      console.error('Error fetching my listings:', error)
+      setMarketplaceState(prev => ({ 
+        ...prev, 
+        isError: true, 
+        error: error.message || 'Error al obtener mis listings' 
+      }))
+      return []
+    } finally {
+      setIsLoadingListings(false)
+    }
+  }, [isConnected, address, chainId])
+
+  // 7. FILTRAR LISTINGS
+  const filterListings = useCallback((
+    listings: MarketplaceListing[], 
+    filters: {
+      minPrice?: string
+      maxPrice?: string
+      eventName?: string
+      seller?: string
+      category?: string
+    }
+  ): MarketplaceListing[] => {
+    return listings.filter(listing => {
+      // Filtro por precio mínimo
+      if (filters.minPrice && parseFloat(listing.price) < parseFloat(filters.minPrice)) {
+        return false
+      }
+      
+      // Filtro por precio máximo
+      if (filters.maxPrice && parseFloat(listing.price) > parseFloat(filters.maxPrice)) {
+        return false
+      }
+      
+      // Filtro por nombre del evento
+      if (filters.eventName && listing.eventInfo) {
+        if (!listing.eventInfo.name.toLowerCase().includes(filters.eventName.toLowerCase())) {
+          return false
+        }
+      }
+      
+      // Filtro por vendedor
+      if (filters.seller && !listing.seller.toLowerCase().includes(filters.seller.toLowerCase())) {
+        return false
+      }
+      
+      return true
+    })
+  }, [])
+
+  // 8. ORDENAR LISTINGS
+  const sortListings = useCallback((
+    listings: MarketplaceListing[], 
+    sortBy: 'price-asc' | 'price-desc' | 'date-new' | 'date-old' | 'expires-soon'
+  ): MarketplaceListing[] => {
+    return [...listings].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-asc':
+          return parseFloat(a.price) - parseFloat(b.price)
+        case 'price-desc':
+          return parseFloat(b.price) - parseFloat(a.price)
+        case 'date-new':
+          return b.createdAt - a.createdAt
+        case 'date-old':
+          return a.createdAt - b.createdAt
+        case 'expires-soon':
+          return a.expiresAt - b.expiresAt
+        default:
+          return 0
+      }
+    })
+  }, [])
+
   // Función para resetear el estado
   const resetMarketplaceState = useCallback(() => {
     setMarketplaceState({
@@ -259,15 +479,34 @@ export function useMarketplace() {
     })
   }, [])
 
+  // Auto-fetch listings cuando se conecta la wallet
+  useEffect(() => {
+    if (isConnected && address) {
+      fetchAllListings()
+      fetchMyListings()
+    }
+  }, [isConnected, address, fetchAllListings, fetchMyListings])
+
   return {
-    // Funciones
+    // Funciones de transacciones
     listTicket,
     buyTicket,
     cancelListing,
     updateListingPrice,
     resetMarketplaceState,
     
-    // Estado
-    ...marketplaceState
+    // Funciones de consulta
+    fetchAllListings,
+    fetchMyListings,
+    filterListings,
+    sortListings,
+    
+    // Estado de transacciones
+    ...marketplaceState,
+    
+    // Estado de listings
+    listings,
+    myListings,
+    isLoadingListings
   }
 }

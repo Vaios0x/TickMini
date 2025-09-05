@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "compile": "hardhat compile",
+    "deploy:local": "hardhat run scripts/deploy-all.js --network hardhat",
+    "deploy:baseSepolia": "hardhat run scripts/deploy-all.js --network baseSepolia",
+    "authorize:validator": "hardhat run scripts/authorize-validator.js --network baseSepolia",
+    "fix:validator": "node scripts/auto-authorize-owner.js",
+    "authorize:specific": "node scripts/quick-authorize.js",
+    "manage:validators": "node scripts/manage-validators.js",
+    "help:private-key": "node scripts/get-private-key-instructions.js",
+    "check:validator": "node scripts/simple-check-validator.js",
+    "test:contracts": "hardhat run scripts/test-contracts.js --network hardhat"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6",
