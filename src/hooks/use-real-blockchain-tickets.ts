@@ -5,6 +5,7 @@ import { TICKET_NFT_ABI } from '@/lib/contracts/ticket-nft-abi'
 import { getContractAddress } from '@/lib/contracts/contract-addresses'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { formatEther } from 'viem'
+import { safeStringToBigInt, bigIntToDate } from '@/lib/bigint-utils'
 
 export interface RealTicketData {
   tokenId: number
@@ -54,7 +55,7 @@ export function useRealBlockchainTickets() {
     }
   })
 
-  // 2. Función para obtener tokenId por índice
+  // 2. Función para obtener tokenId por índice de forma segura
   const getTokenIdByIndex = useCallback(async (index: number): Promise<number | null> => {
     if (!address || !contractAddress) return null
     
@@ -73,9 +74,19 @@ export function useRealBlockchainTickets() {
       })
       
       const result = await response.json()
-      return result.success ? Number(result.data) : null
+      
+      // Si la llamada falla, significa que el índice no existe
+      if (!result.success) {
+        // No loggear como error, es normal que algunos índices no existan
+        return null
+      }
+      
+      return Number(result.data)
     } catch (error) {
-      console.error('Error getting tokenId by index:', error)
+      // Solo loggear errores reales de red, no errores de contrato
+      if (error instanceof Error && !error.message.includes('reverted')) {
+        console.error('Error de red getting tokenId by index:', error)
+      }
       return null
     }
   }, [address, contractAddress, chainId])
@@ -175,10 +186,27 @@ export function useRealBlockchainTickets() {
         return null
       }
 
+      // Convertir los valores BigInt que vienen como strings de vuelta a BigInt
+      const processedTicketInfo = {
+        ...ticketInfo.data,
+        eventId: safeStringToBigInt(ticketInfo.data.eventId) || 0n,
+        ticketType: safeStringToBigInt(ticketInfo.data.ticketType) || 0n,
+        price: safeStringToBigInt(ticketInfo.data.price) || 0n,
+        purchaseDate: safeStringToBigInt(ticketInfo.data.purchaseDate) || 0n
+      }
+
+      const processedEventInfo = {
+        ...eventInfoCorrect.data,
+        eventId: safeStringToBigInt(eventInfoCorrect.data.eventId) || 0n,
+        eventDate: safeStringToBigInt(eventInfoCorrect.data.eventDate) || 0n,
+        totalTickets: safeStringToBigInt(eventInfoCorrect.data.totalTickets) || 0n,
+        soldTickets: safeStringToBigInt(eventInfoCorrect.data.soldTickets) || 0n
+      }
+
       return {
         tokenId,
-        ticketInfo: ticketInfo.data,
-        eventInfo: eventInfoCorrect.data,
+        ticketInfo: processedTicketInfo,
+        eventInfo: processedEventInfo,
         isValid: isValid.data,
         owner: owner.data,
         tokenURI: tokenURI.data
@@ -216,18 +244,38 @@ export function useRealBlockchainTickets() {
       const userTickets: RealTicketData[] = []
       const balanceNumber = Number(balance)
 
-      // Obtener todos los tokenIds del usuario
-      for (let i = 0; i < balanceNumber; i++) {
+      // Estrategia mejorada: obtener tokens de forma más eficiente
+      // Usar un enfoque que maneje gaps en los índices de forma más inteligente
+      
+      let foundTokens = 0
+      let consecutiveFailures = 0
+      const maxConsecutiveFailures = 3
+      const maxAttempts = Math.min(balanceNumber * 3, 100) // Límite más generoso
+      
+      for (let i = 0; i < maxAttempts && foundTokens < balanceNumber; i++) {
         const tokenId = await getTokenIdByIndex(i)
-        if (tokenId) {
+        
+        if (tokenId && tokenId > 0) {
           const ticketData = await getTicketData(tokenId)
           if (ticketData) {
             userTickets.push(ticketData)
+            foundTokens++
+            consecutiveFailures = 0 // Resetear contador de fallos
+          } else {
+            consecutiveFailures++
           }
+        } else {
+          consecutiveFailures++
+        }
+        
+        // Si tenemos muchos fallos consecutivos y ya encontramos algunos tokens,
+        // probablemente hemos llegado al final
+        if (consecutiveFailures >= maxConsecutiveFailures && foundTokens > 0) {
+          break
         }
       }
 
-      console.log('🎫 Tickets encontrados:', userTickets.length)
+      console.log('🎫 Tickets encontrados:', userTickets.length, 'de', balanceNumber, 'esperados')
       setTickets(userTickets)
     } catch (err) {
       console.error('Error cargando tickets del usuario:', err)

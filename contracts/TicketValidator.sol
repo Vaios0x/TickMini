@@ -270,27 +270,4 @@ contract TicketValidator is Ownable, ReentrancyGuard {
             status = "Valid and verified";
         }
     }
-    
-    /**
-     * @dev Obtener información completa de validación de un ticket
-     */
-    function getTicketValidationInfo(uint256 _tokenId) external view returns (
-        bool isValidated,
-        ValidationRecord memory lastValidation,
-        uint256 totalValidations
-    ) {
-        isValidated = isTicketValidated[_tokenId];
-        totalValidations = validationHistory[_tokenId].length;
-        
-        if (totalValidations > 0) {
-            lastValidation = validationHistory[_tokenId][totalValidations - 1];
-        }
-    }
-    
-    /**
-     * @dev Obtener historial de validaciones de un ticket
-     */
-    function getValidationHistory(uint256 _tokenId) external view returns (ValidationRecord[] memory) {
-        return validationHistory[_tokenId];
-    }
 }

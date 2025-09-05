@@ -1,6 +1,7 @@
 const { ethers } = require("hardhat");
 const fs = require('fs');
 const path = require('path');
+require("@nomicfoundation/hardhat-ethers");
 
 async function main() {
   console.log("🚀 Desplegando todos los contratos de TickBase...");

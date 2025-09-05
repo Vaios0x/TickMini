@@ -1,4 +1,5 @@
 const { ethers } = require("ethers");
+require('dotenv').config();
 
 // Configuración
 const VALIDATOR_CONTRACT = "0xB1627A905EB21938009f5fA97C9dd35ffB9F1e82";

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPublicClient, http, formatUnits } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
+import { convertBigIntToString } from '@/lib/bigint-utils'
 
 // Configuración de clientes para diferentes redes
 const clients = {
@@ -47,9 +48,12 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Contract call result:`, result)
 
+    // Convertir BigInt a string para serialización JSON
+    const serializedResult = convertBigIntToString(result)
+
     return NextResponse.json({
       success: true,
-      data: result
+      data: serializedResult
     })
 
   } catch (error: any) {

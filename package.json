@@ -10,6 +10,7 @@
     "compile": "hardhat compile",
     "deploy:local": "hardhat run scripts/deploy-all.js --network hardhat",
     "deploy:baseSepolia": "hardhat run scripts/deploy-all.js --network baseSepolia",
+    "deploy:factory": "node scripts/deploy-factory-only.js",
     "authorize:validator": "hardhat run scripts/authorize-validator.js --network baseSepolia",
     "fix:validator": "node scripts/auto-authorize-owner.js",
     "authorize:specific": "node scripts/quick-authorize.js",
