@@ -67,7 +67,7 @@ export function formatBigInt(value: bigint | string, decimals: number = 18): str
     const quotient = bigIntValue / divisor
     const remainder = bigIntValue % divisor
     
-    if (remainder === 0n) {
+    if (remainder === BigInt(0)) {
       return quotient.toString()
     }
     
