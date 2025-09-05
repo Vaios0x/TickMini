@@ -114,7 +114,7 @@ export function BlockchainStatus({ className }: BlockchainStatusProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Estado:</span>
           <Badge className={getStatusColor()}>
-            {getStatusText() as React.ReactNode}
+            {getStatusText()}
           </Badge>
         </div>
 
