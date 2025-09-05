@@ -48,7 +48,7 @@ export function useValidator() {
         address: contractAddress as `0x${string}`,
         abi: VALIDATOR_ABI,
         functionName: 'validateTicket',
-        args: [BigInt(tokenId)]
+        args: [BigInt(tokenId), true, 'Validated successfully']
       })
 
       console.log('✅ Ticket validado exitosamente')
@@ -89,7 +89,7 @@ export function useValidator() {
     return useReadContract({
       address: contractAddress as `0x${string}` || undefined,
       abi: VALIDATOR_ABI,
-      functionName: 'isValidator',
+      functionName: 'isAuthorizedValidator',
       args: addressToCheck ? [addressToCheck as `0x${string}`] : undefined,
       query: {
         enabled: !!contractAddress && !!addressToCheck
@@ -104,7 +104,7 @@ export function useValidator() {
     return useReadContract({
       address: contractAddress as `0x${string}` || undefined,
       abi: VALIDATOR_ABI,
-      functionName: 'validationHistory',
+      functionName: 'getValidationHistory',
       args: tokenId ? [BigInt(tokenId)] : undefined,
       query: {
         enabled: !!contractAddress && !!tokenId
