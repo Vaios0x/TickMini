@@ -319,8 +319,8 @@ export default function ValidatorPage() {
                   },
                   { 
                     icon: '⏰', 
-                    value: validationStats.pendingValidations, 
-                    label: 'Pendientes',
+                    value: validationStats.recentValidations.length, 
+                    label: 'Recientes',
                     color: '#ffaa00'
                   }
                 ].map((stat, index) => (
