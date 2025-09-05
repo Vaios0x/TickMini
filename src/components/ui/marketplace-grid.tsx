@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { MarketplaceCard } from './marketplace-card'
-import { MarketplaceListing, useMarketplace } from '@/hooks/use-marketplace'
+import { MarketplaceListing, useMarketplace } from '@/hooks/use-marketplace-complex'
 
 interface MarketplaceGridProps {
   listings?: MarketplaceListing[]
