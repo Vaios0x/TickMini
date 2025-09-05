@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { MarketplaceGrid } from '@/components/ui/marketplace-grid'
-import { useMarketplace } from '@/hooks/use-marketplace'
+import { useMarketplace } from '@/hooks/use-marketplace-complex'
 import { useAccount } from 'wagmi'
 import Link from 'next/link'
 

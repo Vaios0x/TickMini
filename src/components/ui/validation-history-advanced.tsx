@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { ValidationRecord, ValidationStats } from '@/hooks/use-ticket-validation'
+import { ValidationRecord, ValidationStats } from '@/hooks/use-ticket-validation-complex'
 
 interface ValidationHistoryAdvancedProps {
   history: ValidationRecord[]
