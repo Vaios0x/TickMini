@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useTicketValidation } from '@/hooks/use-ticket-validation'
+import { useTicketValidation } from '@/hooks/use-ticket-validation-complex'
 import { TicketValidator } from '@/components/ui/ticket-validator'
 import { ValidationHistoryAdvanced } from '@/components/ui/validation-history-advanced'
 import { ValidationNav } from '@/components/layout/validation-nav'
@@ -529,7 +529,7 @@ export default function ValidationPage() {
                       🕐 Validaciones Recientes
                     </h3>
                     <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                      {validationStats.recentValidations.slice(0, 5).map((validation, index) => (
+                      {validationStats.recentValidations.slice(0, 5).map((validation: any, index: number) => (
                         <div key={index} style={{
                           padding: '0.5rem',
                           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
@@ -565,7 +565,7 @@ export default function ValidationPage() {
                       flexWrap: 'wrap',
                       gap: '0.5rem'
                     }}>
-                      {scannedTickets.slice(0, 6).map((ticket, index) => (
+                      {scannedTickets.slice(0, 6).map((ticket: any, index: number) => (
                         <div key={index} style={{
                           background: 'rgba(0, 255, 255, 0.2)',
                           borderRadius: '8px',
