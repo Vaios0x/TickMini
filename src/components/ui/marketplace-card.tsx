@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { MarketplaceListing, useMarketplace } from '@/hooks/use-marketplace'
+import { MarketplaceListing, useMarketplace } from '@/hooks/use-marketplace-complex'
 import { formatEther } from 'viem'
 import { useAccount } from 'wagmi'
 
