@@ -261,4 +261,11 @@ contract TicketMarketplace is ReentrancyGuard, Ownable, IERC721Receiver {
     function getTotalListings() external view returns (uint256) {
         return _listingIdCounter.current();
     }
+    
+    /**
+     * @dev Obtener listing ID por token
+     */
+    function getListingByToken(address _nftContract, uint256 _tokenId) external view returns (uint256) {
+        return tokenToListingId[_nftContract][_tokenId];
+    }
 }

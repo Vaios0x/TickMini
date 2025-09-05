@@ -2,7 +2,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react'
 import { useWriteContract, useReadContract, useAccount, useChainId, useWaitForTransactionReceipt } from 'wagmi'
-import { getPublicClient } from '@wagmi/core'
+import { createPublicClient, http } from 'viem'
+import { base, baseSepolia } from 'viem/chains'
 import { parseEther, formatEther } from 'viem'
 import { VALIDATOR_ABI } from '@/lib/contracts/validator-abi'
 import { TICKET_NFT_ABI } from '@/lib/contracts/ticket-nft-abi'
@@ -139,13 +140,33 @@ export function useTicketValidation() {
       }
 
       // Obtener información de validación del contrato
-      const publicClient = getPublicClient({ chainId })
-      const validationInfo = await publicClient.readContract({
+      const chain = chainId === 8453 ? base : baseSepolia
+      const publicClient = createPublicClient({
+        chain,
+        transport: http()
+      })
+      
+      // Verificar si el ticket está validado
+      const isValidated = await publicClient.readContract({
         address: validatorAddress as `0x${string}`,
         abi: VALIDATOR_ABI,
-        functionName: 'getTicketValidationInfo',
+        functionName: 'isTicketValidated',
         args: [BigInt(tokenId)]
       })
+      
+      // Obtener historial de validaciones
+      const validationHistory = await publicClient.readContract({
+        address: validatorAddress as `0x${string}`,
+        abi: VALIDATOR_ABI,
+        functionName: 'getValidationHistory',
+        args: [BigInt(tokenId)]
+      })
+      
+      const validationInfo = {
+        isValidated,
+        totalValidations: BigInt(validationHistory.length),
+        lastValidation: validationHistory.length > 0 ? validationHistory[validationHistory.length - 1] : null
+      }
 
       // Obtener información del ticket NFT
       const ticketInfo = await publicClient.readContract({
@@ -170,7 +191,7 @@ export function useTicketValidation() {
         isWithinWindow: Date.now() < (Number(eventInfo.eventDate) + 86400) * 1000, // 24h después del evento
         totalValidations: Number(validationInfo.totalValidations),
         ticketStatus: determineTicketStatus(ticketInfo, eventInfo),
-        lastValidation: validationInfo.totalValidations > 0 ? {
+        lastValidation: validationInfo.totalValidations > 0 && validationInfo.lastValidation ? {
           tokenId,
           validator: validationInfo.lastValidation.validator,
           validatedAt: Number(validationInfo.lastValidation.validatedAt),
@@ -193,7 +214,7 @@ export function useTicketValidation() {
           }),
           price: formatEther(ticketInfo.price),
           ticketType: Number(ticketInfo.ticketType),
-          benefits: ticketInfo.benefits,
+          benefits: [...ticketInfo.benefits],
           purchaseDate: Number(ticketInfo.purchaseDate)
         }
       }
@@ -425,7 +446,11 @@ export function useTicketValidation() {
 
       if (tokenId) {
         // Obtener historial de un ticket específico
-        const publicClient = getPublicClient({ chainId })
+        const chain = chainId === 8453 ? base : baseSepolia
+        const publicClient = createPublicClient({
+          chain,
+          transport: http()
+        })
         const history = await publicClient.readContract({
           address: contractAddress as `0x${string}`,
           abi: VALIDATOR_ABI,

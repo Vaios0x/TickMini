@@ -2,7 +2,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react'
 import { useWriteContract, useReadContract, useAccount, useChainId, useWaitForTransactionReceipt } from 'wagmi'
-import { getPublicClient } from '@wagmi/core'
+import { createPublicClient, http } from 'viem'
+import { base, baseSepolia } from 'viem/chains'
 import { parseEther } from 'viem'
 import { MARKETPLACE_ABI } from '@/lib/contracts/marketplace-abi'
 import { getContractAddress } from '@/lib/contracts/contract-addresses'
@@ -291,7 +292,12 @@ export function useMarketplace() {
       }
 
       // Obtener el número total de listings
-      const publicClient = getPublicClient({ chainId })
+      const chain = chainId === 8453 ? base : baseSepolia
+      const publicClient = createPublicClient({
+        chain,
+        transport: http()
+      })
+      
       const totalListings = await publicClient.readContract({
         address: contractAddress as `0x${string}`,
         abi: MARKETPLACE_ABI,
@@ -326,7 +332,7 @@ export function useMarketplace() {
           console.warn(`Error fetching listing ${i}:`, error)
         }
       }
-
+      
       setListings(fetchedListings)
       return fetchedListings
       
@@ -356,7 +362,11 @@ export function useMarketplace() {
         throw new Error('Dirección del marketplace no configurada para esta red')
       }
 
-      const publicClient = getPublicClient({ chainId })
+      const chain = chainId === 8453 ? base : baseSepolia
+      const publicClient = createPublicClient({
+        chain,
+        transport: http()
+      })
       const sellerListingIds = await publicClient.readContract({
         address: contractAddress as `0x${string}`,
         abi: MARKETPLACE_ABI,
