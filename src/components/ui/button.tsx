@@ -1,4 +1,5 @@
 import * as React from "react"
+import type { ReactNode } from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
@@ -39,7 +40,7 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  children?: React.ReactNode
+  children?: ReactNode
   className?: string
   onClick?: () => void
   type?: 'button' | 'submit' | 'reset'

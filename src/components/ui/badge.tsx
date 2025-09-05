@@ -1,4 +1,5 @@
 import * as React from "react"
+import type { ReactNode } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
@@ -28,7 +29,7 @@ const badgeVariants = cva(
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: VariantProps<typeof badgeVariants>['variant']
-  children?: React.ReactNode
+  children?: ReactNode
   className?: string
 }
 
