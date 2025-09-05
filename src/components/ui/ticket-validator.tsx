@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useCallback, useRef } from 'react'
-import { useTicketValidation, TicketValidationInfo, QRScanResult } from '@/hooks/use-ticket-validation'
+import { useTicketValidation, TicketValidationInfo, QRScanResult } from '@/hooks/use-ticket-validation-complex'
 import { QRScanner } from './qr-scanner'
 
 interface TicketValidatorProps {
