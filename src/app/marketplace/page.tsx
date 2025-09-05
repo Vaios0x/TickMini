@@ -8,9 +8,61 @@ import Link from 'next/link'
 
 export default function MarketplacePage() {
   const { address, isConnected } = useAccount()
-  const { listings, myListings, isLoadingListings } = useMarketplace()
+  const marketplace = useMarketplace()
   
   const [activeTab, setActiveTab] = useState<'all' | 'my-listings'>('all')
+  
+  // Datos simulados para la demo (hasta que el contrato esté completamente implementado)
+  const listings = [
+    {
+      listingId: 1,
+      seller: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+      nftContract: '0xB409A4908102A9Ec3e4e65a30e97706df38fbdd7',
+      tokenId: 1,
+      price: '0.13',
+      isActive: true,
+      createdAt: Date.now() - 86400000,
+      expiresAt: Date.now() + 86400000 * 7,
+      eventInfo: {
+        eventId: 1,
+        name: 'Web3 Summit 2026',
+        description: 'El evento más importante de Web3 en Latinoamérica',
+        eventDate: Date.now() + 86400000 * 30,
+        location: 'Centro de Convenciones, CDMX',
+        organizer: 'Web3 Latam'
+      },
+      ticketInfo: {
+        ticketType: 2,
+        benefits: ['Acceso VIP', 'Networking', 'Material exclusivo'],
+        isTransferable: true
+      }
+    },
+    {
+      listingId: 2,
+      seller: '0x8ba1f109551bD432803012645Hac136c',
+      nftContract: '0xB409A4908102A9Ec3e4e65a30e97706df38fbdd7',
+      tokenId: 2,
+      price: '0.08',
+      isActive: true,
+      createdAt: Date.now() - 43200000,
+      expiresAt: Date.now() + 86400000 * 5,
+      eventInfo: {
+        eventId: 1,
+        name: 'Web3 Summit 2026',
+        description: 'El evento más importante de Web3 en Latinoamérica',
+        eventDate: Date.now() + 86400000 * 30,
+        location: 'Centro de Convenciones, CDMX',
+        organizer: 'Web3 Latam'
+      },
+      ticketInfo: {
+        ticketType: 1,
+        benefits: ['Acceso general', 'Material básico'],
+        isTransferable: true
+      }
+    }
+  ]
+  
+  const myListings = listings.filter(listing => listing.seller === address)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   // Manejar movimiento del mouse para efectos de fondo
