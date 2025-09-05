@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useTicketValidation } from '@/hooks/use-ticket-validation'
+import { useTicketValidation } from '@/hooks/use-ticket-validation-complex'
 import { ValidationNav } from '@/components/layout/validation-nav'
 import { useAccount } from 'wagmi'
 
