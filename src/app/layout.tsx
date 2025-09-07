@@ -40,7 +40,7 @@ export default async function RootLayout({
           <div>
             <DemoBanner />
             <Navbar />
-            <div style={{ paddingTop: '80px' }}>
+            <div style={{ paddingTop: '120px' }}>
               {children}
             </div>
             <Footer />

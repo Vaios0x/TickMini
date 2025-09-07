@@ -5,11 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { DEMO_CONFIG, demoUtils } from '@/lib/demo-config'
 
 export function DemoBanner() {
-  const [isVisible, setIsVisible] = useState(false) // DESACTIVADO
+  const [isVisible, setIsVisible] = useState(true) // ACTIVADO
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Banner demo desactivado - usando contratos reales
-  return null
+  // Detectar si es móvil
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  if (!isVisible) return null
 
   return (
     <AnimatePresence>
@@ -24,11 +36,11 @@ export function DemoBanner() {
           left: 0,
           right: 0,
           zIndex: 9999,
-          background: 'linear-gradient(135deg, #ff00ff20, #00ffff20, #ffff0020)',
+          background: 'linear-gradient(135deg, #ff6b6b20, #4ecdc420, #45b7d120)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderTop: 'none',
-          padding: isExpanded ? '1rem' : '0.8rem',
+          padding: isExpanded ? (isMobile ? '0.8rem' : '1rem') : (isMobile ? '0.6rem' : '0.8rem'),
           transition: 'padding 0.3s ease'
         }}
       >
@@ -50,52 +62,59 @@ export function DemoBanner() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
+          gap: isMobile ? '0.5rem' : '1rem',
           flexWrap: 'wrap',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          padding: isMobile ? '0 0.5rem' : '0 1rem'
         }}>
           {/* Contenido principal */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
-            flex: 1
+            gap: isMobile ? '0.5rem' : '1rem',
+            flex: 1,
+            minWidth: 0 // Para permitir que el texto se contraiga
           }}>
             {/* Icono animado */}
             <div style={{
-              fontSize: '1.5rem',
+              fontSize: isMobile ? '1.2rem' : '1.5rem',
               animation: 'pulse 2s ease-in-out infinite',
-              filter: 'drop-shadow(0 0 10px rgba(255, 0, 255, 0.5))'
+              filter: 'drop-shadow(0 0 10px rgba(255, 107, 107, 0.5))',
+              flexShrink: 0
             }}>
-              🎭
+              ⚠️
             </div>
 
             {/* Texto principal */}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.2rem'
+              gap: '0.2rem',
+              minWidth: 0,
+              flex: 1
             }}>
               <div style={{
                 color: '#ffffff',
                 fontWeight: 'bold',
-                fontSize: '1rem',
+                fontSize: isMobile ? '0.85rem' : '1rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                flexWrap: 'wrap'
               }}>
-                <span>MODO DEMO ACTIVO</span>
+                <span>DEMO EN TESTNET</span>
                 <span style={{
-                  background: 'linear-gradient(135deg, #00ff00, #00ffff)',
+                  background: 'linear-gradient(135deg, #ff6b6b, #4ecdc4)',
                   color: '#000000',
                   padding: '0.2rem 0.6rem',
                   borderRadius: '12px',
-                  fontSize: '0.7rem',
+                  fontSize: isMobile ? '0.6rem' : '0.7rem',
                   fontWeight: 'bold',
-                  animation: 'glow 2s ease-in-out infinite alternate'
+                  animation: 'glow 2s ease-in-out infinite alternate',
+                  whiteSpace: 'nowrap'
                 }}>
-                  GRATIS
+                  NO REAL
                 </span>
               </div>
               
@@ -108,67 +127,67 @@ export function DemoBanner() {
                     exit={{ opacity: 0, height: 0 }}
                     style={{
                       color: '#b0b0b0',
-                      fontSize: '0.85rem',
+                      fontSize: isMobile ? '0.75rem' : '0.85rem',
                       lineHeight: '1.4',
                       marginTop: '0.5rem'
                     }}
                   >
                     <div style={{ marginBottom: '0.5rem' }}>
-                      <strong>🌟 Características del Demo:</strong>
+                      <strong>⚠️ IMPORTANTE - ESTO ES UN DEMO:</strong>
                     </div>
                     <div style={{
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
                       gap: '0.8rem',
                       marginBottom: '0.8rem'
                     }}>
                       <div>
-                        <strong style={{ color: '#00ffff' }}>✨ Transacciones Gratuitas:</strong><br />
-                        <span style={{ fontSize: '0.8rem' }}>
-                          Crear eventos, comprar tickets y verificar - todo patrocinado
+                        <strong style={{ color: '#ff6b6b' }}>🚫 NO ES REAL:</strong><br />
+                        <span style={{ fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
+                          Las transacciones son solo de prueba en Base Sepolia
                         </span>
                       </div>
                       <div>
-                        <strong style={{ color: '#ff00ff' }}>🔗 Base Sepolia:</strong><br />
-                        <span style={{ fontSize: '0.8rem' }}>
-                          Red de prueba segura - sin riesgo de fondos reales
+                        <strong style={{ color: '#4ecdc4' }}>🔗 TESTNET:</strong><br />
+                        <span style={{ fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
+                          Red de prueba - no uses fondos reales
                         </span>
                       </div>
                       <div>
-                        <strong style={{ color: '#ffff00' }}>🎫 NFTs Reales:</strong><br />
-                        <span style={{ fontSize: '0.8rem' }}>
-                          Experimenta con NFTs reales en blockchain
+                        <strong style={{ color: '#45b7d1' }}>🎫 DEMO GRATUITO:</strong><br />
+                        <span style={{ fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
+                          Experimenta sin riesgo - perfecto para aprender
                         </span>
                       </div>
                     </div>
                     
                     <div style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
+                      background: 'rgba(255, 107, 107, 0.1)',
                       borderRadius: '8px',
-                      padding: '0.8rem',
-                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                      padding: isMobile ? '0.6rem' : '0.8rem',
+                      border: '1px solid rgba(255, 107, 107, 0.2)'
                     }}>
                       <div style={{ marginBottom: '0.5rem' }}>
-                        <strong style={{ color: '#00ff00' }}>💡 Límites Demo Diarios:</strong>
+                        <strong style={{ color: '#ff6b6b' }}>🚨 RECUERDA:</strong>
                       </div>
                       <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '1rem',
-                        fontSize: '0.8rem',
-                        textAlign: 'center'
+                        gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                        gap: isMobile ? '0.5rem' : '1rem',
+                        fontSize: isMobile ? '0.7rem' : '0.8rem',
+                        textAlign: isMobile ? 'left' : 'center'
                       }}>
                         <div>
-                          <div style={{ color: '#00ffff' }}>🎪 Eventos</div>
-                          <div>{demoUtils.getDailyLimit('create_event')} por día</div>
+                          <div style={{ color: '#ff6b6b' }}>💰 Sin Dinero Real</div>
+                          <div>Todas las transacciones son simuladas</div>
                         </div>
                         <div>
-                          <div style={{ color: '#ff00ff' }}>🎫 Tickets</div>
-                          <div>{demoUtils.getDailyLimit('buy_ticket')} por día</div>
+                          <div style={{ color: '#4ecdc4' }}>🔗 Base Sepolia</div>
+                          <div>Red de prueba para desarrollo</div>
                         </div>
                         <div>
-                          <div style={{ color: '#ffff00' }}>🔍 Verificaciones</div>
-                          <div>{demoUtils.getDailyLimit('verify_ticket')} por día</div>
+                          <div style={{ color: '#45b7d1' }}>🎓 Para Aprender</div>
+                          <div>Experimenta sin riesgo</div>
                         </div>
                       </div>
                     </div>
@@ -179,10 +198,10 @@ export function DemoBanner() {
                     exit={{ opacity: 0 }}
                     style={{
                       color: '#b0b0b0',
-                      fontSize: '0.85rem'
+                      fontSize: isMobile ? '0.75rem' : '0.85rem'
                     }}
                   >
-                    Transacciones gratuitas en Base Sepolia • Perfecto para aprender blockchain
+                    {isMobile ? 'Demo en Base Sepolia - No es real' : 'Demo en Base Sepolia • Las transacciones no son reales • Perfecto para aprender'}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -193,8 +212,9 @@ export function DemoBanner() {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.8rem',
-            flexShrink: 0
+            gap: isMobile ? '0.4rem' : '0.8rem',
+            flexShrink: 0,
+            flexWrap: 'wrap'
           }}>
             {/* Botón de expandir/contraer */}
             <button
@@ -203,14 +223,15 @@ export function DemoBanner() {
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '8px',
-                padding: '0.5rem 0.8rem',
+                padding: isMobile ? '0.4rem 0.6rem' : '0.5rem 0.8rem',
                 color: '#ffffff',
                 cursor: 'pointer',
-                fontSize: '0.8rem',
+                fontSize: isMobile ? '0.7rem' : '0.8rem',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem'
+                gap: '0.4rem',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
@@ -221,40 +242,42 @@ export function DemoBanner() {
                 e.currentTarget.style.transform = 'translateY(0)'
               }}
             >
-              {isExpanded ? '🔼 Menos Info' : '🔽 Más Info'}
+              {isExpanded ? (isMobile ? '🔼' : '🔼 Menos') : (isMobile ? '🔽' : '🔽 Más')}
             </button>
 
-            {/* Enlace a documentación */}
-            <a
-              href="https://docs.base.org/using-base/"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: 'linear-gradient(135deg, #00ffff, #ff00ff)',
-                color: '#000000',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '0.5rem 0.8rem',
-                fontSize: '0.8rem',
-                fontWeight: 'bold',
-                textDecoration: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)'
-                e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 255, 255, 0.4)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
-            >
-              📚 Docs Base
-            </a>
+            {/* Enlace a documentación - Solo en desktop */}
+            {!isMobile && (
+              <a
+                href="https://docs.base.org/using-base/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: 'linear-gradient(135deg, #4ecdc4, #45b7d1)',
+                  color: '#000000',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.5rem 0.8rem',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.boxShadow = '0 5px 15px rgba(78, 205, 196, 0.4)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                📚 Docs Base
+              </a>
+            )}
 
             {/* Botón de cerrar */}
             <button
@@ -263,19 +286,20 @@ export function DemoBanner() {
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '50%',
-                width: '30px',
-                height: '30px',
+                width: isMobile ? '26px' : '30px',
+                height: isMobile ? '26px' : '30px',
                 color: '#ffffff',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.9rem',
-                transition: 'all 0.3s ease'
+                fontSize: isMobile ? '0.8rem' : '0.9rem',
+                transition: 'all 0.3s ease',
+                flexShrink: 0
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 0, 0, 0.2)'
-                e.currentTarget.style.borderColor = '#ff4444'
+                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.2)'
+                e.currentTarget.style.borderColor = '#ff6b6b'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
