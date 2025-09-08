@@ -681,6 +681,27 @@ export function Navbar() {
               <span>Marketplace</span>
             </Link>
             
+            <Link href="/compliance-demo" style={{
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '1.3rem',
+              fontWeight: '500',
+              padding: '1.5rem 2rem',
+              borderRadius: '25px',
+              border: '1px solid rgba(0, 255, 100, 0.3)',
+              transition: 'all 0.3s ease',
+              background: 'rgba(0, 255, 100, 0.05)',
+              backdropFilter: 'blur(15px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.5rem',
+              boxShadow: '0 4px 20px rgba(0, 255, 100, 0.2)',
+              minHeight: '70px'
+            }} className="nav-link mobile-nav-link" onClick={closeMobileMenu}>
+              <span style={{ fontSize: '2rem' }}>🇲🇽</span>
+              <span>Compliance</span>
+            </Link>
+            
             <Link href="/about"
               onClick={closeMobileMenu}
               style={{
