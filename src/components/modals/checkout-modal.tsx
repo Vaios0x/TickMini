@@ -5,7 +5,7 @@ import { useModalScroll } from '@/hooks/use-modal-scroll'
 import { useContractTransactions } from '@/hooks/use-contract-transactions'
 import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
 import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
-// import { ComplianceIntegration } from '@/components/compliance/compliance-integration'
+import { ComplianceIntegration } from '@/components/compliance/compliance-integration'
 import './checkout-modal.css'
 
 interface CheckoutModalProps {
@@ -624,90 +624,179 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 </div>
               </div>
 
-              {/* Quantity Selector mejorado */}
+              {/* Quantity Selector mejorado - Ultra Responsivo */}
               <div style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+                background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.08) 0%, rgba(255, 0, 255, 0.05) 100%)',
                 borderRadius: 'clamp(15px, 4vw, 25px)',
-                padding: 'clamp(1.5rem, 3vw, 2rem)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
+                padding: 'clamp(1.2rem, 3vw, 2rem)',
+                border: '2px solid rgba(0, 255, 255, 0.2)',
+                boxShadow: '0 15px 40px rgba(0, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                position: 'relative',
+                overflow: 'hidden',
+                margin: '0 auto',
+                maxWidth: '100%'
               }}>
+                {/* Efecto de brillo animado */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '-100%',
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent)',
+                  animation: 'shimmer 3s infinite'
+                }} />
+                
                 <h5 style={{
                   color: '#ffffff',
-                  fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
-                  marginBottom: 'clamp(1rem, 2vw, 1.5rem)',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+                  marginBottom: 'clamp(1rem, 2.5vw, 1.5rem)',
                   textAlign: 'center',
-                  textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+                  textShadow: '0 0 15px rgba(0, 255, 255, 0.5)',
+                  fontWeight: '600',
+                  letterSpacing: '0.5px',
+                  lineHeight: 1.2
                 }}>
-                  🔢 Cantidad de Tickets
+                  🎫 Cantidad de Tickets
                 </h5>
+                
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 'clamp(1rem, 3vw, 2rem)',
-                  flexWrap: 'wrap'
+                  gap: 'clamp(0.8rem, 2.5vw, 1.5rem)',
+                  flexWrap: 'nowrap',
+                  position: 'relative',
+                  zIndex: 1,
+                  width: '100%',
+                  maxWidth: '100%'
                 }}>
+                  {/* Botón Menos */}
                   <button
                     onClick={() => setTicketQuantity(Math.max(1, ticketQuantity - 1))}
+                    disabled={ticketQuantity <= 1}
                     style={{
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      color: '#ffffff',
-                      width: 'clamp(50px, 12vw, 60px)',
-                      height: 'clamp(50px, 12vw, 60px)',
-                      borderRadius: 'clamp(15px, 3vw, 20px)',
-                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)'
+                      background: ticketQuantity <= 1 
+                        ? 'linear-gradient(135deg, rgba(100, 100, 100, 0.3) 0%, rgba(80, 80, 80, 0.2) 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 100, 100, 0.8) 0%, rgba(255, 50, 50, 0.6) 100%)',
+                      border: ticketQuantity <= 1 
+                        ? '1px solid rgba(150, 150, 150, 0.3)'
+                        : '2px solid rgba(255, 100, 100, 0.5)',
+                      color: ticketQuantity <= 1 ? '#888888' : '#ffffff',
+                      width: 'clamp(45px, 12vw, 60px)',
+                      height: 'clamp(45px, 12vw, 60px)',
+                      borderRadius: '50%',
+                      fontSize: 'clamp(1.4rem, 4vw, 1.8rem)',
+                      cursor: ticketQuantity <= 1 ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: ticketQuantity <= 1 
+                        ? '0 4px 12px rgba(0, 0, 0, 0.2)'
+                        : '0 6px 20px rgba(255, 100, 100, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                      flexShrink: 0,
+                      order: 1
                     }}
                     onMouseEnter={(e: any) => {
-                      e.currentTarget.style.transform = 'scale(1.1) translateY(-2px)'
-                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)'
+                      if (ticketQuantity > 1) {
+                        e.currentTarget.style.transform = 'scale(1.1) translateY(-2px) rotate(-3deg)'
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 100, 100, 0.4)'
+                        e.currentTarget.style.filter = 'brightness(1.2)'
+                      }
                     }}
                     onMouseLeave={(e: any) => {
-                      e.currentTarget.style.transform = 'scale(1) translateY(0)'
-                      e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)'
+                      if (ticketQuantity > 1) {
+                        e.currentTarget.style.transform = 'scale(1) translateY(0) rotate(0deg)'
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 100, 100, 0.3)'
+                        e.currentTarget.style.filter = 'brightness(1)'
+                      }
                     }}
                   >
-                    -
+                    −
                   </button>
+                  
+                  {/* Display de cantidad */}
                   <div style={{
-                    fontSize: 'clamp(2rem, 6vw, 3rem)',
-                    color: '#00ffff',
-                    fontWeight: 'bold',
+                    position: 'relative',
+                    background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.15) 0%, rgba(255, 0, 255, 0.1) 100%)',
+                    border: '2px solid rgba(0, 255, 255, 0.4)',
+                    borderRadius: 'clamp(15px, 4vw, 20px)',
+                    padding: 'clamp(1rem, 3vw, 1.5rem) clamp(1.2rem, 4vw, 1.8rem)',
                     minWidth: 'clamp(80px, 20vw, 100px)',
+                    maxWidth: 'clamp(120px, 30vw, 140px)',
                     textAlign: 'center',
-                    textShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
-                    background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%)',
-                    padding: 'clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
-                    borderRadius: 'clamp(15px, 3vw, 20px)',
-                    border: '1px solid rgba(0, 255, 255, 0.3)'
+                    boxShadow: '0 0 25px rgba(0, 255, 255, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    flex: '1 1 auto',
+                    minHeight: 'clamp(60px, 15vw, 80px)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    order: 2
                   }}>
-                    {ticketQuantity}
+                    <div style={{
+                      fontSize: 'clamp(2rem, 6vw, 2.8rem)',
+                      color: '#00ffff',
+                      fontWeight: '900',
+                      textShadow: '0 0 20px rgba(0, 255, 255, 0.8), 0 3px 6px rgba(0, 0, 0, 0.3)',
+                      letterSpacing: 'clamp(1px, 0.5vw, 2px)',
+                      lineHeight: 1,
+                      background: 'linear-gradient(45deg, #00ffff, #ff00ff, #00ffff)',
+                      backgroundSize: '200% 200%',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      animation: 'gradientShift 2s ease-in-out infinite',
+                      marginBottom: 'clamp(0.2rem, 0.5vw, 0.4rem)'
+                    }}>
+                      {ticketQuantity}
+                    </div>
+                    <div style={{
+                      fontSize: 'clamp(0.7rem, 1.8vw, 0.9rem)',
+                      color: '#b0b0b0',
+                      textTransform: 'uppercase',
+                      letterSpacing: 'clamp(0.5px, 0.3vw, 1px)',
+                      fontWeight: '500',
+                      lineHeight: 1
+                    }}>
+                      {ticketQuantity === 1 ? 'Ticket' : 'Tickets'}
+                    </div>
                   </div>
+                  
+                  {/* Botón Más */}
                   <button
                     onClick={() => setTicketQuantity(ticketQuantity + 1)}
                     style={{
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      background: 'linear-gradient(135deg, rgba(100, 255, 100, 0.8) 0%, rgba(50, 255, 50, 0.6) 100%)',
+                      border: '2px solid rgba(100, 255, 100, 0.5)',
                       color: '#ffffff',
-                      width: 'clamp(50px, 12vw, 60px)',
-                      height: 'clamp(50px, 12vw, 60px)',
-                      borderRadius: 'clamp(15px, 3vw, 20px)',
-                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                      width: 'clamp(45px, 12vw, 60px)',
+                      height: 'clamp(45px, 12vw, 60px)',
+                      borderRadius: '50%',
+                      fontSize: 'clamp(1.4rem, 4vw, 1.8rem)',
                       cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)'
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 6px 20px rgba(100, 255, 100, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                      flexShrink: 0,
+                      order: 3
                     }}
                     onMouseEnter={(e: any) => {
-                      e.currentTarget.style.transform = 'scale(1.1) translateY(-2px)'
-                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)'
+                      e.currentTarget.style.transform = 'scale(1.1) translateY(-2px) rotate(3deg)'
+                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(100, 255, 100, 0.4)'
+                      e.currentTarget.style.filter = 'brightness(1.2)'
                     }}
                     onMouseLeave={(e: any) => {
-                      e.currentTarget.style.transform = 'scale(1) translateY(0)'
-                      e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)'
+                      e.currentTarget.style.transform = 'scale(1) translateY(0) rotate(0deg)'
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(100, 255, 100, 0.3)'
+                      e.currentTarget.style.filter = 'brightness(1)'
                     }}
                   >
                     +
@@ -790,26 +879,16 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           )}
 
           {step === 2 && (
-            /* Step 2: Compliance */
+            /* Step 2: Compliance - Demo Profesional */
             <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-              <div className="text-center p-8 bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-lg">
-                <h3 className="text-2xl font-bold text-white mb-4">🇲🇽 Compliance Demo</h3>
-                <p className="text-gray-300 mb-6">
-                  Sistema de compliance mexicano en desarrollo.<br/>
-                  Simulando validación automática...
-                </p>
-                <div className="bg-green-900/20 border border-green-700 rounded-lg p-4 mb-4">
-                  <p className="text-green-200 text-sm">✅ Transparencia de fees: APROBADO</p>
-                  <p className="text-green-200 text-sm">✅ Nivel KYC: {priceInEth * ticketQuantity < 500 ? 'BÁSICO' : priceInEth * ticketQuantity < 3000 ? 'AVANZADO' : 'MEJORADO'}</p>
-                  <p className="text-green-200 text-sm">✅ Cumplimiento CNBV: VERIFICADO</p>
-                </div>
-                <button
-                  onClick={handleComplianceComplete}
-                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg"
-                >
-                  ✅ Aprobar Compliance Demo
-                </button>
-              </div>
+              <ComplianceIntegration 
+                ticketPrice={priceInEth * ticketQuantity}
+                transactionAmount={priceInEth * ticketQuantity}
+                userAddress={address || ''}
+                eventId={event.id.toString()}
+                onComplianceComplete={handleComplianceComplete}
+                onComplianceError={handleComplianceError}
+              />
             </div>
           )}
 
@@ -881,14 +960,14 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                         marginBottom: '0.75rem',
                         fontWeight: '600'
                       }}>
-                        Wallet de Base Network
+                        {address ? 'Conectado a Base Sepolia' : 'Wallet de Base Sepolia'}
                       </h5>
                       <p style={{
                         color: '#b0b0b0',
                         fontSize: '1rem',
                         lineHeight: '1.5'
                       }}>
-                        Conecta tu wallet para pagar con ETH
+                        {address ? 'Paga con tu wallet conectado' : 'Conecta tu wallet para pagar con Base Sepolia'}
                       </p>
                     </div>
                   </div>
@@ -950,15 +1029,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                         fontSize: '1rem',
                         lineHeight: '1.5'
                       }}>
-                        Compra ETH con tu tarjeta (MoonPay)
+                        Usa tu tarjeta de crédito o débito
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Wallet Address Input mejorado */}
-              {selectedPaymentMethod === 'wallet' && (
+              {/* Wallet Address Input mejorado - Solo mostrar si no está conectado */}
+              {selectedPaymentMethod === 'wallet' && !address && (
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
                   borderRadius: '25px',

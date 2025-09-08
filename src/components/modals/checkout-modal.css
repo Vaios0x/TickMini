@@ -100,6 +100,19 @@
   100% { background-position: 0% 50%; }
 }
 
+/* Animación de brillo para el selector de cantidad */
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Animación de gradiente para el número */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .checkout-modal-overlay {
@@ -346,6 +359,153 @@
   .checkout-modal-content .content-scroll {
     /* Mínimo margen inferior */
     margin-bottom: clamp(0.3rem, 1vw, 0.8rem) !important;
+  }
+}
+
+/* Estilos específicos para el selector de cantidad - Ultra Responsivo */
+.quantity-selector-container {
+  /* Contenedor principal */
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.quantity-selector-container h5 {
+  /* Título responsivo */
+  font-size: clamp(0.9rem, 2.2vw, 1.2rem) !important;
+  margin-bottom: clamp(0.8rem, 2vw, 1.2rem) !important;
+  line-height: 1.1 !important;
+}
+
+.quantity-controls {
+  /* Controles de cantidad */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(0.6rem, 2vw, 1.2rem) !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+}
+
+.quantity-button {
+  /* Botones de cantidad */
+  width: clamp(40px, 10vw, 55px) !important;
+  height: clamp(40px, 10vw, 55px) !important;
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: all 0.3s ease !important;
+}
+
+.quantity-display {
+  /* Display de cantidad */
+  min-width: clamp(70px, 18vw, 90px) !important;
+  max-width: clamp(100px, 25vw, 120px) !important;
+  padding: clamp(0.8rem, 2.5vw, 1.2rem) clamp(1rem, 3vw, 1.5rem) !important;
+  border-radius: clamp(12px, 3vw, 18px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-height: clamp(50px, 12vw, 70px) !important;
+}
+
+.quantity-number {
+  /* Número principal */
+  font-size: clamp(1.8rem, 5vw, 2.4rem) !important;
+  line-height: 1 !important;
+  margin-bottom: clamp(0.1rem, 0.3vw, 0.3rem) !important;
+  letter-spacing: clamp(0.5px, 0.2vw, 1px) !important;
+}
+
+.quantity-label {
+  /* Etiqueta de ticket/tickets */
+  font-size: clamp(0.6rem, 1.5vw, 0.8rem) !important;
+  line-height: 1 !important;
+  letter-spacing: clamp(0.3px, 0.1vw, 0.5px) !important;
+}
+
+/* Breakpoints específicos para el selector de cantidad */
+@media (max-width: 480px) {
+  .quantity-controls {
+    gap: clamp(0.5rem, 1.5vw, 1rem) !important;
+  }
+  
+  .quantity-button {
+    width: clamp(35px, 8vw, 45px) !important;
+    height: clamp(35px, 8vw, 45px) !important;
+    font-size: clamp(1rem, 3vw, 1.4rem) !important;
+  }
+  
+  .quantity-display {
+    min-width: clamp(60px, 15vw, 80px) !important;
+    max-width: clamp(90px, 22vw, 110px) !important;
+    padding: clamp(0.6rem, 2vw, 1rem) clamp(0.8rem, 2.5vw, 1.2rem) !important;
+  }
+  
+  .quantity-number {
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
+  }
+  
+  .quantity-label {
+    font-size: clamp(0.5rem, 1.2vw, 0.7rem) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .quantity-controls {
+    gap: clamp(0.4rem, 1vw, 0.8rem) !important;
+  }
+  
+  .quantity-button {
+    width: clamp(32px, 7vw, 40px) !important;
+    height: clamp(32px, 7vw, 40px) !important;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem) !important;
+  }
+  
+  .quantity-display {
+    min-width: clamp(55px, 12vw, 70px) !important;
+    max-width: clamp(80px, 18vw, 95px) !important;
+    padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.6rem, 2vw, 1rem) !important;
+  }
+  
+  .quantity-number {
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem) !important;
+  }
+  
+  .quantity-label {
+    font-size: clamp(0.45rem, 1vw, 0.6rem) !important;
+  }
+}
+
+/* Para pantallas muy grandes */
+@media (min-width: 1200px) {
+  .quantity-controls {
+    gap: clamp(1.5rem, 2vw, 2rem) !important;
+  }
+  
+  .quantity-button {
+    width: clamp(60px, 1.5vw, 70px) !important;
+    height: clamp(60px, 1.5vw, 70px) !important;
+    font-size: clamp(1.8rem, 0.8vw, 2.2rem) !important;
+  }
+  
+  .quantity-display {
+    min-width: clamp(100px, 2.5vw, 120px) !important;
+    max-width: clamp(140px, 3.5vw, 160px) !important;
+    padding: clamp(1.5rem, 0.8vw, 2rem) clamp(2rem, 1vw, 2.5rem) !important;
+  }
+  
+  .quantity-number {
+    font-size: clamp(2.8rem, 1.2vw, 3.5rem) !important;
+  }
+  
+  .quantity-label {
+    font-size: clamp(0.9rem, 0.3vw, 1rem) !important;
   }
 }
 

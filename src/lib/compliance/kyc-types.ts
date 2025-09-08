@@ -60,6 +60,7 @@ export interface TransactionReport {
 export interface ComplianceThresholds {
   BASIC_KYC_LIMIT: 500; // USD
   ADVANCED_KYC_LIMIT: 3000; // USD  
+  ENHANCED_KYC_LIMIT: 12500; // USD - Enhanced level
   SAT_REPORTING_LIMIT: 56000; // MXN (~$3,000 USD)
   UIF_REPORTING_LIMIT: 56000; // MXN - Real time reporting
 }
@@ -67,6 +68,7 @@ export interface ComplianceThresholds {
 export const MEXICAN_COMPLIANCE_THRESHOLDS: ComplianceThresholds = {
   BASIC_KYC_LIMIT: 500,
   ADVANCED_KYC_LIMIT: 3000,
+  ENHANCED_KYC_LIMIT: 12500,
   SAT_REPORTING_LIMIT: 56000,
   UIF_REPORTING_LIMIT: 56000
 };
