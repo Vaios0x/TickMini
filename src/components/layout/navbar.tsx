@@ -388,6 +388,33 @@ export function Navbar() {
               }} />
             </Link>
             
+            <Link href="/compliance-demo" style={{
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              padding: '0.75rem 1.2rem',
+              borderRadius: '15px',
+              border: '1px solid rgba(0, 255, 100, 0.3)',
+              position: 'relative',
+              overflow: 'hidden',
+              background: 'linear-gradient(135deg, rgba(0, 255, 100, 0.1), rgba(0, 200, 255, 0.1))',
+              boxShadow: '0 0 10px rgba(0, 255, 100, 0.2)'
+            }} className="nav-link">
+              <span style={{ position: 'relative', zIndex: 1 }}>🇲🇽 Compliance</span>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, rgba(0, 255, 100, 0.2), rgba(0, 200, 255, 0.2))',
+                opacity: 0,
+                transition: 'opacity 0.3s ease'
+              }} />
+            </Link>
+            
             <Link href="/contact" style={{
               color: '#ffffff',
               textDecoration: 'none',

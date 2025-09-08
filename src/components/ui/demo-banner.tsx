@@ -103,7 +103,7 @@ export function DemoBanner() {
                 gap: '0.5rem',
                 flexWrap: 'wrap'
               }}>
-                <span>DEMO EN TESTNET</span>
+                <span>TESTNET DEMO</span>
                 <span style={{
                   background: 'linear-gradient(135deg, #ff6b6b, #4ecdc4)',
                   color: '#000000',
@@ -114,7 +114,7 @@ export function DemoBanner() {
                   animation: 'glow 2s ease-in-out infinite alternate',
                   whiteSpace: 'nowrap'
                 }}>
-                  NO REAL
+                  NOT REAL
                 </span>
               </div>
               

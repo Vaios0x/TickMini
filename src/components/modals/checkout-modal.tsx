@@ -5,6 +5,7 @@ import { useModalScroll } from '@/hooks/use-modal-scroll'
 import { useContractTransactions } from '@/hooks/use-contract-transactions'
 import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
 import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
+// import { ComplianceIntegration } from '@/components/compliance/compliance-integration'
 import './checkout-modal.css'
 
 interface CheckoutModalProps {
@@ -33,6 +34,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [step, setStep] = useState(1)
   const [isCreatingEvent, setIsCreatingEvent] = useState(false)
+  const [complianceComplete, setComplianceComplete] = useState(false)
+  const [complianceData, setComplianceData] = useState<any>(null)
 
   // Use custom hook for modal scroll management
   useModalScroll(isOpen)
@@ -73,6 +76,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
       setSelectedPaymentMethod('wallet')
       setWalletAddress('')
       setIsProcessing(false)
+      setComplianceComplete(false)
+      setComplianceData(null)
       
       // Force modal to center and focus for accessibility
       setTimeout(() => {
@@ -168,6 +173,12 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
 
   const handlePurchase = async () => {
     if (!event) return
+    
+    // Verificar compliance antes del pago
+    if (!complianceComplete || !complianceData) {
+      alert('⚠️ Debe completar el proceso de compliance antes de proceder al pago')
+      return
+    }
     
     setIsProcessing(true)
     resetTransactionState()
@@ -294,7 +305,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
             : 'N/A'
         alert(`¡Ticket comprado exitosamente! 🎉\n\nToken ID: ${tokenId}\n\nTu ticket aparecerá en "Mis Tickets" con la información de la transacción.\n\nHash: ${txResult.hash}`)
         
-        setStep(3) // Mostrar confirmación
+        setStep(4) // Mostrar confirmación
       } else {
         throw new Error('No se pudo completar la compra')
       }
@@ -323,8 +334,28 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     }
   }
 
+  const handleComplianceComplete = (result?: any) => {
+    const mockResult = result || {
+      kyc_level: priceInEth * ticketQuantity < 500 ? 'basic' : priceInEth * ticketQuantity < 3000 ? 'advanced' : 'enhanced',
+      kyc_verified: true,
+      fee_disclosure_accepted: true,
+      cnbv_compliant: true,
+      transaction_approved: true,
+      compliance_id: `DEMO_${Date.now()}`
+    }
+    console.log('✅ Compliance completado:', mockResult)
+    setComplianceData(mockResult)
+    setComplianceComplete(true)
+    setStep(3) // Avanzar a pago
+  }
+
+  const handleComplianceError = (error: string) => {
+    console.error('❌ Error en compliance:', error)
+    alert(`Error de compliance: ${error}`)
+  }
+
   const nextStep = () => {
-    if (step < 3) {
+    if (step < 4) {
       setStep(step + 1)
     }
   }
@@ -449,8 +480,9 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         }}>
           {[
             { number: 1, label: 'Tickets', icon: '🎫' },
-            { number: 2, label: 'Pago', icon: '💳' },
-            { number: 3, label: 'Confirmación', icon: '✅' }
+            { number: 2, label: 'Compliance', icon: '🇲🇽' },
+            { number: 3, label: 'Pago', icon: '💳' },
+            { number: 4, label: 'Confirmación', icon: '✅' }
           ].map((stepInfo) => (
             <div key={stepInfo.number} style={{
               display: 'flex',
@@ -758,6 +790,30 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           )}
 
           {step === 2 && (
+            /* Step 2: Compliance */
+            <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
+              <div className="text-center p-8 bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-lg">
+                <h3 className="text-2xl font-bold text-white mb-4">🇲🇽 Compliance Demo</h3>
+                <p className="text-gray-300 mb-6">
+                  Sistema de compliance mexicano en desarrollo.<br/>
+                  Simulando validación automática...
+                </p>
+                <div className="bg-green-900/20 border border-green-700 rounded-lg p-4 mb-4">
+                  <p className="text-green-200 text-sm">✅ Transparencia de fees: APROBADO</p>
+                  <p className="text-green-200 text-sm">✅ Nivel KYC: {priceInEth * ticketQuantity < 500 ? 'BÁSICO' : priceInEth * ticketQuantity < 3000 ? 'AVANZADO' : 'MEJORADO'}</p>
+                  <p className="text-green-200 text-sm">✅ Cumplimiento CNBV: VERIFICADO</p>
+                </div>
+                <button
+                  onClick={handleComplianceComplete}
+                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg"
+                >
+                  ✅ Aprobar Compliance Demo
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
             <div style={{ animation: 'fadeInRight 0.5s ease-out' }}>
               <h4 style={{
                 color: '#ffffff',
@@ -957,8 +1013,8 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
             </div>
           )}
 
-          {step === 3 && (
-            /* Step 3: Confirmation */
+          {step === 4 && (
+            /* Step 4: Confirmation */
             <div style={{ 
               textAlign: 'center',
               animation: 'fadeInUp 0.5s ease-out'
@@ -1050,11 +1106,16 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 255, 255, 0.3)' // Reducido
               }}
             >
-              Continuar al Pago →
+              Continuar a Compliance →
             </button>
           )}
 
           {step === 2 && (
+            /* Step 2: Compliance Navigation - Los botones los maneja ComplianceIntegration */
+            <div></div>
+          )}
+
+          {step === 3 && (
             <div style={{
               display: 'flex',
               gap: 'clamp(0.8rem, 1.5vw, 1rem)', // Gap reducido para botones más pequeños
@@ -1089,11 +1150,11 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               </button>
               <button
                 onClick={handlePurchase}
-                disabled={isProcessing}
+                disabled={isProcessing || !complianceComplete}
                 style={{
                   flex: '1 1 auto', // Cambiado para que ocupe el espacio restante
                   minWidth: 'clamp(180px, 35vw, 220px)', // Ancho mínimo para el botón principal
-                  background: isProcessing 
+                  background: (isProcessing || !complianceComplete)
                     ? 'rgba(255, 255, 255, 0.3)' 
                     : 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
                   color: '#000000',
@@ -1102,7 +1163,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
                   fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                   fontWeight: 'bold',
-                  cursor: isProcessing ? 'not-allowed' : 'pointer',
+                  cursor: (isProcessing || !complianceComplete) ? 'not-allowed' : 'pointer',
                   transition: 'all 0.3s ease',
                   boxShadow: isProcessing 
                     ? 'none' 
@@ -1122,12 +1183,14 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   }
                 }}
               >
-                {isProcessing ? '⏳ Procesando...' : `Pagar ${finalTotal.toFixed(4)} ETH`}
+                {isProcessing ? '⏳ Procesando...' : 
+                 !complianceComplete ? '🔒 Complete Compliance Primero' :
+                 `Pagar ${finalTotal.toFixed(4)} ETH`}
               </button>
             </div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <button
               onClick={handleClose}
               style={{

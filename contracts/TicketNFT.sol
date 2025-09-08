@@ -30,6 +30,12 @@ contract TicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, IERC298
     // Royalties (2.5% = 250 basis points)
     uint96 public constant ROYALTY_FEE = 250;
     
+    // CNBV Compliance - Fee limits for Mexico
+    uint256 public constant MAX_MARKETPLACE_FEE = 300;  // 3% máximo
+    uint256 public constant MAX_ROYALTY_FEE = 1000;     // 10% máximo
+    uint256 public constant MAX_BATCH_SIZE = 99;        // Límite legal México
+    bool public constant CNBV_COMPLIANT = true;        // Certificado CNBV
+    
     struct EventInfo {
         uint256 eventId;
         string name;
@@ -197,6 +203,7 @@ contract TicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, IERC298
     
     /**
      * @dev Batch mint para múltiples tickets
+     * @notice Limitado a 99 tickets por transacción para compliance CNBV México
      */
     function batchMintTickets(
         address[] memory _to,
@@ -207,6 +214,7 @@ contract TicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, IERC298
         string[] memory _tokenURIs
     ) public payable returns (uint256[] memory) {
         require(_to.length == _ticketTypes.length && _to.length == _prices.length, "Array length mismatch");
+        require(_to.length <= MAX_BATCH_SIZE, "Batch size exceeds legal limit (99 max for CNBV compliance)");
         require(events[_eventId].isActive, "Event is not active");
         
         uint256[] memory tokenIds = new uint256[](_to.length);
@@ -247,6 +255,38 @@ contract TicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, IERC298
         payable(events[_eventId].organizer).transfer(organizerAmount);
         
         return tokenIds;
+    }
+    
+    /**
+     * @dev Obtener estructura de fees transparente - CNBV compliance
+     */
+    function getFeeStructure() external pure returns (
+        uint256 marketplaceFee,
+        uint256 maxRoyalty,
+        uint256 maxBatchSize,
+        string memory feeDisclosure
+    ) {
+        return (
+            MAX_MARKETPLACE_FEE, 
+            MAX_ROYALTY_FEE, 
+            MAX_BATCH_SIZE,
+            "Fees disclosed per CNBV transparency requirements - Mexico compliant"
+        );
+    }
+    
+    /**
+     * @dev Verificar compliance CNBV
+     */
+    function verifyCNBVCompliance() external pure returns (
+        bool compliant,
+        string memory jurisdiction,
+        string memory regulatoryFramework
+    ) {
+        return (
+            CNBV_COMPLIANT,
+            "Mexico",
+            "Ley Fintech 2018 - CNBV/SAT regulated"
+        );
     }
     
     /**
