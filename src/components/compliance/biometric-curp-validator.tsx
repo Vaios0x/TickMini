@@ -191,7 +191,6 @@ export function BiometricCURPValidator({
                 value={curp}
                 onChange={(e) => setCurp(e.target.value.toUpperCase())}
                 placeholder="XXXX000000XXXXXXXX0"
-                maxLength={18}
                 className="bg-gray-800 border-gray-600 text-white"
               />
               {curp && !validateCURPFormat(curp) && (
@@ -208,7 +207,7 @@ export function BiometricCURPValidator({
                 <li>✓ Verificación con RENAPO</li>
                 <li>✓ Captura biométrica facial</li>
                 <li>✓ Detección de vida (liveness)</li>
-                <li>✓ Coincidencia biométrica > 85%</li>
+                <li>✓ Coincidencia biométrica &gt; 85%</li>
               </ul>
             </div>
 
