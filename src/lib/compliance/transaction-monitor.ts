@@ -178,12 +178,12 @@ export class TransactionMonitor {
   ): Promise<void> {
     const aggregationReport = {
       report_type: 'AGREGACION_TRANSACCIONES',
-      user_id: userId,
+      userId: userId,
       total_amount: totalAmount,
       transaction_count: transactions.length,
       period: '24_hours',
       transactions: transactions.map(t => t.txHash),
-      timestamp: new Date().toISOString()
+      timestamp: new Date()
     };
 
     await this.reportToUIF({
