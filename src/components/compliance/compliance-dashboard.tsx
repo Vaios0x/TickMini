@@ -204,7 +204,7 @@ export function ComplianceDashboard() {
           
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">Básico (< $500)</span>
+              <span className="text-gray-300">Básico (&lt; $500)</span>
               <div className="flex items-center space-x-2">
                 <div className="w-32 bg-gray-700 rounded-full h-2">
                   <div 
@@ -234,7 +234,7 @@ export function ComplianceDashboard() {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">Mejorado (> $3K)</span>
+              <span className="text-gray-300">Mejorado (&gt; $3K)</span>
               <div className="flex items-center space-x-2">
                 <div className="w-32 bg-gray-700 rounded-full h-2">
                   <div 
@@ -270,7 +270,7 @@ export function ComplianceDashboard() {
 
             <div className="bg-green-900/20 border border-green-700 rounded-lg p-3">
               <p className="text-green-200 text-sm">
-                ✅ Todos los fees cumplen límites CNBV (< 13% total)
+                ✅ Todos los fees cumplen límites CNBV (&lt; 13% total)
               </p>
             </div>
 

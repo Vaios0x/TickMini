@@ -172,7 +172,7 @@ export function BiometricCURPValidator({
             {isMandatory && (
               <div className="bg-red-900/20 border border-red-700 rounded-lg p-3 mb-4">
                 <p className="text-red-200 text-sm font-semibold">
-                  ⚠️ OBLIGATORIO - Transacción > $3,000 USD o fecha posterior a Oct 2025
+                  ⚠️ OBLIGATORIO - Transacción &gt; $3,000 USD o fecha posterior a Oct 2025
                 </p>
               </div>
             )}
