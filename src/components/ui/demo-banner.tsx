@@ -248,7 +248,7 @@ export function DemoBanner() {
             {/* Enlace a documentación - Solo en desktop */}
             {!isMobile && (
               <a
-                href="https://docs.base.org/using-base/"
+                href="https://docs.base.org/get-started/base"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
