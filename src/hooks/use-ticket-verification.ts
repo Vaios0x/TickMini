@@ -262,7 +262,7 @@ export function useTicketVerification() {
     } finally {
       setIsVerifying(false)
     }
-  }, [verifyTicketOnChain])
+  }, [verifyTicketOnChain, verifyUserTicket])
 
   // Verificar ticket por QR
   const verifyTicketByQR = useCallback(async (qrData: string) => {

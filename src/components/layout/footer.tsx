@@ -345,7 +345,7 @@ export function Footer() {
           gap: '1rem'
         }}>
           
-          {/* Made by vaiosx.base.eth */}
+          {/* Made by Vai0sx */}
           <div style={{
             textAlign: 'center',
             marginBottom: '1rem'
@@ -355,10 +355,10 @@ export function Footer() {
               fontSize: '1.1rem',
               marginBottom: '0.5rem'
             }}>
-              Hecho por
+              Made with ❤️ by
             </p>
             <Link 
-              href="https://x.com/vaiossx" 
+              href="https://t.me/Vai0sx" 
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -372,7 +372,7 @@ export function Footer() {
               }} 
               className="vai0sx-link"
             >
-              vaiosx.base.eth
+              Vai0sx
             </Link>
             <p style={{
               color: '#b0b0b0',

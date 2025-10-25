@@ -42,10 +42,10 @@ export default function VerifyTicketPage() {
       setTicketId(String(ticketIdFromUrl))
       // Auto-verificar si viene de Mis Tickets
       setTimeout(() => {
-        handleVerify(String(ticketIdFromUrl))
+        verifyTicket(String(ticketIdFromUrl))
       }, 500)
     }
-  }, [searchParams])
+  }, [searchParams, verifyTicket])
 
   const handleVerify = async (ticketIdToVerify?: string) => {
     const idToVerify = ticketIdToVerify || ticketId

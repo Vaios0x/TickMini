@@ -150,7 +150,7 @@ export function TicketSummary() {
                 }}
               >
                 <div style={{ fontSize: '2rem' }}>
-                  {ticket.image || '🎫'}
+                  {'image' in ticket ? ticket.image : (ticket as any).eventImage || '🎫'}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: 'bold' }}>
