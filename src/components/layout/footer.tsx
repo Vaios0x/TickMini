@@ -372,7 +372,7 @@ export function Footer() {
               }} 
               className="vaiosx-link"
             >
-              Vaiosx
+              Vaiosx 🧠
             </Link>
             <p style={{
               color: '#b0b0b0',
