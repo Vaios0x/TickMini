@@ -345,7 +345,7 @@ export function Footer() {
           gap: '1rem'
         }}>
           
-          {/* Made by Vai0sx */}
+          {/* Made by Vaiosx */}
           <div style={{
             textAlign: 'center',
             marginBottom: '1rem'
@@ -358,7 +358,7 @@ export function Footer() {
               Made with ❤️ by
             </p>
             <Link 
-              href="https://t.me/Vai0sx" 
+              href="https://x.com/vaiossx" 
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -370,9 +370,9 @@ export function Footer() {
                 transition: 'all 0.3s ease',
                 display: 'inline-block'
               }} 
-              className="vai0sx-link"
+              className="vaiosx-link"
             >
-              Vai0sx
+              Vaiosx
             </Link>
             <p style={{
               color: '#b0b0b0',
