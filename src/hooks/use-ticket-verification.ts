@@ -122,6 +122,78 @@ export function useTicketVerification() {
     setError(null)
   }, [])
 
+  // Verificar si es un ticket de usuario
+  const verifyUserTicket = useCallback(async (ticketIdentifier: string): Promise<TicketVerificationResult | null> => {
+    try {
+      // Obtener tickets de usuario desde localStorage
+      const storedTickets = localStorage.getItem('tickbase_user_tickets')
+      if (!storedTickets) return null
+
+      const userTickets = JSON.parse(storedTickets)
+      const tokenId = parseInt(ticketIdentifier)
+      
+      // Buscar el ticket por nftTokenId o por el ID generado
+      const userTicket = userTickets.find((ticket: any) => 
+        ticket.nftTokenId === tokenId || 
+        ticket.id === ticketIdentifier ||
+        ticket.id.includes(ticketIdentifier)
+      )
+
+      if (!userTicket) return null
+
+      console.log('🎫 Ticket de usuario encontrado:', userTicket)
+
+      // Convertir ticket de usuario a formato de verificación
+      const verificationResult: TicketVerificationResult = {
+        isValid: !userTicket.isUsed,
+        ticket: {
+          id: userTicket.id,
+          tokenId: `#${userTicket.nftTokenId || userTicket.id}`,
+          contractAddress: 'TickBase User Tickets',
+          eventName: userTicket.eventName,
+          owner: 'Usuario Local',
+          eventDate: userTicket.eventDate,
+          eventLocation: userTicket.eventLocation,
+          ticketType: userTicket.ticketType,
+          price: `${userTicket.price} ETH`,
+          purchaseDate: new Date(userTicket.purchaseDate).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }),
+          status: userTicket.isUsed ? 'Usado' : 'Válido',
+          benefits: userTicket.benefits,
+          metadata: {
+            image: userTicket.eventImage,
+            attributes: [
+              { trait_type: 'Tipo', value: 'Usuario Local' },
+              { trait_type: 'Evento', value: userTicket.eventName },
+              { trait_type: 'Fecha', value: userTicket.eventDate },
+              { trait_type: 'Token ID', value: userTicket.nftTokenId?.toString() || 'N/A' }
+            ]
+          },
+          blockchainData: {
+            blockNumber: Math.floor(userTicket.purchaseDate / 1000),
+            transactionHash: userTicket.transactionHash,
+            gasUsed: 'N/A',
+            timestamp: userTicket.purchaseDate
+          }
+        },
+        verification: {
+          timestamp: Date.now(),
+          method: 'manual',
+          verifiedBy: 'Sistema TickBase',
+          blockchainStatus: 'confirmed'
+        }
+      }
+
+      return verificationResult
+    } catch (error) {
+      console.error('Error verificando ticket de usuario:', error)
+      return null
+    }
+  }, [])
+
   // Verificar ticket por ID o Token ID usando blockchain real
   const verifyTicket = useCallback(async (ticketIdentifier: string) => {
     if (!ticketIdentifier.trim()) {
@@ -139,7 +211,24 @@ export function useTicketVerification() {
         throw new Error('ID de ticket debe ser un número válido')
       }
 
-      // Intentar verificación blockchain real
+      // Primero intentar verificar si es un ticket de usuario
+      const userTicketResult = await verifyUserTicket(ticketIdentifier)
+      if (userTicketResult) {
+        setVerificationResult(userTicketResult)
+        
+        // Guardar en historial
+        const historyEntry: VerificationHistory = {
+          id: Date.now().toString(),
+          ticketId: ticketIdentifier,
+          result: userTicketResult,
+          timestamp: Date.now()
+        }
+        
+        setVerificationHistory(prev => [historyEntry, ...prev.slice(0, 9)])
+        return userTicketResult
+      }
+
+      // Si no es ticket de usuario, intentar verificación blockchain
       let result: TicketVerificationResult | null = null
       
       try {

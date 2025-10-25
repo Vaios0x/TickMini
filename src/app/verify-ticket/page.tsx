@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import { QRScanner } from '@/components/ui/qr-scanner'
 import { VerificationHistoryComponent } from '@/components/ui/verification-history'
@@ -26,6 +27,7 @@ export default function VerifyTicketPage() {
     clearError
   } = useTicketVerification()
   
+  const searchParams = useSearchParams()
   const [ticketId, setTicketId] = useState('')
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
@@ -33,11 +35,24 @@ export default function VerifyTicketPage() {
   const [selectedHistoryEntry, setSelectedHistoryEntry] = useState<TicketVerificationResult | null>(null)
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, isVisible: false })
 
-  const handleVerify = async () => {
-    if (!ticketId.trim()) {
+  // Pre-llenar el campo con el ticketId de la URL
+  useEffect(() => {
+    const ticketIdFromUrl = searchParams.get('ticketId')
+    if (ticketIdFromUrl) {
+      setTicketId(String(ticketIdFromUrl))
+      // Auto-verificar si viene de Mis Tickets
+      setTimeout(() => {
+        handleVerify(String(ticketIdFromUrl))
+      }, 500)
+    }
+  }, [searchParams])
+
+  const handleVerify = async (ticketIdToVerify?: string) => {
+    const idToVerify = ticketIdToVerify || ticketId
+    if (!idToVerify || !String(idToVerify).trim()) {
       return
     }
-    await verifyTicket(ticketId)
+    await verifyTicket(String(idToVerify))
   }
 
   const handleQRScan = (qrData: string) => {
@@ -238,7 +253,7 @@ export default function VerifyTicketPage() {
               margin: '0 auto 1.5rem auto'
             }}>
               <button 
-                onClick={handleVerify}
+                onClick={() => handleVerify()}
                 disabled={isVerifying || !ticketId.trim()}
                 style={{
                   flex: '1 1 200px',

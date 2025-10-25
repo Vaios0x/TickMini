@@ -5,6 +5,7 @@ import { useModalScroll } from '@/hooks/use-modal-scroll'
 import { useContractTransactions } from '@/hooks/use-contract-transactions'
 import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
 import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
+import { useUserTickets } from '@/hooks/use-user-tickets'
 import { ComplianceIntegration } from '@/components/compliance/compliance-integration'
 import './checkout-modal.css'
 
@@ -56,6 +57,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   
   // Hook para manejar tickets comprados
   const { addNewTicket } = useBlockchainTickets()
+  const { addTicket } = useUserTickets()
   
   // Hook para transacciones patrocinadas (DESACTIVADO - no se usa)
   // const {
@@ -301,6 +303,30 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         console.log('🎉 Compra exitosa, mostrando animación en step 4')
         console.log('🎫 Token ID:', tokenId)
         console.log('🔗 Transaction Hash:', txResult.hash)
+        
+        // Guardar ticket en el sistema de usuario
+        try {
+          const userTicket = {
+            eventId: realEventId,
+            eventName: event.title,
+            eventDate: event.date,
+            eventTime: event.time,
+            eventLocation: event.location,
+            eventImage: event.image,
+            ticketType: 'General', // Valor por defecto
+            ticketDescription: event.description,
+            price: totalPrice,
+            benefits: ['Acceso al evento', 'Certificado NFT', 'WiFi gratuito'],
+            transactionHash: txResult.hash,
+            nftTokenId: typeof tokenId === 'string' ? parseInt(tokenId) : tokenId,
+            isUsed: false
+          }
+          
+          addTicket(userTicket)
+          console.log('✅ Ticket guardado en perfil de usuario')
+        } catch (ticketError) {
+          console.error('Error guardando ticket en perfil:', ticketError)
+        }
         
         // Pequeño delay para asegurar que la animación se vea
         setTimeout(() => {

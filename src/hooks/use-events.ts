@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useRealEvents, RealEventData } from './use-real-events'
+import { useCreatedEvents, CreatedEvent } from './use-created-events'
+import { getBestEventImage } from '@/lib/default-images'
 
 export interface Event {
   id: number
@@ -61,6 +63,41 @@ export function useEvents() {
     upcomingEvents: realUpcomingEvents,
     eventCounter: realEventCounter
   } = useRealEvents()
+
+  // Hook para eventos creados localmente
+  const {
+    createdEvents,
+    isLoading: createdLoading,
+    getActiveEvents: getCreatedActiveEvents,
+    getEventsByCategory: getCreatedEventsByCategory,
+    searchEvents: searchCreatedEvents
+  } = useCreatedEvents()
+
+  // Función para convertir eventos creados localmente a formato de UI
+  const convertCreatedEventToUI = useCallback((createdEvent: CreatedEvent): Event => {
+    const totalTickets = createdEvent.ticketTypes.reduce((sum, ticket) => sum + ticket.quantity, 0)
+    const minPrice = Math.min(...createdEvent.ticketTypes.map(ticket => ticket.price))
+    
+    return {
+      id: parseInt(createdEvent.eventId.toString()),
+      title: createdEvent.title,
+      description: createdEvent.description,
+      date: createdEvent.date,
+      time: createdEvent.time,
+      location: `${createdEvent.location}, ${createdEvent.city}, ${createdEvent.country}`,
+      price: `${minPrice} ETH`,
+      image: getBestEventImage(createdEvent.image, createdEvent.category),
+      category: createdEvent.category,
+      organizer: createdEvent.organizer,
+      availableTickets: totalTickets,
+      totalTickets: totalTickets,
+      featured: true, // Los eventos creados son destacados
+      tags: [createdEvent.category, 'nuevo', 'blockchain'],
+      rating: 5.0,
+      eventType: 'presential' as const,
+      distance: 0
+    }
+  }, [])
 
   // Función para convertir eventos reales de blockchain a formato de UI
   const convertRealEventToUI = useCallback((realEvent: RealEventData): Event => {
@@ -418,15 +455,21 @@ export function useEvents() {
     }
   ], [])
 
-  // Combinar eventos reales con eventos de demostración
+  // Combinar eventos reales con eventos de demostración y eventos creados
   const events = useMemo(() => {
+    // Convertir eventos creados a formato de UI
+    const formattedCreatedEvents = createdEvents
+      .filter(event => event.isActive)
+      .map(convertCreatedEventToUI)
+    
     // Si hay eventos reales, usarlos; si no, usar eventos de demostración
     if (formattedRealEvents.length > 0) {
-      // Combinar eventos reales con algunos eventos de demostración para tener más variedad
-      return [...formattedRealEvents, ...demoEvents.slice(3)] // Usar eventos reales + demo events desde el 4to
+      // Combinar eventos creados (prioridad), eventos reales y algunos eventos de demostración
+      return [...formattedCreatedEvents, ...formattedRealEvents, ...demoEvents.slice(3)]
     }
-    return demoEvents
-  }, [formattedRealEvents, demoEvents])
+    // Si no hay eventos reales, usar eventos creados + eventos de demostración
+    return [...formattedCreatedEvents, ...demoEvents]
+  }, [formattedRealEvents, demoEvents, createdEvents, convertCreatedEventToUI])
 
   // Categorías memoizadas
   const categories = useMemo(() => [

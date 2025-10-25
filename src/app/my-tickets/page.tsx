@@ -3,31 +3,65 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useBlockchainTickets } from '@/hooks/use-blockchain-tickets'
+import { useUserTickets } from '@/hooks/use-user-tickets'
 import { useTicketVerification } from '@/hooks/use-ticket-verification'
 import './my-tickets.css'
 
+// Agregar estilos CSS para animaciones
+const styles = `
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6); }
+  }
+`
+
+// Inyectar estilos
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
+}
+
 interface MyTicket {
-  id: number
-  tokenId: string
+  id: number | string
+  tokenId?: string
   eventName: string
   eventDate: string
   eventLocation: string
   ticketType: string
-  price: string
+  price: string | number
   purchaseDate: string
-  status: 'Válido' | 'Usado' | 'Expirado' | 'Revocado'
+  status?: 'Válido' | 'Usado' | 'Expirado' | 'Revocado'
   benefits: string[]
   image: string
-  category: string
-  organizer: string
-  contractAddress: string
+  category?: string
+  organizer?: string
+  contractAddress?: string
   transactionHash: string
   eventId: number
-  owner: string
+  owner?: string
   blockNumber?: number
   gasUsed?: string
   isValid?: boolean
   explorerUrl?: string
+  // Campos específicos de tickets de usuario
+  isUsed?: boolean
+  nftTokenId?: number
 }
 
 export default function MyTicketsPage() {
@@ -35,27 +69,116 @@ export default function MyTicketsPage() {
   const [selectedTicket, setSelectedTicket] = useState<MyTicket | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [filter, setFilter] = useState<'all' | 'valid' | 'used' | 'expired'>('all')
+  const [forceShowTickets, setForceShowTickets] = useState(false)
 
   // Usar el hook de blockchain para obtener tickets reales
   const {
-    tickets: myTickets,
-    isLoading,
-    error,
+    tickets: blockchainTickets,
+    isLoading: blockchainLoading,
+    error: blockchainError,
     refreshTickets,
-    totalTickets,
-    validTickets,
-    usedTickets,
-    expiredTickets
+    totalTickets: blockchainTotalTickets,
+    validTickets: blockchainValidTickets,
+    usedTickets: blockchainUsedTickets,
+    expiredTickets: blockchainExpiredTickets
   } = useBlockchainTickets()
+
+  // Usar el hook de tickets de usuario
+  const {
+    userTickets,
+    isLoading: userTicketsLoading,
+    addTicket,
+    getActiveTickets,
+    getUsedTickets,
+    getTicketStats
+  } = useUserTickets()
+
+  // Timeout para forzar la visualización de tickets después de 5 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setForceShowTickets(true)
+      console.log('⏰ Timeout: Forzando visualización de tickets')
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Convertir tickets de usuario al formato de la interfaz
+  const convertUserTickets = (userTickets: any[]) => {
+    return userTickets.map(ticket => ({
+      id: ticket.id,
+      tokenId: ticket.nftTokenId?.toString() || 'N/A',
+      eventName: ticket.eventName,
+      eventDate: ticket.eventDate,
+      eventLocation: ticket.eventLocation,
+      ticketType: ticket.ticketType,
+      price: `${ticket.price} ETH`,
+      purchaseDate: new Date(ticket.purchaseDate).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      status: (ticket.isUsed ? 'Usado' : 'Válido') as 'Válido' | 'Usado' | 'Expirado' | 'Revocado',
+      benefits: ticket.benefits,
+      image: ticket.eventImage,
+      category: 'user',
+      organizer: 'TickBase',
+      contractAddress: 'N/A',
+      transactionHash: ticket.transactionHash,
+      eventId: ticket.eventId,
+      owner: address || '',
+      blockNumber: Math.floor(ticket.purchaseDate / 1000),
+      gasUsed: '334747',
+      isValid: !ticket.isUsed,
+      explorerUrl: `https://sepolia.basescan.org/tx/${ticket.transactionHash}`,
+      isUsed: ticket.isUsed,
+      nftTokenId: ticket.nftTokenId
+    }))
+  }
+
+  // Combinar tickets de blockchain y usuario
+  const myTickets = [...blockchainTickets, ...convertUserTickets(userTickets)]
+  
+  // Debug: mostrar información de tickets
+  console.log('🔍 Debug My Tickets:', {
+    blockchainTickets: blockchainTickets.length,
+    userTickets: userTickets.length,
+    convertedUserTickets: convertUserTickets(userTickets).length,
+    totalTickets: myTickets.length
+  })
+  
+  // Optimización: Solo mostrar loading si no hay tickets de usuario y blockchain está cargando
+  // O si se ha forzado la visualización
+  const isLoading = !forceShowTickets && (userTicketsLoading || (blockchainLoading && userTickets.length === 0))
+  const error = blockchainError
+  const totalTickets = blockchainTotalTickets + userTickets.length
+  const validTickets = blockchainValidTickets + getActiveTickets().length
+  const usedTickets = blockchainUsedTickets + getUsedTickets().length
+  const expiredTickets = blockchainExpiredTickets
 
   const filteredTickets = myTickets.filter(ticket => {
     switch (filter) {
       case 'valid':
-        return ticket.status === 'Válido'
+        // Para tickets de blockchain
+        if ('status' in ticket) {
+          return ticket.status === 'Válido'
+        }
+        // Para tickets de usuario
+        return !(ticket as any).isUsed
       case 'used':
-        return ticket.status === 'Usado'
+        // Para tickets de blockchain
+        if ('status' in ticket) {
+          return ticket.status === 'Usado'
+        }
+        // Para tickets de usuario
+        return (ticket as any).isUsed
       case 'expired':
-        return ticket.status === 'Expirado'
+        // Para tickets de blockchain
+        if ('status' in ticket) {
+          return ticket.status === 'Expirado'
+        }
+        // Los tickets de usuario no tienen estado de expirado por ahora
+        return false
       default:
         return true
     }
@@ -70,6 +193,7 @@ export default function MyTicketsPage() {
     setShowDetails(false)
     setSelectedTicket(null)
   }
+
 
   if (!isConnected) {
     return (
@@ -160,94 +284,279 @@ export default function MyTicketsPage() {
           </p>
         </div>
 
-        {/* Botón de refresh y estadísticas */}
+        {/* Estadísticas mejoradas */}
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '2rem',
-          flexWrap: 'wrap',
-          gap: '1rem'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '1.5rem',
+          marginBottom: '3rem'
         }}>
+          {/* Tarjeta Total */}
           <div style={{
-            display: 'flex',
-            gap: '1rem',
-            flexWrap: 'wrap'
+            background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%)',
+            border: '1px solid rgba(0, 255, 255, 0.3)',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(0, 255, 255, 0.1)'
           }}>
             <div style={{
-              background: 'rgba(0, 255, 255, 0.1)',
-              border: '1px solid rgba(0, 255, 255, 0.3)',
-              borderRadius: '15px',
-              padding: '0.8rem 1.2rem',
-              color: '#00ffff',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}>
-              📊 Total: {totalTickets}
-            </div>
-            <div style={{
-              background: 'rgba(0, 255, 0, 0.1)',
-              border: '1px solid rgba(0, 255, 0, 0.3)',
-              borderRadius: '15px',
-              padding: '0.8rem 1.2rem',
-              color: '#00ff00',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}>
-              ✅ Válidos: {validTickets}
-            </div>
-            <div style={{
-              background: 'rgba(255, 170, 0, 0.1)',
-              border: '1px solid rgba(255, 170, 0, 0.3)',
-              borderRadius: '15px',
-              padding: '0.8rem 1.2rem',
-              color: '#ffaa00',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}>
-              🔒 Usados: {usedTickets}
+              position: 'absolute',
+              top: '-20px',
+              right: '-20px',
+              width: '80px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%)',
+              borderRadius: '50%'
+            }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #00ffff, #00bfff)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem'
+              }}>
+                📊
+              </div>
+              <div>
+                <div style={{ color: '#00ffff', fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                  {totalTickets}
+                </div>
+                <div style={{ color: '#b0b0b0', fontSize: '0.9rem', fontWeight: '500' }}>
+                  Total Tickets
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Tarjeta Válidos */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 255, 0, 0.05) 100%)',
+            border: '1px solid rgba(0, 255, 0, 0.3)',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(0, 255, 0, 0.1)'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-20px',
+              right: '-20px',
+              width: '80px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%)',
+              borderRadius: '50%'
+            }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #00ff00, #00cc00)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem'
+              }}>
+                ✅
+              </div>
+              <div>
+                <div style={{ color: '#00ff00', fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                  {validTickets}
+                </div>
+                <div style={{ color: '#b0b0b0', fontSize: '0.9rem', fontWeight: '500' }}>
+                  Válidos
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tarjeta Usados */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(255, 170, 0, 0.1) 0%, rgba(255, 170, 0, 0.05) 100%)',
+            border: '1px solid rgba(255, 170, 0, 0.3)',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(255, 170, 0, 0.1)'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-20px',
+              right: '-20px',
+              width: '80px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(255, 170, 0, 0.1) 0%, transparent 70%)',
+              borderRadius: '50%'
+            }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #ffaa00, #ff8800)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem'
+              }}>
+                🔒
+              </div>
+              <div>
+                <div style={{ color: '#ffaa00', fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                  {usedTickets}
+                </div>
+                <div style={{ color: '#b0b0b0', fontSize: '0.9rem', fontWeight: '500' }}>
+                  Usados
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tarjeta Usuario */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(255, 0, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%)',
+            border: '1px solid rgba(255, 0, 255, 0.3)',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(255, 0, 255, 0.1)'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-20px',
+              right: '-20px',
+              width: '80px',
+              height: '80px',
+              background: 'radial-gradient(circle, rgba(255, 0, 255, 0.1) 0%, transparent 70%)',
+              borderRadius: '50%'
+            }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #ff00ff, #cc00cc)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem'
+              }}>
+                🎫
+              </div>
+              <div>
+                <div style={{ color: '#ff00ff', fontSize: '2rem', fontWeight: 'bold', lineHeight: '1' }}>
+                  {userTickets.length}
+                </div>
+                <div style={{ color: '#b0b0b0', fontSize: '0.9rem', fontWeight: '500' }}>
+                  Usuario
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Botón de refresh mejorado */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '2rem'
+        }}>
           
-          <button
-            onClick={refreshTickets}
-            disabled={isLoading}
-            style={{
-              background: isLoading 
-                ? 'rgba(255, 255, 255, 0.1)'
-                : 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
-              color: isLoading ? '#666666' : '#000000',
-              border: 'none',
-              padding: '0.8rem 1.5rem',
-              borderRadius: '15px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              boxShadow: isLoading ? 'none' : '0 8px 25px rgba(0, 255, 255, 0.3)'
-            }}
-          >
-            {isLoading ? (
-              <>
-                <div style={{
-                  width: '16px',
-                  height: '16px',
-                  border: '2px solid #666666',
-                  borderTop: '2px solid transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite'
-                }} />
-                Cargando...
-              </>
-            ) : (
-              <>
-                🔄 Refrescar
-              </>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+
+            {/* Botón para forzar visualización */}
+            {isLoading && userTickets.length > 0 && (
+              <button
+                onClick={() => setForceShowTickets(true)}
+                style={{
+                  background: 'linear-gradient(135deg, #00ff00 0%, #00ffff 100%)',
+                  color: '#000000',
+                  border: 'none',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '15px',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 8px 25px rgba(0, 255, 0, 0.3)'
+                }}
+              >
+                ⚡ Mostrar Tickets Ahora
+              </button>
             )}
-          </button>
+            
+            <button
+              onClick={refreshTickets}
+              disabled={isLoading}
+              style={{
+                background: isLoading 
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
+                color: isLoading ? '#666666' : '#000000',
+                border: 'none',
+                padding: '1rem 2rem',
+                borderRadius: '20px',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                boxShadow: isLoading ? 'none' : '0 10px 30px rgba(0, 255, 255, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 15px 40px rgba(0, 255, 255, 0.5)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.4)'
+                }
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <div style={{
+                    width: '20px',
+                    height: '20px',
+                    border: '3px solid #666666',
+                    borderTop: '3px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }} />
+                  Sincronizando...
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: '1.2rem' }}>🔄</div>
+                  Refrescar Tickets
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mostrar error si existe */}
@@ -286,49 +595,90 @@ export default function MyTicketsPage() {
           </div>
         )}
 
-        {/* Filtros */}
+        {/* Filtros mejorados */}
         <div style={{
           display: 'flex',
           gap: '1rem',
-          marginBottom: '2rem',
+          marginBottom: '3rem',
           flexWrap: 'wrap',
           justifyContent: 'center'
         }}>
           {[
-            { key: 'all', label: 'Todos', icon: '🎫' },
-            { key: 'valid', label: 'Válidos', icon: '✅' },
-            { key: 'used', label: 'Usados', icon: '🔒' },
-            { key: 'expired', label: 'Expirados', icon: '⏰' }
-          ].map(({ key, label, icon }) => (
+            { key: 'all', label: 'Todos', icon: '🎫', color: '#00ffff' },
+            { key: 'valid', label: 'Válidos', icon: '✅', color: '#00ff00' },
+            { key: 'used', label: 'Usados', icon: '🔒', color: '#ffaa00' },
+            { key: 'expired', label: 'Expirados', icon: '⏰', color: '#ff4444' }
+          ].map(({ key, label, icon, color }) => (
             <button
               key={key}
               onClick={() => setFilter(key as any)}
               style={{
                 background: filter === key 
-                  ? 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)'
-                  : 'rgba(255, 255, 255, 0.1)',
+                  ? `linear-gradient(135deg, ${color} 0%, ${color}80 100%)`
+                  : 'rgba(255, 255, 255, 0.05)',
                 color: filter === key ? '#000000' : '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                padding: '0.8rem 1.5rem',
-                borderRadius: '15px',
+                border: filter === key 
+                  ? `2px solid ${color}`
+                  : '1px solid rgba(255, 255, 255, 0.2)',
+                padding: '1rem 1.5rem',
+                borderRadius: '20px',
                 fontSize: '1rem',
-                fontWeight: '500',
+                fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                boxShadow: filter === key ? '0 8px 25px rgba(0, 255, 255, 0.3)' : 'none'
+                gap: '0.8rem',
+                boxShadow: filter === key 
+                  ? `0 10px 30px ${color}40`
+                  : '0 5px 15px rgba(0, 0, 0, 0.2)',
+                position: 'relative',
+                overflow: 'hidden',
+                backdropFilter: 'blur(20px)'
+              }}
+              onMouseEnter={(e) => {
+                if (filter !== key) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)'
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 255, 255, 0.1)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (filter !== key) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)'
+                }
               }}
             >
-              <span>{icon}</span>
+              <div style={{
+                fontSize: '1.2rem',
+                filter: filter === key ? 'none' : 'grayscale(0.3)'
+              }}>
+                {icon}
+              </div>
               <span>{label}</span>
+              {filter === key && (
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '1rem',
+                  transform: 'translateY(-50%)',
+                  width: '8px',
+                  height: '8px',
+                  background: '#000000',
+                  borderRadius: '50%',
+                  animation: 'pulse 2s infinite'
+                }} />
+              )}
             </button>
           ))}
         </div>
 
-        {/* Loading */}
-        {isLoading && (
+        {/* Loading solo si no hay tickets de usuario */}
+        {isLoading && userTickets.length === 0 && (
           <div style={{
             textAlign: 'center',
             padding: '4rem 2rem',
@@ -355,8 +705,36 @@ export default function MyTicketsPage() {
           </div>
         )}
 
-        {/* Lista de tickets */}
-        {!isLoading && (
+        {/* Indicador de carga de blockchain en segundo plano */}
+        {blockchainLoading && userTickets.length > 0 && (
+          <div style={{
+            background: 'rgba(0, 255, 255, 0.1)',
+            border: '1px solid rgba(0, 255, 255, 0.3)',
+            borderRadius: '15px',
+            padding: '1rem',
+            marginBottom: '2rem',
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem'
+          }}>
+            <div style={{
+              width: '16px',
+              height: '16px',
+              border: '2px solid rgba(0, 255, 255, 0.3)',
+              borderTop: '2px solid #00ffff',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }} />
+            <span style={{ color: '#00ffff', fontSize: '0.9rem' }}>
+              Sincronizando tickets de blockchain...
+            </span>
+          </div>
+        )}
+
+        {/* Lista de tickets - mostrar si hay tickets de usuario o si no está cargando */}
+        {(!isLoading || userTickets.length > 0) && (
           <>
             {filteredTickets.length === 0 ? (
               <div style={{
@@ -397,52 +775,76 @@ export default function MyTicketsPage() {
             ) : (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))',
+                gap: '2.5rem'
               }}>
                 {filteredTickets.map((ticket) => (
                   <div
                     key={ticket.id}
                     style={{
-                      background: 'rgba(0, 0, 0, 0.6)',
-                      borderRadius: '25px',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(20px)',
-                      padding: '2rem',
-                      transition: 'all 0.3s ease',
+                      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 40, 0.9) 100%)',
+                      borderRadius: '30px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      backdropFilter: 'blur(25px)',
+                      padding: '2.5rem',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                       cursor: 'pointer',
                       position: 'relative',
-                      overflow: 'hidden'
+                      overflow: 'hidden',
+                      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
                     }}
                     onClick={() => handleViewDetails(ticket)}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-5px)'
-                      e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.2)'
-                      e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.3)'
+                      e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'
+                      e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 255, 255, 0.3)'
+                      e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.5)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                      e.currentTarget.style.boxShadow = 'none'
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                      e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.3)'
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
                     }}
                   >
-                    {/* Status badge */}
+                    {/* Status badge mejorado */}
                     <div style={{
                       position: 'absolute',
-                      top: '1rem',
-                      right: '1rem',
+                      top: '1.5rem',
+                      right: '1.5rem',
                       background: ticket.status === 'Válido' 
-                        ? 'linear-gradient(135deg, #00ff00, #00ffff)'
+                        ? 'linear-gradient(135deg, #00ff00, #00cc00)'
                         : ticket.status === 'Usado'
-                        ? 'linear-gradient(135deg, #ffaa00, #ff6600)'
+                        ? 'linear-gradient(135deg, #ffaa00, #ff8800)'
                         : 'linear-gradient(135deg, #ff4444, #ff0080)',
                       color: '#000000',
-                      padding: '0.3rem 0.8rem',
-                      borderRadius: '15px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold'
+                      padding: '0.5rem 1rem',
+                      borderRadius: '20px',
+                      fontSize: '0.85rem',
+                      fontWeight: 'bold',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
                     }}>
                       {ticket.status}
+                    </div>
+
+                    {/* Tipo de ticket badge mejorado */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '1.5rem',
+                      left: '1.5rem',
+                      background: ticket.category === 'user' 
+                        ? 'linear-gradient(135deg, #ff00ff, #cc00cc)'
+                        : 'linear-gradient(135deg, #00ffff, #00bfff)',
+                      color: '#000000',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '20px',
+                      fontSize: '0.85rem',
+                      fontWeight: 'bold',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}>
+                      {ticket.category === 'user' ? '🎫 Usuario' : '⛓️ Blockchain'}
                     </div>
 
                     {/* Event image */}
@@ -513,7 +915,7 @@ export default function MyTicketsPage() {
                       gap: '0.5rem',
                       marginBottom: '1.5rem'
                     }}>
-                      {ticket.benefits.slice(0, 3).map((benefit, index) => (
+                      {ticket.benefits.slice(0, 3).map((benefit: string, index: number) => (
                         <div
                           key={index}
                           style={{
@@ -542,22 +944,77 @@ export default function MyTicketsPage() {
                       )}
                     </div>
 
-                    {/* View details button */}
-                    <button style={{
-                      width: '100%',
-                      background: 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
-                      color: '#000000',
-                      border: 'none',
-                      padding: '0.8rem',
-                      borderRadius: '15px',
-                      fontSize: '1rem',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: '0 5px 15px rgba(0, 255, 255, 0.3)'
-                    }}>
-                      Ver Detalles
-                    </button>
+                    {/* Botones de acción */}
+                    <div style={{ display: 'flex', gap: '0.8rem', marginTop: '1.5rem' }}>
+                      {/* Ver detalles */}
+                      <button 
+                        onClick={() => handleViewDetails(ticket)}
+                        style={{
+                          flex: 1,
+                          background: 'linear-gradient(135deg, #00ffff 0%, #ff00ff 100%)',
+                          color: '#000000',
+                          border: 'none',
+                          padding: '0.8rem 1rem',
+                          borderRadius: '15px',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 6px 20px rgba(0, 255, 255, 0.4)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.4rem'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)'
+                          e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 255, 255, 0.5)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 255, 255, 0.4)'
+                        }}
+                      >
+                        <span>👁️</span>
+                        <span>Detalles</span>
+                      </button>
+
+                      {/* Verificar ticket */}
+                      <button 
+                        onClick={() => {
+                          const ticketId = (ticket as any).nftTokenId?.toString() || ticket.id.toString()
+                          window.open(`/verify-ticket?ticketId=${ticketId}`, '_blank')
+                        }}
+                        style={{
+                          flex: 1,
+                          background: 'linear-gradient(135deg, #00ff00 0%, #00cc00 100%)',
+                          color: '#000000',
+                          border: 'none',
+                          padding: '0.8rem 1rem',
+                          borderRadius: '15px',
+                          fontSize: '0.9rem',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 6px 20px rgba(0, 255, 0, 0.4)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.4rem'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)'
+                          e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 255, 0, 0.5)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 255, 0, 0.4)'
+                        }}
+                      >
+                        <span>🔍</span>
+                        <span>Verificar</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -673,7 +1130,7 @@ export default function MyTicketsPage() {
                     flexWrap: 'wrap',
                     gap: '0.5rem'
                   }}>
-                    {selectedTicket.benefits.map((benefit, index) => (
+                    {selectedTicket.benefits.map((benefit: string, index: number) => (
                       <div
                         key={index}
                         style={{

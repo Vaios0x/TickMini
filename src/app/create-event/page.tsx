@@ -9,6 +9,9 @@ import { MultimediaStep } from '@/components/create-event/multimedia-step'
 import { FinalConfigStep } from '@/components/create-event/final-config-step'
 import { useContractTransactions } from '@/hooks/use-contract-transactions'
 import { useSponsoredTransactions } from '@/hooks/use-sponsored-transactions'
+import { SuccessModal } from '@/components/modals/success-modal'
+import { useCreatedEvents } from '@/hooks/use-created-events'
+import { getBestEventImage } from '@/lib/default-images'
 
 export interface EventFormData {
   // Información básica
@@ -83,6 +86,13 @@ export default function CreateEventPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
   const [windowSize, setWindowSize] = React.useState({ width: 0, height: 0 })
+  const [showSuccessModal, setShowSuccessModal] = React.useState(false)
+  const [successData, setSuccessData] = React.useState({
+    eventName: '',
+    transactionHash: '',
+    eventDate: '',
+    location: ''
+  })
   
   // Hooks para transacciones blockchain
   const {
@@ -103,6 +113,9 @@ export default function CreateEventPage() {
   //   sponsoredTxHash,
   //   resetSponsoredState
   // } = useSponsoredTransactions()
+
+  // Hook para manejar eventos creados
+  const { addEvent } = useCreatedEvents()
 
   // Monitorear cambios en currentStep
   React.useEffect(() => {
@@ -182,14 +195,54 @@ export default function CreateEventPage() {
       console.log('🚀 Creando evento en blockchain:', eventData)
 
       // Usar solo transacciones reales (sin fallback demo)
-      const txHash = await createEvent(eventData)
+      const txResult = await createEvent(eventData)
 
-      if (txHash) {
-        alert(`¡Evento creado exitosamente! 🎉\n\nTransaction Hash: ${txHash}\n\nEste evento ahora existe como NFTs en Base Network.`)
+      if (txResult && txResult.hash) {
+        // Preparar datos para el modal de éxito
+        const eventDate = new Date(`${formData.startDate} ${formData.startTime}`).toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
         
-        // Resetear formulario
-        setFormData(initialFormData)
-        setCurrentStep(1)
+        const location = `${formData.location}, ${formData.city}, ${formData.country}`
+        
+        // Guardar el evento en el almacenamiento local
+        const createdEvent = addEvent({
+          title: formData.title,
+          description: formData.description,
+          date: formData.startDate,
+          time: formData.startTime,
+          location: formData.location,
+          city: formData.city,
+          country: formData.country,
+          category: formData.category,
+          organizer: formData.organizer,
+          image: getBestEventImage(formData.images[0], formData.category),
+          ticketTypes: formData.ticketTypes,
+          transactionHash: txResult.hash,
+          eventId: txResult.eventId,
+          isActive: true
+        })
+        
+        console.log('🎉 Evento guardado localmente:', createdEvent)
+        
+        setSuccessData({
+          eventName: formData.title,
+          transactionHash: txResult.hash,
+          eventDate: eventDate,
+          location: location
+        })
+        
+        setShowSuccessModal(true)
+        
+        // Resetear formulario después de mostrar el modal
+        setTimeout(() => {
+          setFormData(initialFormData)
+          setCurrentStep(1)
+        }, 100)
       } else {
         throw new Error('No se pudo crear el evento')
       }
@@ -481,6 +534,16 @@ export default function CreateEventPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Éxito */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        eventName={successData.eventName}
+        transactionHash={successData.transactionHash}
+        eventDate={successData.eventDate}
+        location={successData.location}
+      />
 
       {/* CSS Animations */}
       <style>{`

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { EventFormData } from '@/app/create-event/page'
+import { eventTemplates, getTemplateById, type EventTemplate } from '@/lib/event-templates'
 
 interface BasicInfoStepProps {
   formData: EventFormData
@@ -23,6 +24,8 @@ const categories = [
 export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isValidating, setIsValidating] = useState(false)
+  const [showTemplates, setShowTemplates] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<EventTemplate | null>(null)
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -80,6 +83,55 @@ export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoSte
     }
   }
 
+  const applyTemplate = (template: EventTemplate) => {
+    updateFormData({
+      title: template.name,
+      description: template.description,
+      category: template.category,
+      organizer: template.organizer,
+      startDate: template.startDate,
+      endDate: template.endDate,
+      startTime: template.startTime,
+      endTime: template.endTime,
+      location: template.location,
+      address: template.address,
+      city: template.city,
+      country: template.country,
+      ticketTypes: template.ticketTypes,
+      blockchain: template.blockchain,
+      royaltyPercentage: template.royaltyPercentage
+    })
+    setSelectedTemplate(template)
+    setShowTemplates(false)
+  }
+
+  const clearTemplate = () => {
+    setSelectedTemplate(null)
+    updateFormData({
+      title: '',
+      description: '',
+      category: '',
+      organizer: '',
+      startDate: '',
+      endDate: '',
+      startTime: '',
+      endTime: '',
+      location: '',
+      address: '',
+      city: '',
+      country: '',
+      ticketTypes: [{
+        name: 'General',
+        description: 'Acceso general al evento',
+        price: 0.05,
+        quantity: 100,
+        benefits: ['Acceso al evento', 'Certificado de participación']
+      }],
+      blockchain: 'base',
+      royaltyPercentage: 5
+    })
+  }
+
   return (
     <div>
       {/* Header del paso */}
@@ -104,6 +156,235 @@ export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoSte
         }}>
           Comienza creando la base de tu evento con información esencial
         </p>
+      </div>
+
+      {/* Sección de Plantillas */}
+      <div style={{
+        marginBottom: 'clamp(2rem, 4vw, 3rem)',
+        textAlign: 'center'
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: 'clamp(1rem, 3vw, 2rem)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)'
+        }}>
+          <button
+            type="button"
+            onClick={() => setShowTemplates(!showTemplates)}
+            style={{
+              background: showTemplates 
+                ? 'linear-gradient(135deg, #00ffff, #ff00ff)' 
+                : 'linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2))',
+              border: '2px solid rgba(0, 255, 255, 0.5)',
+              borderRadius: 'clamp(15px, 4vw, 25px)',
+              padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
+              color: '#ffffff',
+              fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: showTemplates 
+                ? '0 0 30px rgba(0, 255, 255, 0.5)' 
+                : '0 0 20px rgba(0, 255, 255, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'clamp(0.5rem, 2vw, 1rem)'
+            }}
+            onMouseEnter={(e: any) => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 0 40px rgba(0, 255, 255, 0.6)'
+            }}
+            onMouseLeave={(e: any) => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = showTemplates 
+                ? '0 0 30px rgba(0, 255, 255, 0.5)' 
+                : '0 0 20px rgba(0, 255, 255, 0.3)'
+            }}
+          >
+            <span style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)' }}>🎨</span>
+            {showTemplates ? 'Ocultar Plantillas' : 'Usar Plantilla'}
+          </button>
+
+          {selectedTemplate && (
+            <button
+              type="button"
+              onClick={clearTemplate}
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 100, 100, 0.2))',
+                border: '2px solid rgba(255, 0, 0, 0.5)',
+                borderRadius: 'clamp(15px, 4vw, 25px)',
+                padding: 'clamp(1rem, 3vw, 1.5rem) clamp(2rem, 5vw, 3rem)',
+                color: '#ffffff',
+                fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 0 20px rgba(255, 0, 0, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'clamp(0.5rem, 2vw, 1rem)'
+              }}
+              onMouseEnter={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.5)'
+              }}
+              onMouseLeave={(e: any) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.3)'
+              }}
+            >
+              <span style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)' }}>🗑️</span>
+              Limpiar Plantilla
+            </button>
+          )}
+        </div>
+
+        {selectedTemplate && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1))',
+            border: '2px solid rgba(0, 255, 255, 0.3)',
+            borderRadius: 'clamp(15px, 4vw, 25px)',
+            padding: 'clamp(1.5rem, 4vw, 2rem)',
+            marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
+            boxShadow: '0 0 30px rgba(0, 255, 255, 0.2)'
+          }}>
+            <h3 style={{
+              color: '#00ffff',
+              fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
+              marginBottom: 'clamp(0.8rem, 2vw, 1rem)',
+              fontWeight: '700'
+            }}>
+              ✅ Plantilla Aplicada: {selectedTemplate.name}
+            </h3>
+            <p style={{
+              color: '#b0b0b0',
+              fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+              lineHeight: '1.5'
+            }}>
+              Todos los campos han sido prellenados con información profesional. 
+              Puedes modificar cualquier campo según tus necesidades.
+            </p>
+          </div>
+        )}
+
+        {showTemplates && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(300px, 40vw, 400px), 1fr))',
+            gap: 'clamp(1.5rem, 4vw, 2rem)',
+            marginTop: 'clamp(1.5rem, 4vw, 2rem)'
+          }}>
+            {eventTemplates.map((template) => (
+              <div
+                key={template.id}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6))',
+                  border: '2px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 'clamp(15px, 4vw, 25px)',
+                  padding: 'clamp(1.5rem, 4vw, 2rem)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onClick={() => applyTemplate(template)}
+                onMouseEnter={(e: any) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 255, 255, 0.5)'
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 255, 255, 0.3)'
+                }}
+                onMouseLeave={(e: any) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                {/* Efecto de brillo en hover */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '3px',
+                  background: 'linear-gradient(90deg, #00ffff, #ff00ff, #ffff00)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease'
+                }} 
+                onMouseEnter={(e: any) => {
+                  e.currentTarget.style.opacity = '1'
+                }}
+                onMouseLeave={(e: any) => {
+                  e.currentTarget.style.opacity = '0'
+                }}
+                />
+
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <h4 style={{
+                    color: '#00ffff',
+                    fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
+                    marginBottom: 'clamp(0.8rem, 2vw, 1rem)',
+                    fontWeight: '700'
+                  }}>
+                    {template.name}
+                  </h4>
+                  
+                  <p style={{
+                    color: '#b0b0b0',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+                    lineHeight: '1.5',
+                    marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>
+                    {template.description}
+                  </p>
+
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 'clamp(0.8rem, 2vw, 1rem)'
+                  }}>
+                    <span style={{
+                      background: 'rgba(0, 255, 255, 0.2)',
+                      color: '#00ffff',
+                      padding: 'clamp(0.3rem, 1vw, 0.5rem) clamp(0.8rem, 2vw, 1rem)',
+                      borderRadius: 'clamp(8px, 2vw, 12px)',
+                      fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+                      fontWeight: '600'
+                    }}>
+                      {categories.find(cat => cat.id === template.category)?.name}
+                    </span>
+                    
+                    <span style={{
+                      color: '#ffff00',
+                      fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+                      fontWeight: '600'
+                    }}>
+                      {template.startDate}
+                    </span>
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    color: '#b0b0b0',
+                    fontSize: 'clamp(0.8rem, 2vw, 0.9rem)'
+                  }}>
+                    <span>📍 {template.city}</span>
+                    <span>🎫 {template.ticketTypes.length} tipos</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <form style={{
