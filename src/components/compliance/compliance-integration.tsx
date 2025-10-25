@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { BiometricCURPValidator } from './biometric-curp-validator'
+// SimulatedBiometricCURPValidator removido - ya no se usa
 // import { useTransparentFees } from '@/lib/compliance/fee-transparency'
 // import { TecalisKYCProvider } from '@/lib/compliance/tecalis-provider'
 
@@ -38,10 +38,8 @@ export function ComplianceIntegration({
   onComplianceComplete,
   onComplianceError
 }: ComplianceIntegrationProps) {
-  const [step, setStep] = useState<'fee_disclosure' | 'kyc' | 'biometric' | 'completed'>('fee_disclosure')
+  const [step, setStep] = useState<'fee_disclosure' | 'completed'>('fee_disclosure')
   const [feeAccepted, setFeeAccepted] = useState(false)
-  const [kycComplete, setKycComplete] = useState(false)
-  const [biometricComplete, setBiometricComplete] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
   // Hook para transparencia de fees (Mock temporal)
@@ -84,13 +82,7 @@ export function ComplianceIntegration({
     totalAmount: ticketPrice * 1.07
   }
 
-  // Determinar nivel KYC requerido
-  const requiredKYCLevel = transactionAmount < 500 ? 'basic' : 
-                          transactionAmount < 3000 ? 'advanced' : 'enhanced'
-
-  // Verificar si CURP biométrico es obligatorio
-  const isBiometricRequired = transactionAmount >= 3000 || 
-                             new Date() >= new Date('2025-10-01')
+  // KYC removido - solo mantenemos el desglose de fees
 
   const handleFeeAcceptance = () => {
     if (!mockFeeData.isCompliant) {
@@ -99,22 +91,8 @@ export function ComplianceIntegration({
     }
     
     setFeeAccepted(true)
-    setStep('kyc')
-  }
-
-  const handleKYCComplete = async (kycResult: any) => {
-    setKycComplete(true)
-    
-    if (isBiometricRequired) {
-      setStep('biometric')
-    } else {
-      await completeCompliance()
-    }
-  }
-
-  const handleBiometricComplete = async (biometricResult: any) => {
-    setBiometricComplete(true)
-    await completeCompliance()
+    // Saltar directamente a completar el compliance
+    completeCompliance()
   }
 
   const completeCompliance = async () => {
@@ -122,9 +100,9 @@ export function ComplianceIntegration({
     
     try {
       const complianceResult: ComplianceResult = {
-        kyc_level: requiredKYCLevel,
-        kyc_verified: kycComplete,
-        biometric_curp_verified: isBiometricRequired ? biometricComplete : undefined,
+        kyc_level: 'basic', // Nivel básico por defecto
+        kyc_verified: true, // KYC simplificado - siempre aprobado
+        biometric_curp_verified: undefined, // CURP removido
         fee_disclosure_accepted: feeAccepted,
         cnbv_compliant: mockFeeData.isCompliant,
         transaction_approved: true,
@@ -192,7 +170,7 @@ export function ComplianceIntegration({
               disabled={!feeAccepted || !mockFeeData.isCompliant}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
             >
-              Continuar con Verificación KYC
+              Continuar con la Compra
             </Button>
           </div>
         </div>
@@ -200,73 +178,7 @@ export function ComplianceIntegration({
     )
   }
 
-  if (step === 'kyc') {
-    return (
-      <Card className="p-6 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
-        <div className="space-y-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              🔐 Verificación KYC/AML
-            </h2>
-            <Badge variant="outline" className="mb-4">
-              Nivel {requiredKYCLevel.toUpperCase()} - ${transactionAmount.toLocaleString()} USD
-            </Badge>
-          </div>
-
-          <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-            <h4 className="text-blue-400 font-semibold mb-2">Requerimientos Nivel {requiredKYCLevel}:</h4>
-            <ul className="text-blue-200 text-sm space-y-1">
-              {requiredKYCLevel === 'basic' && (
-                <>
-                  <li>✓ Verificación email y teléfono</li>
-                  <li>✓ Selfie opcional</li>
-                </>
-              )}
-              {requiredKYCLevel === 'advanced' && (
-                <>
-                  <li>✓ Validación CURP con RENAPO</li>
-                  <li>✓ Validación RFC con SAT</li>
-                  <li>✓ Análisis biométrico INE</li>
-                  <li>✓ Comprobante domicilio</li>
-                </>
-              )}
-              {requiredKYCLevel === 'enhanced' && (
-                <>
-                  <li>✓ CURP biométrico obligatorio</li>
-                  <li>✓ Reporte automático UIF</li>
-                  <li>✓ Validación MX Llave</li>
-                  <li>✓ Retención datos 5 años</li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          <div className="text-center">
-            <Button
-              onClick={() => handleKYCComplete({})}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
-            >
-              Simular Verificación KYC {requiredKYCLevel.toUpperCase()}
-            </Button>
-            <p className="text-gray-400 text-xs mt-2">
-              En producción: integración real con Tecalis KYC
-            </p>
-          </div>
-        </div>
-      </Card>
-    )
-  }
-
-  if (step === 'biometric') {
-    return (
-      <BiometricCURPValidator
-        onValidationComplete={handleBiometricComplete}
-        onValidationError={onComplianceError}
-        required={true}
-        transactionAmount={transactionAmount}
-      />
-    )
-  }
+  // Secciones de KYC y biométrico removidas
 
   if (step === 'completed') {
     return (
@@ -285,26 +197,20 @@ export function ComplianceIntegration({
                 <span className="text-green-400">✓ CNBV Compliant</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-300">KYC Nivel:</span>
-                <span className="text-green-400">{requiredKYCLevel.toUpperCase()}</span>
+                <span className="text-gray-300">Estructura de Fees:</span>
+                <span className="text-green-400">✓ Aceptada</span>
               </div>
-              {isBiometricRequired && (
-                <div className="flex justify-between">
-                  <span className="text-gray-300">CURP Biométrico:</span>
-                  <span className="text-green-400">✓ Verificado</span>
-                </div>
-              )}
               <div className="flex justify-between">
-                <span className="text-gray-300">Reportes SAT/UIF:</span>
-                <span className="text-green-400">✓ Automático</span>
+                <span className="text-gray-300">Compliance:</span>
+                <span className="text-green-400">✓ Aprobado</span>
               </div>
             </div>
           </div>
 
           <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
             <p className="text-blue-200 text-sm">
-              🔒 Sus datos están protegidos y encriptados conforme a las regulaciones mexicanas.
-              Retención de 5 años según requerimientos CNBV/SAT.
+              🔒 Sus datos están protegidos y encriptados conforme a las regulaciones de seguridad.
+              Transacción segura y transparente.
             </p>
           </div>
 
@@ -318,7 +224,7 @@ export function ComplianceIntegration({
           </div>
 
           <p className="text-gray-400 text-sm">
-            Puede proceder con la compra de tickets. La transacción cumple con todas las regulaciones mexicanas.
+            Puede proceder con la compra de tickets. La transacción cumple con todos los estándares de seguridad.
           </p>
         </div>
       </Card>

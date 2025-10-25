@@ -1,0 +1,21 @@
+[33mcommit dcdbd4d3e898cc07667480cfada513b8260ce982[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Vaios0x <vaios0x@example.com>
+Date:   Mon Sep 8 15:17:32 2025 -0600
+
+    feat: improve payment section and ticket quantity selector
+    
+    - Update wallet connection status display (Base Sepolia)
+    - Change credit card option text (remove MoonPay reference)
+    - Remove wallet address input when connected
+    - Enhance ticket quantity selector with modern design
+    - Implement horizontal layout for +/- buttons
+    - Add responsive design improvements
+    - Add shimmer and gradient animations
+    - Optimize for mobile and desktop experiences
+
+src/app/privacy/page.tsx
+src/components/modals/checkout-modal.css
+src/components/modals/checkout-modal.tsx
+src/hooks/use-contract-transactions.ts
+src/hooks/use-mexican-compliance.ts
+src/lib/compliance/kyc-types.ts

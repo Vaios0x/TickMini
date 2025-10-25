@@ -34,8 +34,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [step, setStep] = useState(1)
   const [isCreatingEvent, setIsCreatingEvent] = useState(false)
-  const [complianceComplete, setComplianceComplete] = useState(false)
-  const [complianceData, setComplianceData] = useState<any>(null)
+  // Variables de compliance removidas
 
   // Use custom hook for modal scroll management
   useModalScroll(isOpen)
@@ -76,8 +75,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
       setSelectedPaymentMethod('wallet')
       setWalletAddress('')
       setIsProcessing(false)
-      setComplianceComplete(false)
-      setComplianceData(null)
+      // Variables de compliance removidas
       
       // Force modal to center and focus for accessibility
       setTimeout(() => {
@@ -174,11 +172,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
   const handlePurchase = async () => {
     if (!event) return
     
-    // Verificar compliance antes del pago
-    if (!complianceComplete || !complianceData) {
-      alert('⚠️ Debe completar el proceso de compliance antes de proceder al pago')
-      return
-    }
+    // Verificación de compliance removida
     
     setIsProcessing(true)
     resetTransactionState()
@@ -303,9 +297,15 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           : txResult && 'tokenIds' in txResult && txResult.tokenIds 
             ? txResult.tokenIds[0] 
             : 'N/A'
-        alert(`¡Ticket comprado exitosamente! 🎉\n\nToken ID: ${tokenId}\n\nTu ticket aparecerá en "Mis Tickets" con la información de la transacción.\n\nHash: ${txResult.hash}`)
+        // Ir directamente al step 4 con la hermosa animación
+        console.log('🎉 Compra exitosa, mostrando animación en step 4')
+        console.log('🎫 Token ID:', tokenId)
+        console.log('🔗 Transaction Hash:', txResult.hash)
         
-        setStep(4) // Mostrar confirmación
+        // Pequeño delay para asegurar que la animación se vea
+        setTimeout(() => {
+          setStep(4) // Mostrar confirmación con animación
+        }, 100)
       } else {
         throw new Error('No se pudo completar la compra')
       }
@@ -334,25 +334,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
     }
   }
 
-  const handleComplianceComplete = (result?: any) => {
-    const mockResult = result || {
-      kyc_level: priceInEth * ticketQuantity < 500 ? 'basic' : priceInEth * ticketQuantity < 3000 ? 'advanced' : 'enhanced',
-      kyc_verified: true,
-      fee_disclosure_accepted: true,
-      cnbv_compliant: true,
-      transaction_approved: true,
-      compliance_id: `DEMO_${Date.now()}`
-    }
-    console.log('✅ Compliance completado:', mockResult)
-    setComplianceData(mockResult)
-    setComplianceComplete(true)
-    setStep(3) // Avanzar a pago
-  }
-
-  const handleComplianceError = (error: string) => {
-    console.error('❌ Error en compliance:', error)
-    alert(`Error de compliance: ${error}`)
-  }
+  // Funciones de compliance removidas - ya no se usan
 
   const nextStep = () => {
     if (step < 4) {
@@ -878,19 +860,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
             </div>
           )}
 
-          {step === 2 && (
-            /* Step 2: Compliance - Demo Profesional */
-            <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-              <ComplianceIntegration 
-                ticketPrice={priceInEth * ticketQuantity}
-                transactionAmount={priceInEth * ticketQuantity}
-                userAddress={address || ''}
-                eventId={event.id.toString()}
-                onComplianceComplete={handleComplianceComplete}
-                onComplianceError={handleComplianceError}
-              />
-            </div>
-          )}
+          {/* Step 2 removido - KYC eliminado */}
 
           {step === 3 && (
             <div style={{ animation: 'fadeInRight 0.5s ease-out' }}>
@@ -1093,56 +1063,264 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
           )}
 
           {step === 4 && (
-            /* Step 4: Confirmation */
+            /* Step 4: Hermosa Animación de Compra Exitosa */
             <div style={{ 
               textAlign: 'center',
-              animation: 'fadeInUp 0.5s ease-out'
+              animation: 'fadeInUp 0.8s ease-out',
+              position: 'relative',
+              overflow: 'visible',
+              minHeight: 'auto',
+              padding: '2rem 0',
+              width: '100%'
             }}>
+              {/* Partículas flotantes de fondo */}
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    left: `${(i * 5) % 100}%`,
+                    top: `${(i * 3) % 100}%`,
+                    width: '4px',
+                    height: '4px',
+                    background: `hsl(${i * 18}, 100%, 70%)`,
+                    borderRadius: '50%',
+                    filter: 'blur(1px)',
+                    animation: `float-particle ${3 + (i % 3)}s ease-in-out infinite`,
+                    animationDelay: `${(i % 3) * 0.5}s`,
+                    pointerEvents: 'none'
+                  }}
+                />
+              ))}
+
+              {/* Efecto de ondas concéntricas */}
               <div style={{
-                fontSize: '6rem',
-                marginBottom: '1.5rem',
-                filter: 'drop-shadow(0 0 20px rgba(0, 255, 255, 0.5))'
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '200px',
+                height: '200px',
+                border: '2px solid rgba(0, 255, 255, 0.3)',
+                borderRadius: '50%',
+                animation: 'pulse-ring 2s ease-out infinite',
+                pointerEvents: 'none'
+              }} />
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '150px',
+                height: '150px',
+                border: '2px solid rgba(255, 0, 255, 0.3)',
+                borderRadius: '50%',
+                animation: 'pulse-ring 2s ease-out infinite 0.5s',
+                pointerEvents: 'none'
+              }} />
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '100px',
+                height: '100px',
+                border: '2px solid rgba(255, 255, 0, 0.3)',
+                borderRadius: '50%',
+                animation: 'pulse-ring 2s ease-out infinite 1s',
+                pointerEvents: 'none'
+              }} />
+
+              {/* Emoji principal con animación */}
+              <div style={{
+                fontSize: '8rem',
+                marginBottom: '2rem',
+                filter: 'drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))',
+                animation: 'bounce-celebration 1.5s ease-out infinite',
+                position: 'relative',
+                zIndex: 2
               }}>
-                🎉
+                🎫
               </div>
+
+              {/* Título con efecto de gradiente animado */}
               <h4 style={{
-                color: '#00ffff',
-                fontSize: '2.5rem',
+                background: 'linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00, #00ffff)',
+                backgroundSize: '400% 400%',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: '3rem',
                 marginBottom: '1.5rem',
-                textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
+                fontWeight: '900',
+                textShadow: '0 0 30px rgba(0, 255, 255, 0.5)',
+                animation: 'gradient-shift 3s ease-in-out infinite',
+                position: 'relative',
+                zIndex: 2
               }}>
                 ¡Compra Exitosa!
               </h4>
+
+              {/* Subtítulo con efecto de escritura */}
               <p style={{
-                color: '#b0b0b0',
-                fontSize: '1.2rem',
-                marginBottom: '2.5rem',
-                lineHeight: '1.6'
-              }}>
-                Has comprado {ticketQuantity} ticket(s) para {event.title}
-              </p>
-              <div style={{
-                background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.15) 0%, rgba(255, 0, 255, 0.15) 100%)',
-                borderRadius: '25px',
-                padding: '2rem',
-                border: '2px solid rgba(0, 255, 255, 0.3)',
+                color: '#ffffff',
+                fontSize: '1.4rem',
                 marginBottom: '2rem',
-                boxShadow: '0 0 30px rgba(0, 255, 255, 0.2)'
+                lineHeight: '1.6',
+                fontWeight: '500',
+                opacity: 0,
+                animation: 'fadeInUp 0.8s ease-out 0.5s forwards',
+                position: 'relative',
+                zIndex: 2
+              }}>
+                Has comprado {ticketQuantity} ticket(s) para <span style={{color: '#00ffff'}}>{event.title}</span>
+              </p>
+
+              {/* Card de información del ticket con efectos */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 50%, rgba(255, 255, 0, 0.1) 100%)',
+                borderRadius: '30px',
+                padding: '2.5rem',
+                border: '2px solid transparent',
+                backgroundClip: 'padding-box',
+                position: 'relative',
+                marginBottom: '2rem',
+                boxShadow: '0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(255, 255, 255, 0.05)',
+                animation: 'card-glow 2s ease-in-out infinite alternate',
+                overflow: 'hidden'
+              }}>
+                {/* Efecto de brillo interno */}
+                <div style={{
+                  position: 'absolute',
+                  top: '-50%',
+                  left: '-50%',
+                  width: '200%',
+                  height: '200%',
+                  background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
+                  animation: 'shimmer 3s ease-in-out infinite',
+                  pointerEvents: 'none'
+                }} />
+
+                {/* Contenido del card */}
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    <span style={{ fontSize: '2rem' }}>🎫</span>
+                    <p style={{
+                      color: '#00ffff',
+                      fontSize: '1.5rem',
+                      fontWeight: '700',
+                      margin: 0,
+                      textShadow: '0 0 20px rgba(0, 255, 255, 0.5)'
+                    }}>
+                      Ticket ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+                    </p>
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>💰</span>
+                    <p style={{
+                      color: '#ffff00',
+                      fontSize: '1.3rem',
+                      fontWeight: '600',
+                      margin: 0
+                    }}>
+                      Total Pagado: {finalTotal.toFixed(4)} ETH
+                    </p>
+                  </div>
+
+                  {/* Link a la transacción en testnet */}
+                  {transactionHash && (
+                    <div style={{
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      borderRadius: '15px',
+                      padding: '1rem',
+                      border: '1px solid rgba(0, 255, 255, 0.3)',
+                      marginBottom: '1rem'
+                    }}>
+                      <p style={{
+                        color: '#ffffff',
+                        fontSize: '1rem',
+                        marginBottom: '0.5rem',
+                        fontWeight: '500'
+                      }}>
+                        🔗 Transacción en Base Sepolia:
+                      </p>
+                      <a
+                        href={`https://sepolia.basescan.org/tx/${transactionHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#00ffff',
+                          textDecoration: 'none',
+                          fontSize: '0.9rem',
+                          wordBreak: 'break-all',
+                          display: 'inline-block',
+                          padding: '0.5rem',
+                          background: 'rgba(0, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(0, 255, 255, 0.3)',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e: any) => {
+                          e.currentTarget.style.background = 'rgba(0, 255, 255, 0.2)'
+                          e.currentTarget.style.transform = 'scale(1.05)'
+                        }}
+                        onMouseLeave={(e: any) => {
+                          e.currentTarget.style.background = 'rgba(0, 255, 255, 0.1)'
+                          e.currentTarget.style.transform = 'scale(1)'
+                        }}
+                      >
+                        {transactionHash}
+                      </a>
+                    </div>
+                  )}
+
+                  <p style={{
+                    color: '#b0b0b0',
+                    fontSize: '1.1rem',
+                    lineHeight: '1.5',
+                    margin: 0,
+                    fontStyle: 'italic'
+                  }}>
+                    ✨ Tu ticket NFT será enviado a tu wallet en los próximos minutos
+                  </p>
+                </div>
+              </div>
+
+              {/* Mensaje de éxito adicional */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 255, 0.1))',
+                borderRadius: '20px',
+                padding: '1.5rem',
+                border: '1px solid rgba(0, 255, 0, 0.3)',
+                marginBottom: '2rem',
+                animation: 'success-pulse 2s ease-in-out infinite'
               }}>
                 <p style={{
-                  color: '#00ffff',
+                  color: '#00ff00',
                   fontSize: '1.2rem',
-                  marginBottom: '1rem',
-                  fontWeight: '600'
+                  fontWeight: '600',
+                  margin: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
                 }}>
-                  🎫 Ticket ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
-                </p>
-                <p style={{
-                  color: '#b0b0b0',
-                  fontSize: '1rem',
-                  lineHeight: '1.5'
-                }}>
-                  Tu ticket NFT será enviado a tu wallet en los próximos minutos
+                  <span>🎉</span>
+                  ¡Transacción confirmada en Base Network!
+                  <span>🎉</span>
                 </p>
               </div>
             </div>
@@ -1161,7 +1339,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
         }}>
           {step === 1 && (
             <button
-              onClick={nextStep}
+              onClick={() => setStep(3)}
               style={{
                 width: '100%',
                 background: 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
@@ -1185,14 +1363,11 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                 e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 255, 255, 0.3)' // Reducido
               }}
             >
-              Continuar a Compliance →
+              Continuar al Pago →
             </button>
           )}
 
-          {step === 2 && (
-            /* Step 2: Compliance Navigation - Los botones los maneja ComplianceIntegration */
-            <div></div>
-          )}
+          {/* Step 2 navigation removido */}
 
           {step === 3 && (
             <div style={{
@@ -1229,11 +1404,11 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
               </button>
               <button
                 onClick={handlePurchase}
-                disabled={isProcessing || !complianceComplete}
+                disabled={isProcessing}
                 style={{
                   flex: '1 1 auto', // Cambiado para que ocupe el espacio restante
                   minWidth: 'clamp(180px, 35vw, 220px)', // Ancho mínimo para el botón principal
-                  background: (isProcessing || !complianceComplete)
+                  background: isProcessing
                     ? 'rgba(255, 255, 255, 0.3)' 
                     : 'linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)',
                   color: '#000000',
@@ -1242,7 +1417,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   borderRadius: 'clamp(10px, 2vw, 12px)', // Reducido
                   fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', // Reducido
                   fontWeight: 'bold',
-                  cursor: (isProcessing || !complianceComplete) ? 'not-allowed' : 'pointer',
+                  cursor: isProcessing ? 'not-allowed' : 'pointer',
                   transition: 'all 0.3s ease',
                   boxShadow: isProcessing 
                     ? 'none' 
@@ -1262,9 +1437,7 @@ export function CheckoutModal({ isOpen, onClose, event }: CheckoutModalProps) {
                   }
                 }}
               >
-                {isProcessing ? '⏳ Procesando...' : 
-                 !complianceComplete ? '🔒 Complete Compliance Primero' :
-                 `Pagar ${finalTotal.toFixed(4)} ETH`}
+                {isProcessing ? '⏳ Procesando...' : `Pagar ${finalTotal.toFixed(4)} ETH`}
               </button>
             </div>
           )}
