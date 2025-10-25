@@ -361,5 +361,6 @@ export const getTemplatesByCategory = (category: string): EventTemplate[] => {
 
 // Función para obtener todas las categorías disponibles
 export const getAvailableCategories = (): string[] => {
-  return [...new Set(eventTemplates.map(template => template.category))]
+  const categories = eventTemplates.map(template => template.category)
+  return Array.from(new Set(categories))
 }
