@@ -159,7 +159,7 @@ export function ContextAwareWrapper({ children }: ContextAwareWrapperProps) {
               Abrir en Base App
             </a>
             <button 
-              onClick={() => window.location.reload()}
+              onClick={() => window.location.href = '/'}
               className="block bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors w-full"
             >
               Continuar de Todas Formas
