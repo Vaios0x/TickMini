@@ -1,0 +1,135 @@
+{
+  "name": "TickMini - NFT Ticketing Marketplace",
+  "short_name": "TickMini",
+  "description": "Plataforma de tickets NFT para eventos en Base Network",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["entertainment", "business", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-optimized.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshot1-optimized.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "TickMini Dashboard"
+    },
+    {
+      "src": "/images/screenshot2.svg",
+      "sizes": "750x1334",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Mobile Event View"
+    },
+    {
+      "src": "/images/screenshot3.svg",
+      "sizes": "750x1334",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Ticket Purchase"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Explorar Eventos",
+      "short_name": "Eventos",
+      "description": "Ver todos los eventos disponibles",
+      "url": "/events",
+      "icons": [
+        {
+          "src": "/icon-optimized.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Crear Evento",
+      "short_name": "Crear",
+      "description": "Crear un nuevo evento",
+      "url": "/create-event",
+      "icons": [
+        {
+          "src": "/icon-optimized.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Mis Tickets",
+      "short_name": "Tickets",
+      "description": "Ver mis tickets",
+      "url": "/my-tickets",
+      "icons": [
+        {
+          "src": "/icon-optimized.svg",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "capture_links": "new-client",
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+tickmini",
+      "url": "/?action=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "image",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  }
+}
