@@ -1,0 +1,45 @@
+<svg width="300" height="600" viewBox="0 0 300 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="600" fill="url(#bg2)"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="300" height="60" fill="#000000" stroke="#ff00ff" stroke-width="1"/>
+  <text x="150" y="35" text-anchor="middle" fill="#ff00ff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Crear Evento</text>
+  
+  <!-- Form -->
+  <rect x="20" y="80" width="260" height="400" fill="rgba(255,0,255,0.1)" stroke="#ff00ff" stroke-width="1" rx="10"/>
+  
+  <!-- Form fields -->
+  <text x="30" y="110" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Nombre del Evento</text>
+  <rect x="30" y="115" width="240" height="30" fill="rgba(0,0,0,0.5)" stroke="#ff00ff" stroke-width="1" rx="5"/>
+  <text x="35" y="135" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">Mi Concierto Increíble</text>
+  
+  <text x="30" y="170" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Fecha y Hora</text>
+  <rect x="30" y="175" width="240" height="30" fill="rgba(0,0,0,0.5)" stroke="#ff00ff" stroke-width="1" rx="5"/>
+  <text x="35" y="195" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">25 Dic 2024 • 21:00</text>
+  
+  <text x="30" y="230" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Precio (ETH)</text>
+  <rect x="30" y="235" width="240" height="30" fill="rgba(0,0,0,0.5)" stroke="#ff00ff" stroke-width="1" rx="5"/>
+  <text x="35" y="255" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">0.05</text>
+  
+  <text x="30" y="290" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Cantidad de Tickets</text>
+  <rect x="30" y="295" width="240" height="30" fill="rgba(0,0,0,0.5)" stroke="#ff00ff" stroke-width="1" rx="5"/>
+  <text x="35" y="315" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">100</text>
+  
+  <!-- Create button -->
+  <rect x="30" y="350" width="240" height="40" fill="#ff00ff" rx="20"/>
+  <text x="150" y="375" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🚀 Crear Evento</text>
+  
+  <!-- Bottom navigation -->
+  <rect x="0" y="540" width="300" height="60" fill="#000000" stroke="#ff00ff" stroke-width="1"/>
+  <text x="60" y="570" text-anchor="middle" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">🏠 Inicio</text>
+  <text x="150" y="570" text-anchor="middle" fill="#ff00ff" font-family="Arial, sans-serif" font-size="12">➕ Crear</text>
+  <text x="240" y="570" text-anchor="middle" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">👤 Perfil</text>
+</svg>

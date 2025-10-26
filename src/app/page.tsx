@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { HeroSection } from '@/components/sections/hero-section'
 import { CheckoutModal } from '@/components/modals/checkout-modal'
 import { AdvancedSearch } from '@/components/ui/advanced-search'
+import { EmbedShare } from '@/components/social/embed-share'
 import { useEvents, type Event } from '@/hooks/use-events'
 import './animations.css'
 import './events.css'
@@ -165,6 +166,10 @@ export default function HomePage() {
     }
   ]
 
+  // Descripción clara y concisa según Featured Guidelines
+  const appDescription = "Plataforma de tickets NFT para eventos en Base Network"
+  const valueProposition = "Crea, compra y gestiona tickets únicos como NFTs con transacciones instantáneas y bajas tarifas"
+
   const stats = [
     { value: '10K+', label: 'Tickets NFT Vendidos', icon: '🎫', color: '#00ffff' },
     { value: '500+', label: 'Eventos Activos', icon: '🎭', color: '#ff00ff' },
@@ -292,16 +297,15 @@ export default function HomePage() {
               }}>
                 🔍 Descubre Eventos Increíbles
               </h2>
-              <p style={{
-                fontSize: 'clamp(1rem, 3vw, 1.3rem)',
-                color: '#b0b0b0',
-                maxWidth: '800px',
-                margin: '0 auto',
-                lineHeight: '1.6'
-              }}>
-                Usa nuestro buscador avanzado para encontrar eventos que se adapten perfectamente a tus intereses, 
-                ubicación y presupuesto. Filtros inteligentes para resultados precisos.
-              </p>
+            <p style={{
+              fontSize: 'clamp(1rem, 3vw, 1.3rem)',
+              color: '#b0b0b0',
+              maxWidth: '800px',
+              margin: '0 auto',
+              lineHeight: '1.6'
+            }}>
+              {valueProposition}
+            </p>
             </div>
 
             {/* Componente de búsqueda avanzada */}
@@ -874,6 +878,36 @@ export default function HomePage() {
                   </span>
                 </button>
               </a>
+            </div>
+            
+            {/* Embed Share Section */}
+            <div style={{
+              marginTop: 'clamp(3rem, 6vw, 4rem)',
+              textAlign: 'center'
+            }}>
+              <h3 style={{
+                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                fontWeight: '600',
+                color: '#ffffff',
+                marginBottom: 'clamp(1rem, 2vw, 1.5rem)'
+              }}>
+                📤 Comparte TickMini
+              </h3>
+              <p style={{
+                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+                color: '#b0b0b0',
+                marginBottom: 'clamp(1.5rem, 3vw, 2rem)',
+                maxWidth: '600px',
+                margin: '0 auto clamp(1.5rem, 3vw, 2rem) auto'
+              }}>
+                Invita a tus amigos a descubrir el futuro del ticketing digital
+              </p>
+              <div style={{
+                maxWidth: '400px',
+                margin: '0 auto'
+              }}>
+                <EmbedShare />
+              </div>
             </div>
           </div>
         </section>

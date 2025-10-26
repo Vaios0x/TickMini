@@ -1,0 +1,35 @@
+<svg width="300" height="600" viewBox="0 0 300 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="600" fill="url(#bg1)"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="300" height="60" fill="#000000" stroke="#00ffff" stroke-width="1"/>
+  <text x="150" y="35" text-anchor="middle" fill="#00ffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">TickMini</text>
+  
+  <!-- Event card -->
+  <rect x="20" y="80" width="260" height="120" fill="rgba(0,255,255,0.1)" stroke="#00ffff" stroke-width="1" rx="10"/>
+  <text x="30" y="105" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎵 Concierto de Rock</text>
+  <text x="30" y="125" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">15 Dic 2024 • 20:00</text>
+  <text x="30" y="145" fill="#00ffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">0.05 ETH</text>
+  <text x="30" y="165" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">50 tickets disponibles</text>
+  
+  <!-- Another event card -->
+  <rect x="20" y="220" width="260" height="120" fill="rgba(255,0,255,0.1)" stroke="#ff00ff" stroke-width="1" rx="10"/>
+  <text x="30" y="245" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎭 Teatro Clásico</text>
+  <text x="30" y="265" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">20 Dic 2024 • 19:30</text>
+  <text x="30" y="285" fill="#ff00ff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">0.03 ETH</text>
+  <text x="30" y="305" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">30 tickets disponibles</text>
+  
+  <!-- Bottom navigation -->
+  <rect x="0" y="540" width="300" height="60" fill="#000000" stroke="#00ffff" stroke-width="1"/>
+  <text x="60" y="570" text-anchor="middle" fill="#00ffff" font-family="Arial, sans-serif" font-size="12">🏠 Inicio</text>
+  <text x="150" y="570" text-anchor="middle" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">🎫 Mis Tickets</text>
+  <text x="240" y="570" text-anchor="middle" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="12">👤 Perfil</text>
+</svg>

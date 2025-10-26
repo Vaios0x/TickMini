@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Ticket, Play, ArrowRight, Sparkles } from 'lucide-react'
+import { ShareButton } from '@/components/social/share-button'
 
 export function HeroSection() {
   return (
@@ -121,7 +122,8 @@ export function HeroSection() {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
             
-            <button 
+            <Link 
+              href="/create-event"
               className="text-lg px-8 py-6 h-auto font-bold transition-all duration-300 inline-flex items-center justify-center whitespace-nowrap rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden"
               style={{
                 background: '#1a1a1a',
@@ -134,7 +136,21 @@ export function HeroSection() {
               <span className="mr-2">🚀</span>
               CREAR EVENTO
               <span className="ml-2">✨</span>
-            </button>
+            </Link>
+          </motion.div>
+
+          {/* Share Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="flex justify-center mb-8"
+          >
+            <ShareButton
+              title="🎫 TickMini - NFT Ticketing Marketplace"
+              description="El futuro del ticketing digital en Base Network. Tickets únicos, transacciones instantáneas y máxima seguridad blockchain."
+              className="text-sm px-6 py-3"
+            />
           </motion.div>
 
           {/* Stats */}

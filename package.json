@@ -20,6 +20,13 @@
     "test:contracts": "hardhat run scripts/test-contracts.js --network hardhat"
   },
   "dependencies": {
+    "@base-org/account": "^2.4.0",
+    "@base-org/account-ui": "^1.0.1",
+    "@farcaster/miniapp-node": "^0.1.11",
+    "@farcaster/miniapp-sdk": "^0.2.1",
+    "@farcaster/quick-auth": "^0.0.8",
+    "@neynar/nodejs-sdk": "^3.34.0",
+    "@neynar/react": "^1.2.15",
     "@openzeppelin/contracts": "^4.9.6",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.3",

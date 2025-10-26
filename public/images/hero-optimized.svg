@@ -1,0 +1,55 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff00ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffff00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Grid Pattern -->
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#00ffff" stroke-width="0.5" opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Main Content -->
+  <g transform="translate(600, 315)">
+    <!-- Logo/Icon -->
+    <circle cx="0" cy="-80" r="60" fill="none" stroke="url(#neon)" stroke-width="6"/>
+    <text x="0" y="-60" text-anchor="middle" fill="#00ffff" font-family="Arial, sans-serif" font-size="72" font-weight="bold">🎫</text>
+    
+    <!-- App name -->
+    <text x="0" y="-10" text-anchor="middle" fill="url(#neon)" font-family="Arial, sans-serif" font-size="72" font-weight="bold">TickMini</text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="36" opacity="0.9">NFT Ticketing Marketplace</text>
+    
+    <!-- Description -->
+    <text x="0" y="100" text-anchor="middle" fill="#b0b0b0" font-family="Arial, sans-serif" font-size="28" opacity="0.8">Base Network • Blockchain • Events • Web3</text>
+    
+    <!-- Features -->
+    <text x="0" y="150" text-anchor="middle" fill="#00ffff" font-family="Arial, sans-serif" font-size="24" opacity="0.9">⚡ Transacciones Instantáneas • 🔒 Máxima Seguridad • 💰 Bajas Tarifas</text>
+  </g>
+  
+  <!-- Animated elements -->
+  <circle cx="150" cy="150" r="4" fill="#00ffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1050" cy="480" r="4" fill="#ff00ff" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="600" cy="80" r="4" fill="#ffff00" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+  </circle>
+</svg>
