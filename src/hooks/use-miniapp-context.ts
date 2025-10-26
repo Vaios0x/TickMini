@@ -32,6 +32,24 @@ export function useMiniAppContext(): MiniAppContext {
       try {
         console.log('🔍 Loading Mini App context...')
         
+        // Verificar si se fuerza el modo normal
+        const urlParams = new URLSearchParams(window.location.search)
+        const forceMode = urlParams.get('force') === 'true'
+        
+        if (forceMode) {
+          console.log('🚀 Force mode enabled - bypassing Mini App check')
+          setContext({
+            user: null,
+            location: null,
+            client: null,
+            features: null,
+            isInMiniApp: true, // Forzar como si estuviera en Mini App
+            isLoading: false,
+            error: null
+          })
+          return
+        }
+        
         // Verificar si estamos en Mini App
         const isInMiniApp = await sdk.context.isInMiniApp()
         console.log('📱 Is in Mini App:', isInMiniApp)

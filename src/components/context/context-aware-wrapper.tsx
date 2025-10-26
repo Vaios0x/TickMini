@@ -137,8 +137,8 @@ export function ContextAwareWrapper({ children }: ContextAwareWrapperProps) {
     )
   }
 
-  // Mostrar mensaje si no está en Mini App
-  if (!isInMiniApp) {
+  // Mostrar mensaje si no está en Mini App (solo en la primera carga)
+  if (!isInMiniApp && !isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center p-8 max-w-md">
@@ -159,7 +159,10 @@ export function ContextAwareWrapper({ children }: ContextAwareWrapperProps) {
               Abrir en Base App
             </a>
             <button 
-              onClick={() => window.location.href = '/'}
+              onClick={() => {
+                // Forzar que se muestre la aplicación principal
+                window.location.href = '/?force=true'
+              }}
               className="block bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors w-full"
             >
               Continuar de Todas Formas
